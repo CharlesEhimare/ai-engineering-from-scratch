@@ -134,6 +134,20 @@ Its first lab gets a skill into a real host in about ten minutes.
   not the next Agent Skills lesson after 22. Complete lessons 06 through 20
   before taking it.
 
+## Reverse engineering path
+
+Five lessons teach how to read a compiled program you built yourself. You parse the file, decode its instructions, lift them to pseudocode, record what you know as evidence, and prove a rebuilt function equal to the original. The companion manual, [Reverse Engineering 101](../../manuals/reverse-engineering-101/), runs the same fixture through rea 6.4.0 and Ghidra 12.1.4.
+
+| Lesson | What you build | Time |
+|---|---|---|
+| [32](32-program-anatomy-elf-from-scratch/) | An ELF reader: headers, sections, symbols, relocations | 2 hr |
+| [33](33-disassembly-and-control-flow/) | An x86-64 decoder, linear sweep, recursive descent, and a control-flow graph | 2 hr 30 min |
+| [34](34-lifting-to-pseudocode/) | A lifter from instructions to structured pseudocode | 2 hr 30 min |
+| [35](35-evidence-confidence-and-unknowns/) | An evidence ledger with confidence, limitations, and unknowns | 1 hr 45 min |
+| [36](36-rebuild-and-prove-equal/) | A differential test harness and a byte comparison that masks relocations | 2 hr |
+
+Every target in this path is a program you wrote and compiled. Lesson 32 starts with the law and the authorization rules.
+
 ## Full phase
 
 See [ROADMAP.md](../../ROADMAP.md) for the full lesson plan.

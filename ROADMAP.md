@@ -360,6 +360,11 @@ Total estimated time: ~332 hours, at your own pace.
 | 29 | [MCP Reliability, Cancellation, and Flow Control](phases/13-tools-and-protocols/29-mcp-reliability-cancellation-and-flow-control/) | ✅ | ~120 min |
 | 30 | [MCP Registry Supply Chain: Admission, Drift, and Rollback](phases/13-tools-and-protocols/30-mcp-registry-supply-chain-and-drift/) | ✅ | ~90 min |
 | 31 | [MCP Conformance Engineering: Versioning, Evidence, and Operations](phases/13-tools-and-protocols/31-mcp-conformance-versioning-and-operations/) | ✅ | ~100 min |
+| 32 | [Program Anatomy: Reading ELF From Scratch](phases/13-tools-and-protocols/32-program-anatomy-elf-from-scratch/) | ✅ | ~120 min |
+| 33 | [Disassembly and Control-Flow Graphs](phases/13-tools-and-protocols/33-disassembly-and-control-flow/) | ✅ | ~150 min |
+| 34 | [Lifting Machine Code to Pseudocode](phases/13-tools-and-protocols/34-lifting-to-pseudocode/) | ✅ | ~150 min |
+| 35 | [Evidence, Confidence, and Unknowns in Binary Analysis](phases/13-tools-and-protocols/35-evidence-confidence-and-unknowns/) | ✅ | ~105 min |
+| 36 | [Rebuild and Prove Equal](phases/13-tools-and-protocols/36-rebuild-and-prove-equal/) | ✅ | ~120 min |
 
 ## Phase 14: Agent Engineering — ✅ (~55 hours)
 

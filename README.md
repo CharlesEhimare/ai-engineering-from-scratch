@@ -15,7 +15,7 @@ Free, open source, MIT. Learn on the website, with a coding agent, or by running
 
 <p align="center">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-1a1a1a?style=flat-square&labelColor=fafaf5" alt="MIT License"></a>
-  <a href="ROADMAP.md"><img src="https://img.shields.io/badge/lessons-528-3553ff?style=flat-square&labelColor=fafaf5" alt="528 lessons"></a>
+  <a href="ROADMAP.md"><img src="https://img.shields.io/badge/lessons-533-3553ff?style=flat-square&labelColor=fafaf5" alt="533 lessons"></a>
   <a href="#contents"><img src="https://img.shields.io/badge/phases-20-3553ff?style=flat-square&labelColor=fafaf5" alt="20 phases"></a>
   <a href="https://github.com/rohitg00/ai-engineering-from-scratch/stargazers"><img src="https://img.shields.io/github/stars/rohitg00/ai-engineering-from-scratch?style=flat-square&labelColor=fafaf5&color=3553ff" alt="GitHub stars"></a>
   <a href="https://aiengineeringfromscratch.com"><img src="https://img.shields.io/badge/web-aiengineeringfromscratch.com-3553ff?style=flat-square&labelColor=fafaf5" alt="Website"></a>
@@ -796,6 +796,11 @@ Twenty phases. Click any phase to expand its lesson list.
 | 29 | [MCP Reliability, Cancellation, and Flow Control](phases/13-tools-and-protocols/29-mcp-reliability-cancellation-and-flow-control/) | Build | Python |
 | 30 | [MCP Registry Supply Chain: Admission, Drift, and Rollback](phases/13-tools-and-protocols/30-mcp-registry-supply-chain-and-drift/) | Build | Python |
 | 31 | [MCP Conformance Engineering: Versioning, Evidence, and Operations](phases/13-tools-and-protocols/31-mcp-conformance-versioning-and-operations/) | Build | Python |
+| 32 | [Program Anatomy: Reading ELF From Scratch](phases/13-tools-and-protocols/32-program-anatomy-elf-from-scratch/) | Build | Python |
+| 33 | [Disassembly and Control-Flow Graphs](phases/13-tools-and-protocols/33-disassembly-and-control-flow/) | Build | Python |
+| 34 | [Lifting Machine Code to Pseudocode](phases/13-tools-and-protocols/34-lifting-to-pseudocode/) | Build | Python |
+| 35 | [Evidence, Confidence, and Unknowns in Binary Analysis](phases/13-tools-and-protocols/35-evidence-confidence-and-unknowns/) | Build | Python |
+| 36 | [Rebuild and Prove Equal](phases/13-tools-and-protocols/36-rebuild-and-prove-equal/) | Build | Python |
 
 Lessons 06-18 and 28-31 form the focused
 [Model Context Protocol (MCP) path](learning-paths/model-context-protocol.json). Its manifest order
