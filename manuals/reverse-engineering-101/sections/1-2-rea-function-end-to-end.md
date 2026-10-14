@@ -32,7 +32,7 @@ caption: Read top to bottom, one numbered row per step. Rows 1 and 12 come from 
 
 1. The session parses the Mach-O header, reads the architecture, and hashes the file. The record's `subject` carries the result: `mach-o`, `arm64`, and the SHA-256 that `00-fixtures.txt` lists for `ledger-arm64-O1`.
 2. The registry selects `ghidra`, because the command asked for it, and records `selection_source: "request"`.
-3. The provider builds the analysis profile, a list of versioned contract names such as `function_body_evidence: "complete-inclusive-ranges-v1"`, and hashes it. The digest `20565088524a2d03…` in the record is this hash.
+3. The provider builds the analysis profile, a list of versioned contract names such as `function_body_evidence: "complete-inclusive-ranges-v1"`, and hashes it. The digest `20565088…` in the record is this hash.
 4. The client makes a private runtime root and allocates `bridge.sock`. It copies the file as `target-<sha256[0:12]>.bin` while hashing it again. Then it launches `java` with `ghidra.Ghidra ghidra.app.util.headless.AnalyzeHeadless`, `-import`, `-readOnly`, and `-deleteProject`. The copy is `target-01b5d08b08fb.bin`, and the overview record shows that name as its `document` (capture/out/05-analyze-arm64-O1.json). The startup deadline is 330,000 ms.
 5. The client sends `ping`. It accepts the session only when `run_id`, the token, the profile digest, the target SHA-256, and `analysis_complete` all match.
 6. The client writes one JSON line that asks for `analyze_function`. Ghidra runs the analysis and writes one JSON line back.
@@ -48,11 +48,11 @@ lang: json
 note: Cut after the provider. The analysis profile and the results follow in the next listings.
 ---
 {
-  "evidence_id": "ev_0000b698c9b0cfc40a11bf8f609d4dd136c0fb468a551bf970d1521fbcb413d0",
+  "evidence_id": "ev_0000b698…",
   "subject": {
     "name": "ledger-arm64-O1",
     "digest": {
-      "sha256": "01b5d08b08fb94678be5919d0e753d44b505a53107c95b94634f0e5d41c9e375"
+      "sha256": "01b5d08b…"
     },
     "format": "mach-o",
     "architecture": "arm64",
@@ -90,7 +90,7 @@ note: Cut to five of the 21 parameters and the digest.
       "loader": "auto-from-header",
       …
     },
-    "digest": "20565088524a2d0359b9b96f46ac48e679d774c7b0092c56abc06de8fdbec11c"
+    "digest": "20565088…"
   },
   "predicate_type": "rea.analysis",
   "operation": "analyze_function",

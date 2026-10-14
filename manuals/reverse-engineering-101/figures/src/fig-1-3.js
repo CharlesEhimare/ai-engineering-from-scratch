@@ -4,7 +4,7 @@ const { figure, color } = require('../../../_shared/figkit.js');
 
 const rows = [
   ['evidence_id', 'ev_ + 64 hex digits', 'SHA-256 of the semantic content'],
-  ['subject', 'ledger-arm64-O1, mach-o, arm64', 'sha256 01b5d08b08fb, local_path'],
+  ['subject', 'ledger-arm64-O1, mach-o, arm64', 'sha256 starts 01b5d08b, local_path'],
   ['provider', 'ghidra, Ghidra, 12.1.4', 'the engine that answered'],
   ['analysis_profile', '21 parameters, digest 20565088', 'contract versions behind the answer'],
   ['predicate_type', 'rea.analysis', 'the default tag'],
@@ -27,7 +27,7 @@ module.exports = figure('fig-1-3', {
 }, f => {
   f.kicker(20, 18, 'one Evidence record');
   f.kicker(396, 18, 'what the field holds');
-  f.box({ x: 20, y: 26, w: 360, h: 28, hue: 'teal', title: 'Evidence ev_0000b698c9b0cfc4 for analyze_function', align: 'left', titleSize: 11, pad: 10 });
+  f.box({ x: 20, y: 26, w: 360, h: 28, hue: 'teal', title: 'Evidence ev_0000b698 for analyze_function', align: 'left', titleSize: 11, pad: 10 });
   rows.forEach(([field, value, note], index) => {
     const y = 54 + index * 26;
     f.rect(20, y, 360, 26, { fill: color('paper'), stroke: color('panel-edge') });

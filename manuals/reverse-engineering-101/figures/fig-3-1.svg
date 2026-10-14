@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 320" role="img" aria-labelledby="fig-3-1-title fig-3-1-desc" font-family="JetBrains Mono, ui-monospace, monospace">
   <title id="fig-3-1-title">The inspect-artifact record for ledger-arm64-O1</title>
-  <desc id="fig-3-1-desc">One Evidence record from the rea-artifact-graph provider. Its subject is ledger-arm64-O1, a 33872-byte Mach-O whose SHA-256 starts 01b5d08b08fb. One substep, inventory_artifact, produced a manifest with one node, one occurrence and no edges. One unexplored branch says open_binary was not run, and the next probe names open_binary with authority native-analysis-provider.</desc>
+  <desc id="fig-3-1-desc">One Evidence record from the rea-artifact-graph provider. Its subject is ledger-arm64-O1, a 33872-byte Mach-O whose SHA-256 starts 01b5d08b. One substep, inventory_artifact, produced a manifest with one node, one occurrence and no edges. One unexplored branch says open_binary was not run, and the next probe names open_binary with authority native-analysis-provider.</desc>
   <defs><marker id="fig-3-1-head-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0 1 L10 5 L0 9 z" fill="var(--m-ink, #1a1a1a)"/></marker><marker id="fig-3-1-head-amber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0 1 L10 5 L0 9 z" fill="var(--m-amber-ink, #85590c)"/></marker></defs>
   <text x="20" y="18" font-size="11" letter-spacing="1.2" fill="var(--m-ink-mute, #6f6f6a)">THE RECORD</text>
   <text x="360" y="18" font-size="11" letter-spacing="1.2" fill="var(--m-ink-mute, #6f6f6a)">WHAT IT SAW</text>
@@ -11,7 +11,7 @@
   <rect x="360" y="26" width="260" height="62" fill="var(--m-green-fill, #e5f0e4)" stroke="var(--m-green-ink, #336b40)"/>
   <text x="490" y="44.75" font-size="12.5" text-anchor="middle" font-weight="700">subject ledger-arm64-O1</text>
   <text x="490" y="62.05" font-size="11" text-anchor="middle" class="m-serif" fill="var(--m-ink-soft, #4a4a4a)">format mach-o · 33872 bytes</text>
-  <text x="490" y="77.05" font-size="11" text-anchor="middle" class="m-serif" fill="var(--m-ink-soft, #4a4a4a)">sha256 starts 01b5d08b08fb</text>
+  <text x="490" y="77.05" font-size="11" text-anchor="middle" class="m-serif" fill="var(--m-ink-soft, #4a4a4a)">sha256 starts 01b5d08b</text>
   <line x1="300" y1="57" x2="359" y2="57" stroke="var(--m-ink, #1a1a1a)" stroke-width="1.2" marker-end="url(#fig-3-1-head-ink)"/>
   <rect class="m-knock" x="305.8" y="40.03" width="47.4" height="15.5" fill="var(--m-panel, #f3f1e8)"/>
   <text x="329.5" y="51" font-size="11.5" text-anchor="middle">hashes</text>

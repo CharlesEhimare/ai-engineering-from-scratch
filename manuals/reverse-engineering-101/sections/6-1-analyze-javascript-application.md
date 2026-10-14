@@ -17,11 +17,11 @@ lang: json
 note: The kit kept the record without graph and semantic_graph, with --filter-output. The result fields follow.
 ---
 {
-  "evidence_id": "ev_96bdd75ccb4b15538c6c00cfb5a161a74c0548372c27b68103fa80446cba5ba0",
+  "evidence_id": "ev_96bdd75c…",
   "subject": {
     "name": "js-app",
     "digest": {
-      "sha256": "bb9f726c3aafe026e6cc871b8de16cd81db9f03b4c2bab05f494307f8ebb42a2"
+      "sha256": "bb9f726c…"
     },
     "format": "directory",
     "architecture": null,
@@ -41,7 +41,7 @@ note: The kit kept the record without graph and semantic_graph, with --filter-ou
   },
 ```
 
-This is an Evidence record like the ones in Part 5, with three differences from a Ghidra dossier. The provider is rea itself, `rea-javascript-application` version `1`. The confidence is `derived`, because rea computed relationships from syntax, and the authority is `shipped-artifact`, because the six files on disk are the source. The subject is the directory, with the SHA-256 `bb9f726c3aafe026` of its inventory as the digest. The `normalized_result` has eleven fields: `input_path`, `format`, `root_artifact_sha256`, `inventory_manifest_id`, `inventory_graph_sha256`, `integrity_contradictions`, `graph`, `summary`, `statistics`, `limitations`, and `semantic_graph`.
+This is an Evidence record like the ones in Part 5, with three differences from a Ghidra dossier. The provider is rea itself, `rea-javascript-application` version `1`. The confidence is `derived`, because rea computed relationships from syntax, and the authority is `shipped-artifact`, because the six files on disk are the source. The subject is the directory, with the SHA-256 `bb9f726c…` of its inventory as the digest. The `normalized_result` has eleven fields: `input_path`, `format`, `root_artifact_sha256`, `inventory_manifest_id`, `inventory_graph_sha256`, `integrity_contradictions`, `graph`, `summary`, `statistics`, `limitations`, and `semantic_graph`.
 
 ```listing
 title: the summary and the statistics of ledger-desk
@@ -135,8 +135,8 @@ lang: json
 note: The artifact reference, the extractor, the coverage, and the limitations of the edge are cut.
 ---
 {
-  "source_node_id": "jag_node_c239425ed63dde96c66f79d62382815ec8d74e10226288382342d2692d575194",
-  "target_node_id": "jag_node_367214590020a12beca38c25d211a1a1833416614a061b504c04196267384c3b",
+  "source_node_id": "jag_node_c239425e…",
+  "target_node_id": "jag_node_36721459…",
   "relation": "invokes",
   "properties": {
     "channel": "ledger:grade-label",
@@ -215,12 +215,12 @@ note: Thirteen of the fifteen items are cut.
 ---
 "items": [
   {
-    "node_id": "jag_node_0fc7e361d6bdb22e59520e1f47da91ccaacc6a1b5cec1f034337d4d97c795122",
+    "node_id": "jag_node_0fc7e361…",
     "kind": "javascript-asset",
     "path": "main.js"
   },
   {
-    "node_id": "jag_node_19e7e9011bef4165096bf3bd3871c679471b704b77b6f5e253c3e16fcd9de41f",
+    "node_id": "jag_node_19e7e901…",
     "kind": "javascript-module",
     "path": "main.js"
   },

@@ -49,7 +49,7 @@
   <rect x="20" y="424" width="284" height="56" fill="var(--m-green-fill, #e5f0e4)" stroke="var(--m-green-ink, #336b40)"/>
   <text x="162" y="439.6" font-size="12" text-anchor="middle" font-weight="700">ledger-arm64-O1</text>
   <text x="162" y="456.8" font-size="11" text-anchor="middle" class="m-serif" fill="var(--m-ink-soft, #4a4a4a)">mach-o arm64, 33872 bytes</text>
-  <text x="162" y="471.8" font-size="11" text-anchor="middle" class="m-serif" fill="var(--m-ink-soft, #4a4a4a)">sha256 01b5d08b08fb</text>
+  <text x="162" y="471.8" font-size="11" text-anchor="middle" class="m-serif" fill="var(--m-ink-soft, #4a4a4a)">sha256 starts 01b5d08b</text>
   <rect x="336" y="424" width="284" height="56" fill="var(--m-green-fill, #e5f0e4)" stroke="var(--m-green-ink, #336b40)"/>
   <text x="478" y="439.6" font-size="12" text-anchor="middle" font-weight="700">target-01b5d08b08fb.bin</text>
   <text x="478" y="456.8" font-size="11" text-anchor="middle" class="m-serif" fill="var(--m-ink-soft, #4a4a4a)">the private copy Ghidra imports</text>

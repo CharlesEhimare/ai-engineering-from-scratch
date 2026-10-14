@@ -63,16 +63,16 @@ source: capture/out/00-fixtures.txt
 lang: text
 note: Cut to the two C sources, the two arm64 executables, the module, and its text. The object files, the JavaScript files, and the smoke-test program are cut.
 ---
-01b5d08b08fb94678be5919d0e753d44b505a53107c95b94634f0e5d41c9e375   33872  fixtures/ledger-arm64-O1
+01b5d08b…   33872  fixtures/ledger-arm64-O1
 …
-8bbbaa5866c3fc9f6f598943350b55b5c11669dd1d5e41005efdfe44241915b3   33872  fixtures/ledger-arm64-O2
+8bbbaa58…   33872  fixtures/ledger-arm64-O2
 …
-80af384b02fa0b492b6208d416f7593c2e71190b1a7618029aa47787bc12a38e     743  fixtures/ledger-main.c
+80af384b…     743  fixtures/ledger-main.c
 …
-4564c3e7e39fe4d10530bb6489722924ad3f34ffd78d8fa203a5e1fe832fdacb     568  fixtures/ledger.c
+4564c3e7…     568  fixtures/ledger.c
 …
-699f6ff7737b6f59db95a37840ed9c11f7ad9d69c29a6a240b8ecf0b79275e99     290  fixtures/wasm/ledger.wasm
-2e0b579231545236f971cb9981c244d8c3eb58b98dadcced405b539b45ca58f3    1841  fixtures/wasm/ledger.wat
+699f6ff7…     290  fixtures/wasm/ledger.wasm
+2e0b5792…    1841  fixtures/wasm/ledger.wat
 ```
 
 For these files the five questions in [figure](#fig-2-1) answer themselves. You hold the copy because you compiled it. The purpose is study. No other way is needed because the source is beside the binary, and the comparison of the two is the point. The whole program is yours, so the parts and the expression are yours.

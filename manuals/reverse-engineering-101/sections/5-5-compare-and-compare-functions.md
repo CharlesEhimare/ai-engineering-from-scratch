@@ -17,11 +17,11 @@ note: The kit kept each evidence_id and replaced the complete dossier with a mar
 "name": "compare_functions",
 "arguments": {
   "left": {
-    "evidence_id": "ev_0000b698c9b0cfc40a11bf8f609d4dd136c0fb468a551bf970d1521fbcb413d0",
+    "evidence_id": "ev_0000b698…",
     "record": "<cut by run.py: the complete analyze_function record, see 10-mcp-09-analyze-function-percent-change-O1.json>"
   },
   "right": {
-    "evidence_id": "ev_b84b923e786e233da8b57ebed31f16db218648fa57595cd893e92c01caa5e71d",
+    "evidence_id": "ev_b84b923e…",
     "record": "<cut by run.py: the complete analyze_function record, see 10-mcp-17-analyze-function-percent-change-O2.json>"
   }
 }
@@ -43,8 +43,8 @@ note: The dimensions, the changes, and the limitations are cut.
     "left_name": "_percent_change",
     "right_name": "_percent_change"
   },
-  "left_subject_sha256": "01b5d08b08fb94678be5919d0e753d44b505a53107c95b94634f0e5d41c9e375",
-  "right_subject_sha256": "8bbbaa5866c3fc9f6f598943350b55b5c11669dd1d5e41005efdfe44241915b3",
+  "left_subject_sha256": "01b5d08b…",
+  "right_subject_sha256": "8bbbaa58…",
   "summary": {
     "unchanged": 8,
     "changed": 0,
@@ -96,15 +96,15 @@ note: Nothing inside the dimension is cut.
   "left_count": 336,
   "right_count": 1866,
   "evidence_links": [
-    "ev_4c2f020b378297935c737659e7abac4be91d6379a3b4445ab15af6872d8794cb",
-    "ev_6b95d417dd77d1a5f848f88cc7e1a84387e46443d50b9a29b53cbe10320bb0d8"
+    "ev_4c2f020b…",
+    "ev_6b95d417…"
   ],
   "limitations": [
     "Assembly is opaque provider text; relocation normalization is unavailable."
   ],
   "status": "changed",
-  "left_digest": "40e2d441a90f4ea0d2cbde965a97d454ee787ce4557c684e5d6fd32c7963a63a",
-  "right_digest": "e1140153c0701ef2ba6e716883403a68807951b0805205c62cc59717d81017b4",
+  "left_digest": "40e2d441…",
+  "right_digest": "e1140153…",
   "text_delta": {
     "added_lines": 61,
     "removed_lines": 12,
@@ -130,8 +130,8 @@ note: Nine of the ten changes are cut, and so are the closing limitations.
 ---
 {
   "status": "unknown",
-  "left_bundle_sha256": "9659bb79c304ea69520383c719e0e3464f9003363f8c8b3ac197ef3c20b38e15",
-  "right_bundle_sha256": "b8f71cfee899b99bcd4e042942be22752039f574f00d32755383db9aaa60aad9",
+  "left_bundle_sha256": "9659bb79…",
+  "right_bundle_sha256": "b8f71cfe…",
   "summary": {
     "records_unchanged": 0,
     "records_added": 0,
@@ -147,14 +147,14 @@ note: Nine of the ten changes are cut, and so are the closing limitations.
   "changes": [
     {
       "entity": "evidence",
-      "key": "ev_0000b698c9b0cfc40a11bf8f609d4dd136c0fb468a551bf970d1521fbcb413d0",
+      "key": "ev_0000b698…",
       "classification": "unknown",
       "conclusion_kind": "unresolved_branch",
       "left_evidence_ids": [
-        "ev_0000b698c9b0cfc40a11bf8f609d4dd136c0fb468a551bf970d1521fbcb413d0"
+        "ev_0000b698…"
       ],
       "right_evidence_ids": [],
-      "left_digest": "0000b698c9b0cfc40a11bf8f609d4dd136c0fb468a551bf970d1521fbcb413d0",
+      "left_digest": "0000b698…",
       "right_digest": null,
       "limitations": [
         "EvidenceBundle has no inventory completeness marker; one-sided membership may reflect incomplete capture."
@@ -164,7 +164,7 @@ note: Nine of the ten changes are cut, and so are the closing limitations.
 
 Ten unresolved, none unchanged, none removed. The two bundles come from two different files, `ledger-arm64-O1` and `ledger-arm64-O2`. No `evidence_id` is in both, and every one of the ten records is one-sided. The tool does not call a one-sided record `removed`, because a bundle has no marker of completeness.
 
-The digests it reports are digests of the canonical bytes. `9659bb79c304ea69` is the digest of bundle O1 without the kit's trailing newline ([export and import](#s-evidence-bundles-export-and-import)). `rea compare` answers the question "what changed in this evidence set" for two bundles of one build. For two builds, `compare_functions` is the tool, one function at a time.
+The digests it reports are digests of the canonical bytes. `9659bb79` is the digest of bundle O1 without the kit's trailing newline ([export and import](#s-evidence-bundles-export-and-import)). `rea compare` answers the question "what changed in this evidence set" for two bundles of one build. For two builds, `compare_functions` is the tool, one function at a time.
 
 ```takeaways
 - Pass complete `analyze_function` records to `compare_functions`, never summaries or views.

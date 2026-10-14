@@ -28,7 +28,7 @@ note: The request and the result. The text copy of the result is cut by the capt
     "path": "$CAPTURE/fixtures/ledger-arm64-O1",
     "format": "mach-o",
     "kind": "executable",
-    "sha256": "01b5d08b08fb94678be5919d0e753d44b505a53107c95b94634f0e5d41c9e375",
+    "sha256": "01b5d08b…",
     "architecture": "arm64"
   }
 }
@@ -53,7 +53,7 @@ note: Cut to the provider binding and the server identity. The capabilities, can
   "selection_source": "request",
   "analysis_profile": {
     …
-    "digest": "20565088524a2d0359b9b96f46ac48e679d774c7b0092c56abc06de8fdbec11c"
+    "digest": "20565088…"
   }
 },
 …

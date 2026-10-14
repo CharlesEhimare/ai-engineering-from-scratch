@@ -32,7 +32,7 @@ note: The second and third claims are cut. The response follows the request in t
               "title": "percent_change: the Ghidra pseudocode is the same text in the -O1 and -O2 builds",
               "kind": "structural-function",
               "dimension": "pseudocode",
-              "comparison_evidence_id": "ev_f52769989622771ca8f07ce69a4053f5c70692f867db845ee949c66a0fd68058"
+              "comparison_evidence_id": "ev_f5276998…"
             },
             …
             {
@@ -40,7 +40,7 @@ note: The second and third claims are cut. The response follows the request in t
               "title": "total: the Ghidra assembly is the same text in the -O1 and -O2 builds",
               "kind": "structural-function",
               "dimension": "assembly",
-              "comparison_evidence_id": "ev_0fe621b65771a5ee1f08d48f852a1463b591e96cbc14da05f2a1bb4c16672ab6"
+              "comparison_evidence_id": "ev_0fe621b6…"
             }
           ]
         }
@@ -66,7 +66,7 @@ lang: json
 note: The analysis_profile, the per-claim items, the probes, and the evidence links are cut.
 ---
       "structuredContent": {
-        "evidence_id": "ev_5897face4631c5b3812d91cf46a75ff821c3d242aaeb41dfb60a8abc549151a4",
+        "evidence_id": "ev_5897face…",
         "subject": null,
         "provider": {
           "id": "rea-reconstruction-verifier",
@@ -76,7 +76,7 @@ note: The analysis_profile, the per-claim items, the probes, and the evidence li
         …
         "normalized_result": {
           "status": "fail",
-          "specification_sha256": "bb337f344824a009408039dae385aa37783233de6e220db042e42d1425882c9d",
+          "specification_sha256": "bb337f34…",
           "summary": {
             "total": 4,
             "passed": 2,
@@ -112,21 +112,21 @@ note: The evidence_links array and 26 of the 28 limitation strings are cut. The 
                 "dimension": "assembly",
                 "status": "fail",
                 "observed_status": "changed",
-                "comparison_evidence_id": "ev_0fe621b65771a5ee1f08d48f852a1463b591e96cbc14da05f2a1bb4c16672ab6",
+                "comparison_evidence_id": "ev_0fe621b6…",
                 "left_evidence_ids": [
-                  "ev_4c2f020b378297935c737659e7abac4be91d6379a3b4445ab15af6872d8794cb"
+                  "ev_4c2f020b…"
                 ],
                 "right_evidence_ids": [
-                  "ev_6b95d417dd77d1a5f848f88cc7e1a84387e46443d50b9a29b53cbe10320bb0d8"
+                  "ev_6b95d417…"
                 ],
                 …
                 "unknown_ids": [
-                  "unk_391244e5e7898bafb442d68966a5cf7130699e29714fd6f2620add0748372daa"
+                  "unk_391244e5…"
                 ],
                 "limitations": [
                   "Artifact identity is unavailable for this observation.",
                   …
-                  "Residual unknown: Function comparison is changed (comparison ev_0fe621b65771a5ee1f08d48f852a1463b591e96cbc14da05f2a1bb4c16672ab6)",
+                  "Residual unknown: Function comparison is changed (comparison ev_0fe621b6…)",
                   …
                 ]
 ```

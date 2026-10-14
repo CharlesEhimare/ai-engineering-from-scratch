@@ -29,6 +29,6 @@ module.exports = figure('fig-1-1', {
   f.kicker(336, 80, 'Ghidra 12.1.4 · what rea leaves to it');
   rea.forEach((item, index) => f.box({ x: 20, y: 90 + index * 66, w: 284, h: 56, titleSize: 12, ...item }));
   ghidra.forEach((item, index) => f.box({ x: 336, y: 90 + index * 66, w: 284, h: 56, titleSize: 12, ...item }));
-  f.box({ x: 20, y: 424, w: 284, h: 56, hue: 'green', title: 'ledger-arm64-O1', sub: ['mach-o arm64, 33872 bytes', 'sha256 01b5d08b08fb'], titleSize: 12 });
+  f.box({ x: 20, y: 424, w: 284, h: 56, hue: 'green', title: 'ledger-arm64-O1', sub: ['mach-o arm64, 33872 bytes', 'sha256 starts 01b5d08b'], titleSize: 12 });
   f.box({ x: 336, y: 424, w: 284, h: 56, hue: 'green', title: 'target-01b5d08b08fb.bin', sub: ['the private copy Ghidra imports', 'same bytes, deleted on close'], titleSize: 12 });
 });

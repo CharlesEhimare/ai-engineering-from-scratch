@@ -36,8 +36,8 @@ source: capture/out/11-bundles.txt
 lang: text
 note: Nothing is cut.
 ---
-28b743a3ea4476998fb4a865e48232ec3127d28ca762f6b20de91230e4262933  171730  11-bundle-O1.json (the bytes export_evidence_bundle wrote, with the capture path masked and a newline added)
-961261dab7287443f43222bc48d6993dd32943c8fbc88006f0f657bd9a234f9d  283753  11-bundle-O2.json (the bytes export_evidence_bundle wrote, with the capture path masked and a newline added)
+28b743a3…  171730  11-bundle-O1.json (the bytes export_evidence_bundle wrote, with the capture path masked and a newline added)
+961261da…  283753  11-bundle-O2.json (the bytes export_evidence_bundle wrote, with the capture path masked and a newline added)
 ```
 
 ## inspect-evidence-bundle
@@ -58,12 +58,12 @@ note: The subject and provider of the first record and the seven other records a
   "unknown_revisions": 0,
   "records": [
     {
-      "evidence_id": "ev_0000b698c9b0cfc40a11bf8f609d4dd136c0fb468a551bf970d1521fbcb413d0",
+      "evidence_id": "ev_0000b698…",
       …
       "operation": "analyze_function",
       "confidence": "observed",
       "authority": "shipped-artifact",
-      "analysis_profile_digest": "20565088524a2d0359b9b96f46ac48e679d774c7b0092c56abc06de8fdbec11c",
+      "analysis_profile_digest": "20565088…",
       "retention": "complete-record",
       "limitation_count": 10,
       "native_dossier": {
@@ -73,7 +73,7 @@ note: The subject and provider of the first record and the seven other records a
         …
 ```
 
-The eight rows name four `analyze_function` dossiers, `_percent_change`, `_grade`, `_total`, and `_grade_label`, and one record each for `list_procedures`, `procedure_assembly`, `xrefs`, and `list_strings`. Every row carries the same profile digest, `20565088524a2d0359`, because one Ghidra session produced them all. The O2 bundle has two rows, the `_total` and `_percent_change` dossiers of the -O2 build (`11-inspect-evidence-bundle-O2.json`). The contract names the filters a summary accepts: "Optional `filters` match exact `evidence_id`, `operation`, `target_sha256`, `analysis_profile_digest` or `procedure_address`." {{mcp mcp-contracts.md:314-315}}
+The eight rows name four `analyze_function` dossiers, `_percent_change`, `_grade`, `_total`, and `_grade_label`, and one record each for `list_procedures`, `procedure_assembly`, `xrefs`, and `list_strings`. Every row carries the same profile digest, `20565088…`, because one Ghidra session produced them all. The O2 bundle has two rows, the `_total` and `_percent_change` dossiers of the -O2 build (`11-inspect-evidence-bundle-O2.json`). The contract names the filters a summary accepts: "Optional `filters` match exact `evidence_id`, `operation`, `target_sha256`, `analysis_profile_digest` or `procedure_address`." {{mcp mcp-contracts.md:314-315}}
 
 ## evidence-export and evidence-import on the CLI
 
@@ -85,13 +85,13 @@ source: capture/out/12-evidence-export.txt
 lang: text
 note: Nothing is cut.
 ---
-28b743a3ea4476998fb4a865e48232ec3127d28ca762f6b20de91230e4262933  171730  export_evidence_bundle over MCP, out/11-bundle-O1.json
-9659bb79c304ea69520383c719e0e3464f9003363f8c8b3ac197ef3c20b38e15  171729  evidence-export over the CLI, $WORK/canonical-O1.json
+28b743a3…  171730  export_evidence_bundle over MCP, out/11-bundle-O1.json
+9659bb79…  171729  evidence-export over the CLI, $WORK/canonical-O1.json
 same bytes as the MCP export: no
 same JSON content as the MCP export: yes
 ```
 
-The one byte of difference is the newline the kit appended to its copy. Strip it, and the copy has 171,729 bytes and the digest `9659bb79c304ea69`, the digest of the CLI file. The MCP server and the CLI write the same canonical bytes for the same records, which is what the thesis of this section promised.
+The one byte of difference is the newline the kit appended to its copy. Strip it, and the copy has 171,729 bytes and the digest `9659bb79`, the digest of the CLI file. The MCP server and the CLI write the same canonical bytes for the same records, which is what the thesis of this section promised.
 
 `rea evidence-import PATH` validates a bundle and reports its counts. On the CLI there is no session, so `imported` and `total` are both the number of records in the file: `{"imported": 8, "unknowns_added": 0, "total": 8}` in `13-evidence-import.json`. The CLI documentation draws the line: "Separate CLI calls consume full saved records." {{cli cli.md:158}}
 

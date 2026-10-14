@@ -29,11 +29,11 @@ lang: json
 note: The substeps array and everything after it are cut. The capture kit masks local_path.
 ---
 {
-  "evidence_id": "ev_768902c59a4a95715d0e059a9f10a7f1760bca27983089ca26d9a704a75f9fb1",
+  "evidence_id": "ev_768902c5…",
   "subject": {
     "name": "ledger-arm64-O1",
     "digest": {
-      "sha256": "01b5d08b08fb94678be5919d0e753d44b505a53107c95b94634f0e5d41c9e375"
+      "sha256": "01b5d08b…"
     },
     "format": "mach-o",
     "architecture": null,
@@ -66,18 +66,18 @@ lang: json
 note: Cut from the inventory substep to the manifest counts, the one node, and the one occurrence.
 ---
 "manifest": {
-  "manifest_id": "agm_8e2e5c4c5d396d3f2e72bec33b13243b76697c2cc4b467ed1954d7955189df0a",
+  "manifest_id": "agm_8e2e5c4c…",
   …
-  "graph_sha256": "b6c8ab6f43371ec7e8df0b5dfbddef8e15d9cdeb72508340638fa9404b09f4af",
+  "graph_sha256": "b6c8ab6f…",
   "node_count": 1,
   "occurrence_count": 1,
   "edge_count": 0
 },
 "nodes": [
   {
-    "artifact_id": "art_8906b5a777ab042d64b1b558797274ee4d1736bf46693b809657ebbcb5f382f7",
+    "artifact_id": "art_8906b5a7…",
     "format": "mach-o",
-    "sha256": "01b5d08b08fb94678be5919d0e753d44b505a53107c95b94634f0e5d41c9e375",
+    "sha256": "01b5d08b…",
     "size": 33872,
     …
     "content_state": "materialized",
@@ -86,7 +86,7 @@ note: Cut from the inventory substep to the manifest counts, the one node, and t
 ],
 "occurrences": [
   {
-    "occurrence_id": "occ_35a9bb4853a6d20b97caaa4a679da98a2732cd718e0d1fe9b294cda8f9b61ba1",
+    "occurrence_id": "occ_35a9bb48…",
     …
     "logical_path": ".",
     "entry_kind": "file",
@@ -114,7 +114,7 @@ note: The hypotheses and contradictions arrays are empty and are cut with the co
 ---
 "unexplored_branches": [
   {
-    "branch_id": "aib_a0c2bfaf2712f080d4e4374df38de2930f6b44115542efe095111da5435be51f",
+    "branch_id": "aib_a0c2bfaf…",
     "reason": "format-specific-analysis-required",
     "detail": "open_binary was not run by provider-neutral artifact inspection.",
     "next_probe": {

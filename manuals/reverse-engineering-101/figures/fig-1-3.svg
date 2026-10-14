@@ -4,7 +4,7 @@
   <text x="20" y="18" font-size="11" letter-spacing="1.2" fill="var(--m-ink-mute, #6f6f6a)">ONE EVIDENCE RECORD</text>
   <text x="396" y="18" font-size="11" letter-spacing="1.2" fill="var(--m-ink-mute, #6f6f6a)">WHAT THE FIELD HOLDS</text>
   <rect x="20" y="26" width="360" height="28" fill="var(--m-teal-fill, #e1efee)" stroke="var(--m-teal-ink, #18696a)"/>
-  <text x="30" y="43.3" font-size="11" font-weight="700">Evidence ev_0000b698c9b0cfc4 for analyze_function</text>
+  <text x="30" y="43.3" font-size="11" font-weight="700">Evidence ev_0000b698 for analyze_function</text>
   <rect x="20" y="54" width="360" height="26" fill="var(--m-paper, #fafaf5)" stroke="var(--m-panel-edge, #e4e1d4)"/>
   <text x="30" y="71" font-size="12" fill="var(--m-ink-soft, #4a4a4a)">evidence_id</text>
   <text x="156" y="71" font-size="12">ev_ + 64 hex digits</text>
@@ -14,7 +14,7 @@
   <text x="30" y="97" font-size="12" fill="var(--m-ink-soft, #4a4a4a)">subject</text>
   <text x="156" y="97" font-size="12">ledger-arm64-O1, mach-o, arm64</text>
   <line x1="380" y1="93" x2="390" y2="93" stroke="var(--m-teal-ink, #18696a)" stroke-width="1"/>
-  <text x="396" y="97" font-size="11" class="m-serif" fill="var(--m-ink-soft, #4a4a4a)">sha256 01b5d08b08fb, local_path</text>
+  <text x="396" y="97" font-size="11" class="m-serif" fill="var(--m-ink-soft, #4a4a4a)">sha256 starts 01b5d08b, local_path</text>
   <rect x="20" y="106" width="360" height="26" fill="var(--m-paper, #fafaf5)" stroke="var(--m-panel-edge, #e4e1d4)"/>
   <text x="30" y="123" font-size="12" fill="var(--m-ink-soft, #4a4a4a)">provider</text>
   <text x="156" y="123" font-size="12">ghidra, Ghidra, 12.1.4</text>

@@ -16,7 +16,7 @@ The word covers three things in rea, and only one of them is a cache you can kee
 
 ## The query id
 
-**Query id:** `query_` followed by the SHA-256 of canonical JSON holding four things: the target, the binding, the operation, and the parameters. The target is the path-free identity, `sha256`, `kind`, `format`, and `architecture`. The binding is the provider and its analysis profile. For the capture that is the digest `01b5d08b08fb94678be5`, `executable`, `mach-o`, `arm64`, Ghidra `12.1.4`, and the profile below.
+**Query id:** `query_` followed by the SHA-256 of canonical JSON holding four things: the target, the binding, the operation, and the parameters. The target is the path-free identity, `sha256`, `kind`, `format`, and `architecture`. The binding is the provider and its analysis profile. For the capture that is the digest that starts `01b5d08b`, `executable`, `mach-o`, `arm64`, Ghidra `12.1.4`, and the profile below.
 
 ```listing
 title: the Ghidra analysis profile that every cache key carries
@@ -39,11 +39,11 @@ note: The profile as the binary_overview record carries it. Sixteen of the twent
     …
     "analyzer_preset": "ghidra-default"
   },
-  "digest": "20565088524a2d0359b9b96f46ac48e679d774c7b0092c56abc06de8fdbec11c"
+  "digest": "20565088…"
 },
 ```
 
-The parameters are version strings, one per observation contract that the Ghidra adapter makes. The digest is the SHA-256 of the canonical JSON of provider and parameters. A cache entry matches only when the binding's provider and digest equal the selected profile's. So a rea release that moves `function_references` from `-v2` to `-v3` changes the digest, and every entry made under the old digest stops matching. That is what exact means in the thesis of this section. It is also why all eight rows of the bundle summary carry the digest `20565088524a2d0359` ([export and import](#s-evidence-bundles-export-and-import)).
+The parameters are version strings, one per observation contract that the Ghidra adapter makes. The digest is the SHA-256 of the canonical JSON of provider and parameters. A cache entry matches only when the binding's provider and digest equal the selected profile's. So a rea release that moves `function_references` from `-v2` to `-v3` changes the digest, and every entry made under the old digest stops matching. That is what exact means in the thesis of this section. It is also why all eight rows of the bundle summary carry the digest `20565088…` ([export and import](#s-evidence-bundles-export-and-import)).
 
 ## Which calls the cache answers
 

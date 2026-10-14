@@ -20,8 +20,8 @@ note: One of the eight dimension objects. The counts are characters of provider 
               "left_count": 161,
               "right_count": 161,
               "evidence_links": [
-                "ev_0000b698c9b0cfc40a11bf8f609d4dd136c0fb468a551bf970d1521fbcb413d0",
-                "ev_b84b923e786e233da8b57ebed31f16db218648fa57595cd893e92c01caa5e71d"
+                "ev_0000b698…",
+                "ev_b84b923e…"
               ],
               "limitations": [
                 "Assembly is opaque provider text; relocation normalization is unavailable."
