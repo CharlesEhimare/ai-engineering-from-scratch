@@ -1,0 +1,172 @@
+{
+  "status": "unknown",
+  "left_bundle_sha256": "9659bb79c304ea69520383c719e0e3464f9003363f8c8b3ac197ef3c20b38e15",
+  "right_bundle_sha256": "b8f71cfee899b99bcd4e042942be22752039f574f00d32755383db9aaa60aad9",
+  "summary": {
+    "records_unchanged": 0,
+    "records_added": 0,
+    "records_removed": 0,
+    "records_changed": 0,
+    "unknowns_unchanged": 0,
+    "unknowns_added": 0,
+    "unknowns_removed": 0,
+    "unknowns_advanced": 0,
+    "unknowns_diverged": 0,
+    "unresolved": 10
+  },
+  "changes": [
+    {
+      "entity": "evidence",
+      "key": "ev_0000b698c9b0cfc40a11bf8f609d4dd136c0fb468a551bf970d1521fbcb413d0",
+      "classification": "unknown",
+      "conclusion_kind": "unresolved_branch",
+      "left_evidence_ids": [
+        "ev_0000b698c9b0cfc40a11bf8f609d4dd136c0fb468a551bf970d1521fbcb413d0"
+      ],
+      "right_evidence_ids": [],
+      "left_digest": "0000b698c9b0cfc40a11bf8f609d4dd136c0fb468a551bf970d1521fbcb413d0",
+      "right_digest": null,
+      "limitations": [
+        "EvidenceBundle has no inventory completeness marker; one-sided membership may reflect incomplete capture."
+      ]
+    },
+    {
+      "entity": "evidence",
+      "key": "ev_0f6b287a3f97cdcd15f0c227680aa018ad02797a45baf47caa3354b4b884f6fc",
+      "classification": "unknown",
+      "conclusion_kind": "unresolved_branch",
+      "left_evidence_ids": [
+        "ev_0f6b287a3f97cdcd15f0c227680aa018ad02797a45baf47caa3354b4b884f6fc"
+      ],
+      "right_evidence_ids": [],
+      "left_digest": "0f6b287a3f97cdcd15f0c227680aa018ad02797a45baf47caa3354b4b884f6fc",
+      "right_digest": null,
+      "limitations": [
+        "EvidenceBundle has no inventory completeness marker; one-sided membership may reflect incomplete capture."
+      ]
+    },
+    {
+      "entity": "evidence",
+      "key": "ev_4c2f020b378297935c737659e7abac4be91d6379a3b4445ab15af6872d8794cb",
+      "classification": "unknown",
+      "conclusion_kind": "unresolved_branch",
+      "left_evidence_ids": [
+        "ev_4c2f020b378297935c737659e7abac4be91d6379a3b4445ab15af6872d8794cb"
+      ],
+      "right_evidence_ids": [],
+      "left_digest": "4c2f020b378297935c737659e7abac4be91d6379a3b4445ab15af6872d8794cb",
+      "right_digest": null,
+      "limitations": [
+        "EvidenceBundle has no inventory completeness marker; one-sided membership may reflect incomplete capture."
+      ]
+    },
+    {
+      "entity": "evidence",
+      "key": "ev_6b95d417dd77d1a5f848f88cc7e1a84387e46443d50b9a29b53cbe10320bb0d8",
+      "classification": "unknown",
+      "conclusion_kind": "unresolved_branch",
+      "left_evidence_ids": [],
+      "right_evidence_ids": [
+        "ev_6b95d417dd77d1a5f848f88cc7e1a84387e46443d50b9a29b53cbe10320bb0d8"
+      ],
+      "left_digest": null,
+      "right_digest": "6b95d417dd77d1a5f848f88cc7e1a84387e46443d50b9a29b53cbe10320bb0d8",
+      "limitations": [
+        "EvidenceBundle has no inventory completeness marker; one-sided membership may reflect incomplete capture."
+      ]
+    },
+    {
+      "entity": "evidence",
+      "key": "ev_9101f891d736b174030fce6d536f11818faf528065d7604d0e58593365d7131f",
+      "classification": "unknown",
+      "conclusion_kind": "unresolved_branch",
+      "left_evidence_ids": [
+        "ev_9101f891d736b174030fce6d536f11818faf528065d7604d0e58593365d7131f"
+      ],
+      "right_evidence_ids": [],
+      "left_digest": "9101f891d736b174030fce6d536f11818faf528065d7604d0e58593365d7131f",
+      "right_digest": null,
+      "limitations": [
+        "EvidenceBundle has no inventory completeness marker; one-sided membership may reflect incomplete capture."
+      ]
+    },
+    {
+      "entity": "evidence",
+      "key": "ev_a6703a897e91942bc6e8e0ba17032d293e23f71c2bd830be711cf5fdafd57792",
+      "classification": "unknown",
+      "conclusion_kind": "unresolved_branch",
+      "left_evidence_ids": [
+        "ev_a6703a897e91942bc6e8e0ba17032d293e23f71c2bd830be711cf5fdafd57792"
+      ],
+      "right_evidence_ids": [],
+      "left_digest": "a6703a897e91942bc6e8e0ba17032d293e23f71c2bd830be711cf5fdafd57792",
+      "right_digest": null,
+      "limitations": [
+        "EvidenceBundle has no inventory completeness marker; one-sided membership may reflect incomplete capture."
+      ]
+    },
+    {
+      "entity": "evidence",
+      "key": "ev_b84b923e786e233da8b57ebed31f16db218648fa57595cd893e92c01caa5e71d",
+      "classification": "unknown",
+      "conclusion_kind": "unresolved_branch",
+      "left_evidence_ids": [],
+      "right_evidence_ids": [
+        "ev_b84b923e786e233da8b57ebed31f16db218648fa57595cd893e92c01caa5e71d"
+      ],
+      "left_digest": null,
+      "right_digest": "b84b923e786e233da8b57ebed31f16db218648fa57595cd893e92c01caa5e71d",
+      "limitations": [
+        "EvidenceBundle has no inventory completeness marker; one-sided membership may reflect incomplete capture."
+      ]
+    },
+    {
+      "entity": "evidence",
+      "key": "ev_b9de4066c547bced9d8639ffa4145f04b73cc974b00f6ee5e027c35473865d8c",
+      "classification": "unknown",
+      "conclusion_kind": "unresolved_branch",
+      "left_evidence_ids": [
+        "ev_b9de4066c547bced9d8639ffa4145f04b73cc974b00f6ee5e027c35473865d8c"
+      ],
+      "right_evidence_ids": [],
+      "left_digest": "b9de4066c547bced9d8639ffa4145f04b73cc974b00f6ee5e027c35473865d8c",
+      "right_digest": null,
+      "limitations": [
+        "EvidenceBundle has no inventory completeness marker; one-sided membership may reflect incomplete capture."
+      ]
+    },
+    {
+      "entity": "evidence",
+      "key": "ev_d3ea35a51f358cb7681bab1fb66ffe93b623bae8339f2cb09d4af2872611b9c0",
+      "classification": "unknown",
+      "conclusion_kind": "unresolved_branch",
+      "left_evidence_ids": [
+        "ev_d3ea35a51f358cb7681bab1fb66ffe93b623bae8339f2cb09d4af2872611b9c0"
+      ],
+      "right_evidence_ids": [],
+      "left_digest": "d3ea35a51f358cb7681bab1fb66ffe93b623bae8339f2cb09d4af2872611b9c0",
+      "right_digest": null,
+      "limitations": [
+        "EvidenceBundle has no inventory completeness marker; one-sided membership may reflect incomplete capture."
+      ]
+    },
+    {
+      "entity": "evidence",
+      "key": "ev_f543d5a23db9c44fbb7ec632e9f6c86844e2278ec871f713a421a28cfac9544f",
+      "classification": "unknown",
+      "conclusion_kind": "unresolved_branch",
+      "left_evidence_ids": [
+        "ev_f543d5a23db9c44fbb7ec632e9f6c86844e2278ec871f713a421a28cfac9544f"
+      ],
+      "right_evidence_ids": [],
+      "left_digest": "f543d5a23db9c44fbb7ec632e9f6c86844e2278ec871f713a421a28cfac9544f",
+      "right_digest": null,
+      "limitations": [
+        "EvidenceBundle has no inventory completeness marker; one-sided membership may reflect incomplete capture."
+      ]
+    }
+  ],
+  "limitations": [
+    "EvidenceBundle has no inventory completeness marker; one-sided membership remains unknown."
+  ]
+}

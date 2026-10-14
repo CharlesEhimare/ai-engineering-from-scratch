@@ -1,0 +1,47 @@
+{
+  "request": {
+    "jsonrpc": "2.0",
+    "id": 13,
+    "method": "tools/call",
+    "params": {
+      "name": "analyze_function",
+      "arguments": {
+        "procedure": "_nothing"
+      }
+    }
+  },
+  "response": {
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"error\":{\"code\":\"invalid_request\",\"category\":\"invalid_input\",\"message\":\"Analysis input is invalid. Check the arguments and try again.\",\"retryable\":true,\"remediation\":{\"action\":\"Correct the listed arguments and retry.\"},\"details\":{\"operation\":\"analyze_function\",\"issues\":[{\"path\":[],\"reason\":\"invalid_value\",\"message\":\"Unknown Ghidra procedure name or address: _nothing\"}]}}}"
+        }
+      ],
+      "isError": true
+    },
+    "jsonrpc": "2.0",
+    "id": 13
+  },
+  "decoded_text": {
+    "error": {
+      "code": "invalid_request",
+      "category": "invalid_input",
+      "message": "Analysis input is invalid. Check the arguments and try again.",
+      "retryable": true,
+      "remediation": {
+        "action": "Correct the listed arguments and retry."
+      },
+      "details": {
+        "operation": "analyze_function",
+        "issues": [
+          {
+            "path": [],
+            "reason": "invalid_value",
+            "message": "Unknown Ghidra procedure name or address: _nothing"
+          }
+        ]
+      }
+    }
+  }
+}
