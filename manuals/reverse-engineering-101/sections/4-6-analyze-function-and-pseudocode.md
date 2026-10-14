@@ -8,7 +8,7 @@ When you finish this section, you can read the fourteen facets of a dossier. You
 
 ## The dossier
 
-`rea function` is the CLI name of `analyze_function` (`src/cliCommandNames.ts:142`). The CLI run on `_grade` and the MCP call in the same session produced the same `evidence_id`, `ev_d3ea35a5` and 56 more digits. The id is a hash of the record's semantic content, and the file path and the display name are left out of it (`src/domain/evidence.ts:208-234`). [Section 5.1](#s-the-evidence-record) reads every field of the record. This section reads its `normalized_result`, which has fourteen facets.
+`rea function` is the CLI name of `analyze_function`. The CLI run on `_grade` and the MCP call in the same session produced the same `evidence_id`, `ev_d3ea35a5` and 56 more digits. The id is a hash of the record's semantic content, and the file path and the display name are left out of it. [Section 5.1](#s-the-evidence-record) reads every field of the record. This section reads its `normalized_result`, which has fourteen facets.
 
 ```listing
 title: the pseudocode, the blocks, and the signature facts of _grade
@@ -84,9 +84,9 @@ undefined4 _grade(int param_1)
 | `native_value_flow` | 14 operations, 12 def-use edges | high p-code, `truncated: false` |
 | `limitations` | 4 | the facet's own limits |
 
-**Dossier:** rea's name for the composed record of one function. The bridge builds it from five Ghidra sources: the FunctionManager, the Listing, the ReferenceManager, the BasicBlockModel, and the decompiler. The record-level limitation names all five (`src/ghidra/GhidraProviderCapabilities.ts:159`). The record carries ten limitations, the result four more, `native_api` three, and `native_value_flow` five. Read them once. They say in rea's words what this section shows with examples.
+**Dossier:** rea's name for the composed record of one function. The bridge builds it from five Ghidra sources: the FunctionManager, the Listing, the ReferenceManager, the BasicBlockModel, and the decompiler. The record-level limitation names all five. The record carries ten limitations, the result four more, `native_api` three, and `native_value_flow` five. Read them once. They say in rea's words what this section shows with examples.
 
-The signature facts are the first thing to read. `signature_source` is `default`, which means no analyzer or user set the prototype, and every parameter and the return value carry `confidence: "low"`. The bridge gives `medium` only when the source is `analysis` (`bridge/ghidra/ReaGhidraBridge.java:2864-2865`). `native_api.pseudocode.compilable` is `false`, and the third `native_api` limitation is written into the Java source itself (`bridge/ghidra/ReaGhidraBridge.java:1873`).
+The signature facts are the first thing to read. `signature_source` is `default`, which means no analyzer or user set the prototype, and every parameter and the return value carry `confidence: "low"`. The bridge gives `medium` only when the source is `analysis`. `native_api.pseudocode.compilable` is `false`, and the third `native_api` limitation is written into the Java source itself.
 
 ```figure
 id: fig-4-8
@@ -98,7 +98,7 @@ caption: Read top to bottom. The left column is the facet name, the middle colum
 
 ## procedure_pseudo_code: the text alone
 
-`rea decompile` is the CLI name of `procedure_pseudo_code` (`src/cliCommandNames.ts:141`). It returns the text and nothing else.
+`rea decompile` is the CLI name of `procedure_pseudo_code`. It returns the text and nothing else.
 
 ```listing
 title: the pseudocode of _total
@@ -144,7 +144,7 @@ int _total(int *param_1,uint param_2)
 }
 ```
 
-The bridge opens one `DecompInterface` per program with C output, the syntax tree, and jump loads on, and no instruction limit (`bridge/ghidra/ReaGhidraBridge.java:648-659`). Each call is `decompileFunction(function, 0, monitor)`, with no timeout, and an external or bodyless function returns `null` (`bridge/ghidra/ReaGhidraBridge.java:2868-2887`). The text is the `getC()` output of the result (`bridge/ghidra/ReaGhidraBridge.java:2890-2895`).
+The bridge opens one `DecompInterface` per program with C output, the syntax tree, and jump loads on, and no instruction limit. Each call is `decompileFunction(function, 0, monitor)`, with no timeout, and an external or bodyless function returns `null`. The text is the `getC()` output of the result.
 
 `_total` reads well. The `do` loop with `uVar2 - 1` is the rotated loop that `subs x9, x9, #0x1` and `b.ne` make in the assembly. The pointer type `int *param_1` follows from the load `ldr w10, [x0], #0x4`. The one open question is `uint param_2`. The source says `int count`. The instructions compare `w1` as signed once and then count it down in `x9`, so both types fit, and Ghidra picked one.
 
@@ -238,7 +238,7 @@ note: The request arguments, the error flag, and the decoded error. The text con
 }
 ```
 
-The bridge tried `_nothing` as a symbol name, then as an address, and failed with `not_found` (`bridge/ghidra/ReaGhidraBridge.java:1796-1797`). The client maps the remote codes `invalid_request`, `not_found`, and `ambiguous` to `AnalysisInputError` (`src/ghidra/GhidraProviderClient.ts:829-836`). That error projects to the code `invalid_request` (`src/domain/analysisErrorProjection.ts:188`). An error reaches the MCP client as text with `isError: true` and no result (`src/server/toolResult.ts:93-111`). The server log shows where the time went.
+The bridge tried `_nothing` as a symbol name, then as an address, and failed with `not_found`. The client maps the remote codes `invalid_request`, `not_found`, and `ambiguous` to `AnalysisInputError`. That error projects to the code `invalid_request`. An error reaches the MCP client as text with `isError: true` and no result. The server log shows where the time went.
 
 ```listing
 title: the failed call in the server log
@@ -263,4 +263,4 @@ Read the fourteen facets in this order. Start with `procedure` for the body and 
 - Expect `invalid_request` with `retryable: true` for an unknown name, then fix the name.
 ```
 
-Sources: capture/out/06-function-grade.json, capture/out/10-mcp-10-analyze-function-grade-O1.json, capture/out/07-decompile-total.json, capture/out/07-decompile-grade-x86_64-O1.json, capture/out/10-mcp-09-analyze-function-percent-change-O1.json, capture/out/10-mcp-11-analyze-function-total-O1.json, capture/out/10-mcp-12-analyze-function-grade-label-O1.json, capture/out/10-mcp-13-analyze-function-missing.json, capture/out/10-mcp-server.log, capture/fixtures/ledger.c, capture/fixtures/ledger-arm64-O1; rea 6.4.0 at a56f7bb: src/cliCommandNames.ts, src/domain/evidence.ts, src/ghidra/GhidraProviderCapabilities.ts, src/ghidra/GhidraProviderClient.ts, src/domain/analysisErrorProjection.ts, src/server/toolResult.ts, bridge/ghidra/ReaGhidraBridge.java; research/rea-tools.md section 2.2; research/rea-gaps.md items 8 and 9; research/rea-evidence-model.md section 1
+Sources: capture/out/06-function-grade.json, capture/out/10-mcp-10-analyze-function-grade-O1.json, capture/out/07-decompile-total.json, capture/out/07-decompile-grade-x86_64-O1.json, capture/out/10-mcp-09-analyze-function-percent-change-O1.json, capture/out/10-mcp-11-analyze-function-total-O1.json, capture/out/10-mcp-12-analyze-function-grade-label-O1.json, capture/out/10-mcp-13-analyze-function-missing.json, capture/out/10-mcp-server.log, capture/fixtures/ledger.c, capture/fixtures/ledger-arm64-O1; rea 6.4.0 at a56f7bb: src/cliCommandNames.ts, src/domain/evidence.ts, src/ghidra/GhidraProviderCapabilities.ts, src/ghidra/GhidraProviderClient.ts, src/domain/analysisErrorProjection.ts, src/server/toolResult.ts, bridge/ghidra/ReaGhidraBridge.java; research/rea-tools.md section 2.2; research/rea-gaps.md items 8 and 9; research/rea-evidence-model.md section 1 rea 6.4.0 source at tag a56f7bb: `src/cliCommandNames.ts`, `src/domain/evidence.ts`, `src/ghidra/GhidraProviderCapabilities.ts`, `bridge/ghidra/ReaGhidraBridge.java`, `src/ghidra/GhidraProviderClient.ts`, `src/domain/analysisErrorProjection.ts`, `src/server/toolResult.ts`.

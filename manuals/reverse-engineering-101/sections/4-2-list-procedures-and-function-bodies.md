@@ -57,7 +57,7 @@ note: Cut from normalized_result: one external function, two internal functions,
 ],
 ```
 
-The bridge builds the list once per program from two Ghidra iterators, the internal functions and the external functions (`bridge/ghidra/ReaGhidraBridge.java:1687-1696`). It drops duplicates by entry address. For each function it records `external`, `thunk`, and the resolved `thunk_target` when there is one (`bridge/ghidra/ReaGhidraBridge.java:1699-1728`). The value is the qualified symbol name, which is why the external entries carry their library path. The record's limitation states the rule: "External functions and local thunks are distinct; procedure metadata identifies both and preserves a thunk target when Ghidra resolves one." (`src/ghidra/GhidraProviderCapabilities.ts:97`).
+The bridge builds the list once per program from two Ghidra iterators, the internal functions and the external functions. It drops duplicates by entry address. For each function it records `external`, `thunk`, and the resolved `thunk_target` when there is one. The value is the qualified symbol name, which is why the external entries carry their library path. The record's limitation states the rule: "External functions and local thunks are distinct; procedure metadata identifies both and preserves a thunk target when Ghidra resolves one.".
 
 | Address | Name | Kind | Where it comes from |
 |---|---|---|---|
@@ -134,7 +134,7 @@ source: native §Exact CLI selectors
 "an exact database symbol name takes precedence over a bare hexadecimal address"
 ```
 
-A string with a `0x` prefix or an address-space prefix is an address. Any other string is tried as a symbol name first. A name that matches more than one function fails with `ambiguous` and the list of entry addresses (`bridge/ghidra/ReaGhidraBridge.java:1788-1792`). A name that matches nothing fails with `not_found` (`bridge/ghidra/ReaGhidraBridge.java:1796-1797`), which [section 4.6](#s-analyze-function-and-pseudocode) shows as the MCP error `invalid_request`.
+A string with a `0x` prefix or an address-space prefix is an address. Any other string is tried as a symbol name first. A name that matches more than one function fails with `ambiguous` and the list of entry addresses. A name that matches nothing fails with `not_found`, which [section 4.6](#s-analyze-function-and-pseudocode) shows as the MCP error `invalid_request`.
 
 ```takeaways
 - Count procedures as internal, thunk, and external before you compare two builds.
@@ -143,4 +143,4 @@ A string with a `0x` prefix or an address-space prefix is an address. Any other 
 - Treat `end` in `body.ranges` as inclusive and every other `end` as exclusive.
 ```
 
-Sources: capture/out/10-mcp-05-list-procedures.json, capture/out/06-function-grade.json, capture/out/10-mcp-09-analyze-function-percent-change-O1.json, capture/out/10-mcp-11-analyze-function-total-O1.json, capture/out/10-mcp-12-analyze-function-grade-label-O1.json, capture/out/04-inspect-macho.json; rea 6.4.0 at a56f7bb: bridge/ghidra/ReaGhidraBridge.java, src/ghidra/GhidraProviderCapabilities.ts; research/sources/rea/docs-native-investigation.md; research/rea-tools.md sections 2.1 and 2.2; research/rea-gaps.md item 13
+Sources: capture/out/10-mcp-05-list-procedures.json, capture/out/06-function-grade.json, capture/out/10-mcp-09-analyze-function-percent-change-O1.json, capture/out/10-mcp-11-analyze-function-total-O1.json, capture/out/10-mcp-12-analyze-function-grade-label-O1.json, capture/out/04-inspect-macho.json; rea 6.4.0 at a56f7bb: bridge/ghidra/ReaGhidraBridge.java, src/ghidra/GhidraProviderCapabilities.ts; research/sources/rea/docs-native-investigation.md; research/rea-tools.md sections 2.1 and 2.2; research/rea-gaps.md item 13 rea 6.4.0 source at tag a56f7bb: `bridge/ghidra/ReaGhidraBridge.java`, `src/ghidra/GhidraProviderCapabilities.ts`.

@@ -18,7 +18,7 @@ $ rea inspect-artifact fixtures/ledger-arm64-O1 --format json
 [exit 0] (…) -> 03-inspect-artifact.json
 ```
 
-The record comes from the provider `rea-artifact-graph`, named "REA safe artifact graph provider", version 1 (`src/application/InvestigationProviders.ts:27-31`). No analysis engine runs. The tool opens the file, hashes it, names the format from the header, and builds an inventory of the file as a container.
+The record comes from the provider `rea-artifact-graph`, named "REA safe artifact graph provider", version 1. No analysis engine runs. The tool opens the file, hashes it, names the format from the header, and builds an inventory of the file as a container.
 
 **Artifact graph:** the inventory rea builds of one file and the files inside it. A node is one distinct content, identified by its SHA-256. An occurrence is one place where that content appears, with a logical path. An edge joins a container to a member.
 
@@ -135,7 +135,7 @@ note: The hypotheses and contradictions arrays are empty and are cut with the co
 ],
 ```
 
-rea builds one unexplored branch for every next probe it lists, with the reason `format-specific-analysis-required` (`src/domain/artifactInspection.ts:333-340`). The second limitation is a constant in the same file (`src/domain/artifactInspection.ts:179`). The record is `observed` with authority `shipped-artifact`: rea read the bytes of the file you gave it and derived nothing from another record. The `coverage` block reports `complete-within-substeps` with one substep, one observation, one branch, one probe, and nothing omitted.
+rea builds one unexplored branch for every next probe it lists, with the reason `format-specific-analysis-required`. The second limitation is a constant in the same file. The record is `observed` with authority `shipped-artifact`: rea read the bytes of the file you gave it and derived nothing from another record. The `coverage` block reports `complete-within-substeps` with one substep, one observation, one branch, one probe, and nothing omitted.
 
 ```figure
 id: fig-3-1
@@ -156,4 +156,4 @@ The record is not a format parse. It holds no load commands, no sections, no sym
 - Carry the subject `sha256` into every later record about the same file.
 ```
 
-Sources: capture/out/00-commands.txt, capture/out/00-fixtures.txt, capture/out/03-inspect-artifact.json; rea 6.4.0 at a56f7bb: src/application/InvestigationProviders.ts, src/domain/artifactInspection.ts; research/rea-tools.md section 7, research/rea-evidence-model.md section 1
+Sources: capture/out/00-commands.txt, capture/out/00-fixtures.txt, capture/out/03-inspect-artifact.json; rea 6.4.0 at a56f7bb: src/application/InvestigationProviders.ts, src/domain/artifactInspection.ts; research/rea-tools.md section 7, research/rea-evidence-model.md section 1 rea 6.4.0 source at tag a56f7bb: `src/application/InvestigationProviders.ts`, `src/domain/artifactInspection.ts`.

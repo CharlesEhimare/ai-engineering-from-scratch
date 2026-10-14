@@ -8,7 +8,7 @@ The capture kit ran that harness over `ledger-x86_64-O1.o` and recorded four fil
 
 ## What compare_functions can see
 
-`compare_functions` compares two `analyze_function` records in eight dimensions: `identity`, `pseudocode`, `assembly`, `comments`, `calls`, `references`, `strings_names`, and `cfg` (capture/out/10-mcp-20-compare-functions-percent-change.json). The pseudocode and assembly dimensions are a bounded line diff of two strings (`src/domain/functionComparisonDimensions.ts:80-93`). The status is `unknown` when the diff exceeds 100 ms or 10,000 edits. The assembly dimension carries one fixed limitation:
+`compare_functions` compares two `analyze_function` records in eight dimensions: `identity`, `pseudocode`, `assembly`, `comments`, `calls`, `references`, `strings_names`, and `cfg` (capture/out/10-mcp-20-compare-functions-percent-change.json). The pseudocode and assembly dimensions are a bounded line diff of two strings. The status is `unknown` when the diff exceeds 100 ms or 10,000 edits. The assembly dimension carries one fixed limitation:
 
 ```listing
 title: the assembly dimension of the percent_change comparison
@@ -250,4 +250,4 @@ The lesson adds a third source for the constant check. The rea evidence pages de
 - Record the host and the compiler with every proof, because the trap cell and the bytes depend on both.
 ```
 
-Sources: capture/out/17-harness-grid.json, 17-harness-execute-plausible.json, 17-harness-execute-equal.json, 17-harness-bytes.json, 17-harness.txt, 10-mcp-20-compare-functions-percent-change.json, 10-mcp-21-compare-functions-total.json, 00-versions.txt; capture/README.md; phases/13-tools-and-protocols/36-rebuild-and-prove-equal/code/main.py, driver.c, fixtures/candidates/; rea at a56f7bb: src/domain/functionComparisonDimensions.ts; research/rea-reconstruction.md, research/landscape-ml-research.md (Liu, Raff, Micinski, arXiv 2609.05370, 2026), research/specs-isa.md; Intel 64 and IA-32 Architectures Software Developer's Manual, Volume 2, IDIV; Arm Architecture Reference Manual for A-profile, DDI 0487, SDIV
+Sources: capture/out/17-harness-grid.json, 17-harness-execute-plausible.json, 17-harness-execute-equal.json, 17-harness-bytes.json, 17-harness.txt, 10-mcp-20-compare-functions-percent-change.json, 10-mcp-21-compare-functions-total.json, 00-versions.txt; capture/README.md; phases/13-tools-and-protocols/36-rebuild-and-prove-equal/code/main.py, driver.c, fixtures/candidates/; rea at a56f7bb: src/domain/functionComparisonDimensions.ts; research/rea-reconstruction.md, research/landscape-ml-research.md (Liu, Raff, Micinski, arXiv 2609.05370, 2026), research/specs-isa.md; Intel 64 and IA-32 Architectures Software Developer's Manual, Volume 2, IDIV; Arm Architecture Reference Manual for A-profile, DDI 0487, SDIV rea 6.4.0 source at tag a56f7bb: `src/domain/functionComparisonDimensions.ts`.

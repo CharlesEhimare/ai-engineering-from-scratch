@@ -76,9 +76,9 @@ The ELF rule has the same shape. For a loadable segment it is `offset = address 
 
 ## What Ghidra does instead
 
-The bridge does not compute. `addressToFileOffset` asks Ghidra for the memory block at the address and requires an initialized block (`bridge/ghidra/ReaGhidraBridge.java:624-631`). Otherwise it fails with `invalid_request` and the message "Address has no initialized file-backed memory". It then walks the block's source mappings and keeps the `FileBytes` offset of the one that contains the address. It requires exactly one such mapping (`bridge/ghidra/ReaGhidraBridge.java:632-641`).
+The bridge does not compute. `addressToFileOffset` asks Ghidra for the memory block at the address and requires an initialized block. Otherwise it fails with `invalid_request` and the message "Address has no initialized file-backed memory". It then walks the block's source mappings and keeps the `FileBytes` offset of the one that contains the address. It requires exactly one such mapping.
 
-The reply carries only `address` and `file_offset` (`bridge/ghidra/ReaGhidraBridge.java:642-645`). The output schema of rea also allows `provider_file_offset`, `image_base_file_offset`, and `source_path` (`src/contracts/toolOutputSchemaGroups.ts:136-165`), and the Ghidra provider at 6.4.0 leaves them out.
+The reply carries only `address` and `file_offset`. The output schema of rea also allows `provider_file_offset`, `image_base_file_offset`, and `source_path`, and the Ghidra provider at 6.4.0 leaves them out.
 
 Three addresses show the three outcomes. The capture ran only the first row. The other two follow from the bridge code above.
 
@@ -97,4 +97,4 @@ This is why the limitation says the offsets are not virtual-address arithmetic. 
 - Quote the file offset when you point another person at bytes in a hex viewer.
 ```
 
-Sources: capture/out/00-commands.txt, capture/out/04-inspect-macho.json, capture/out/08-address-to-file-offset.json, capture/fixtures/ledger-arm64-O1; rea 6.4.0 at a56f7bb: bridge/ghidra/ReaGhidraBridge.java, src/contracts/toolOutputSchemaGroups.ts; research/specs-formats.md sections 1 and 4; research/rea-tools.md section 2.1
+Sources: capture/out/00-commands.txt, capture/out/04-inspect-macho.json, capture/out/08-address-to-file-offset.json, capture/fixtures/ledger-arm64-O1; rea 6.4.0 at a56f7bb: bridge/ghidra/ReaGhidraBridge.java, src/contracts/toolOutputSchemaGroups.ts; research/specs-formats.md sections 1 and 4; research/rea-tools.md section 2.1 rea 6.4.0 source at tag a56f7bb: `bridge/ghidra/ReaGhidraBridge.java`, `src/contracts/toolOutputSchemaGroups.ts`.

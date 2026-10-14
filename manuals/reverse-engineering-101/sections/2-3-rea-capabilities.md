@@ -8,7 +8,7 @@ When you finish this section, you can read a capability record, name its seven e
 
 ## The command and its record
 
-`capabilities` and `providers` are registered together, and `capabilities` is described as "List provider capabilities and side effects" (`src/cli/utilityCommands.ts:126-141`). Both print the session status, the same object that `binary_session` returns over MCP (`src/application/binary/BinarySessionStatus.ts:30-99`). With no target open it starts `open: false`:
+`capabilities` and `providers` are registered together, and `capabilities` is described as "List provider capabilities and side effects". Both print the session status, the same object that `binary_session` returns over MCP. With no target open it starts `open: false`:
 
 ```listing
 title: the head of the status record
@@ -52,9 +52,9 @@ note: Cut to the first target-free capability and the first fields of the ghidra
 …
 ```
 
-The record has eight top-level fields in the capture: `open`, `capabilities`, `analysis_provider_binding`, `analysis_provider_candidates`, `analysis_run`, `analysis_activity`, `provider_operation_health`, and `server_identity`. `capabilities` holds the 18 operations that need no bound provider, such as `inspect_artifact`, `inspect_macho`, and the managed .NET readers. `analysis_provider_candidates` holds the three deep providers with their availability and their own operation lists. `analysis_provider_binding` is `null` because no target is open, and every candidate reports `target_support.status: "unknown"` with the reason `No target is open.`.
+The record has eight top-level fields in the capture: `open`, `capabilities`, `analysis_provider_binding`, `analysis_provider_candidates`, `analysis_run`, `analysis_activity`, `provider_operation_health`, and `server_identity`. `capabilities` holds the 18 operations that need no bound provider, such as `inspect_artifact`, `inspect_macho`, and the managed.NET readers. `analysis_provider_candidates` holds the three deep providers with their availability and their own operation lists. `analysis_provider_binding` is `null` because no target is open, and every candidate reports `target_support.status: "unknown"` with the reason `No target is open.`.
 
-**Capability:** one operation with its `available` flag, seven `effects` booleans, and a list of `limitations` (`src/contracts/toolOutputSchemaPrimitives.ts:79-99`). When the operation is not available, `reason` and `availability_code` say why. The session projects each provider's internal descriptor into this shape, so the field names are the same for every provider (`src/application/binary/BinarySessionStatus.ts:190-206`). [Figure](#fig-2-3) shows one.
+**Capability:** one operation with its `available` flag, seven `effects` booleans, and a list of `limitations`. When the operation is not available, `reason` and `availability_code` say why. The session projects each provider's internal descriptor into this shape, so the field names are the same for every provider. [Figure](#fig-2-3) shows one.
 
 ```figure
 id: fig-2-3
@@ -130,7 +130,7 @@ Then each operation adds its own, and these are the sentences to read before you
 
 ## A second vocabulary in server_identity
 
-The same record ends with `server_identity`, and its `catalog.tools` entries describe the 170 MCP tools in another vocabulary (capture/out/02-capabilities.json, `src/contracts/toolEffects.ts:1-20`):
+The same record ends with `server_identity`, and its `catalog.tools` entries describe the 170 MCP tools in another vocabulary:
 
 ```listing
 title: the catalog entry for xrefs
@@ -169,4 +169,4 @@ The catalog describes the MCP tool, not the provider operation. `xrefs` has `mut
 - Read each operation's `limitations` before you read an empty result as absence.
 ```
 
-Sources: cli Choose a provider (research/sources/rea/docs-cli.md); design Define the contract (research/sources/rea/docs-tool-design.md); research/rea-architecture.md; research/rea-tools.md; rea at a56f7bb: src/cli/utilityCommands.ts, src/application/binary/BinarySessionStatus.ts, src/contracts/toolOutputSchemaPrimitives.ts, src/contracts/toolEffects.ts; capture/out/02-capabilities.json
+Sources: cli Choose a provider (research/sources/rea/docs-cli.md); design Define the contract (research/sources/rea/docs-tool-design.md); research/rea-architecture.md; research/rea-tools.md; rea at a56f7bb: src/cli/utilityCommands.ts, src/application/binary/BinarySessionStatus.ts, src/contracts/toolOutputSchemaPrimitives.ts, src/contracts/toolEffects.ts; capture/out/02-capabilities.json rea 6.4.0 source at tag a56f7bb: `src/cli/utilityCommands.ts`, `src/application/binary/BinarySessionStatus.ts`, `src/contracts/toolOutputSchemaPrimitives.ts`.

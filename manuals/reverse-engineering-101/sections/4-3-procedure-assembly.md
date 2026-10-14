@@ -22,7 +22,7 @@ note: The request arguments and the start of the result. The result is one strin
 "normalized_result": "0x100000518: mov w8, #0x6667\n0x10000051c: movk w8, #0x6666, LSL #16\n…
 ```
 
-The bridge resolves the procedure, scans its instructions with no limit, renders each one as text, and attaches any no-return call warnings (`bridge/ghidra/ReaGhidraBridge.java:674-683`). The record carries the limitation "Assembly is Ghidra Listing text and does not claim textual equivalence with Hopper output." (`src/ghidra/GhidraProviderCapabilities.ts:134`). The text is Ghidra's rendering, so register names, immediates, and spacing follow Ghidra, not clang or `llvm-objdump`.
+The bridge resolves the procedure, scans its instructions with no limit, renders each one as text, and attaches any no-return call warnings. The record carries the limitation "Assembly is Ghidra Listing text and does not claim textual equivalence with Hopper output.". The text is Ghidra's rendering, so register names, immediates, and spacing follow Ghidra, not clang or `llvm-objdump`.
 
 The dossier of [section 4.6](#s-analyze-function-and-pseudocode) carries the same lines as an array, which is easier to read.
 
@@ -112,4 +112,4 @@ Fourteen instructions, the same shape. The multiply is one instruction, `IMUL RA
 - Check `raw_result.limitations` for a terminal call before you trust the body size.
 ```
 
-Sources: capture/out/10-mcp-06-procedure-assembly-grade.json, capture/out/06-function-grade.json, capture/out/06-function-grade-x86_64-O1.json, capture/out/04-inspect-macho.json, capture/fixtures/ledger-arm64-O1, capture/fixtures/ledger.c; rea 6.4.0 at a56f7bb: bridge/ghidra/ReaGhidraBridge.java, src/ghidra/GhidraProviderCapabilities.ts; research/sources/rea/docs-ghidra-provider.md; research/specs-isa.md; research/rea-tools.md section 2.2
+Sources: capture/out/10-mcp-06-procedure-assembly-grade.json, capture/out/06-function-grade.json, capture/out/06-function-grade-x86_64-O1.json, capture/out/04-inspect-macho.json, capture/fixtures/ledger-arm64-O1, capture/fixtures/ledger.c; rea 6.4.0 at a56f7bb: bridge/ghidra/ReaGhidraBridge.java, src/ghidra/GhidraProviderCapabilities.ts; research/sources/rea/docs-ghidra-provider.md; research/specs-isa.md; research/rea-tools.md section 2.2 rea 6.4.0 source at tag a56f7bb: `bridge/ghidra/ReaGhidraBridge.java`, `src/ghidra/GhidraProviderCapabilities.ts`.

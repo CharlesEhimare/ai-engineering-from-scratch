@@ -2,7 +2,7 @@
 
 > Every rea command and MCP tool the captures ran, with what it answers, the capture file that holds its output, and the section that explains it.
 
-rea 6.4.0 has 127 CLI commands and 170 MCP tools, as `binary_session` reports in its catalog counts (capture/out/10-mcp-04-binary-session.json). The capture kit ran 16 commands and 13 tools, plus the two MCP methods that every session starts with. CLI names join words with `-` and MCP names with `_`. Three native commands map to tools with other names (`src/cliCommandNames.ts:139-149`): `function` calls `analyze_function`, `decompile` calls `procedure_pseudo_code`, and `analyze` calls `binary_overview`. The capture passed `--format json` to every command and `--filter-output` with a key list where a record was too large to keep whole (capture/out/00-commands.txt).
+rea 6.4.0 has 127 CLI commands and 170 MCP tools, as `binary_session` reports in its catalog counts (capture/out/10-mcp-04-binary-session.json). The capture kit ran 16 commands and 13 tools, plus the two MCP methods that every session starts with. CLI names join words with `-` and MCP names with `_`. Three native commands map to tools with other names: `function` calls `analyze_function`, `decompile` calls `procedure_pseudo_code`, and `analyze` calls `binary_overview`. The capture passed `--format json` to every command and `--filter-output` with a key list where a record was too large to keep whole (capture/out/00-commands.txt).
 
 ## CLI commands
 
@@ -17,7 +17,7 @@ rea 6.4.0 has 127 CLI commands and 170 MCP tools, as `binary_session` reports in
 | `rea function <path> <name> --provider ghidra` | the `analyze_function` dossier of one procedure | `06-function-*.json` | [4.6](#s-analyze-function-and-pseudocode) |
 | `rea decompile <path> <name> --provider ghidra` | the `procedure_pseudo_code` of one procedure | `07-decompile-*.json` | [4.6](#s-analyze-function-and-pseudocode) |
 | `rea address-to-file-offset <path> <address> --provider ghidra` | the file offset of one virtual address | `08-address-to-file-offset.json` | [3.3](#s-address-to-file-offset) |
-| `rea inspect-evidence-bundle '{"path": ..., "detail": "summary"}'` | one row per record of a bundle, without the payloads | `11-inspect-evidence-bundle-*.json` | [5.4](#s-evidence-bundles-export-and-import) |
+| `rea inspect-evidence-bundle '{"path":..., "detail": "summary"}'` | one row per record of a bundle, without the payloads | `11-inspect-evidence-bundle-*.json` | [5.4](#s-evidence-bundles-export-and-import) |
 | `rea evidence-export <bundle> <out>` | a canonical copy of a bundle, keys sorted | `12-evidence-export.json`, `12-evidence-export.txt` | [5.4](#s-evidence-bundles-export-and-import) |
 | `rea evidence-import <bundle>` | validation of every record id and manifest in a bundle | `13-evidence-import.json` | [5.4](#s-evidence-bundles-export-and-import) |
 | `rea compare <left> <right>` | the two bundles by record membership and unknown revisions | `14-compare-bundles.json` | [5.5](#s-compare-and-compare-functions) |
@@ -48,15 +48,15 @@ The CLI documents its exit status {{cli Output and exit status}}. It is `0` when
 | `close_binary` | `null`, after the provider and the ephemeral project are gone | destructive, not idempotent | none | `10-mcp-15`, `10-mcp-25` | [4.1](#s-open-binary-and-the-headless-bridge) |
 | `inspect_wasm_artifact` | nothing in 6.4.0, the SDK answers JSON-RPC error `-32602` | | | `10-mcp-24-inspect-wasm-artifact.json` | [6.2](#s-wasm-in-rea-6-4-0) |
 
-The hints column reads the four annotations of each tool in `tools/list`: `readOnlyHint`, `destructiveHint`, `idempotentHint`, and `openWorldHint`. An empty cell means read-only false, destructive false, idempotent true, and open world false, which is the shape of most analysis tools. "None" in the CLI column means the tool is one of the 53 that `src/cliCommandNames.ts:152-206` lists without a command.
+The hints column reads the four annotations of each tool in `tools/list`: `readOnlyHint`, `destructiveHint`, `idempotentHint`, and `openWorldHint`. An empty cell means read-only false, destructive false, idempotent true, and open world false, which is the shape of most analysis tools. "None" in the CLI column means the tool is one of the 53 that have no CLI command.
 
 ## Environment variables the capture set
 
-| Variable | Effect at 6.4.0 | Source |
+| Variable | Effect at 6.4.0 | Documented in |
 |---|---|---|
-| `GHIDRA_INSTALL_DIR` | the Ghidra installation, an absolute path | `src/config/environment.ts:24-28` |
-| `JAVA_HOME` | the JDK, an absolute path | `src/config/environment.ts:29-33` |
-| `REA_GHIDRA_STARTUP_TIMEOUT_MS` | the startup deadline, 330,000 ms by default | `src/config/environment.ts:39`, `src/config/ghidraStartupTimeout.ts:4` |
+| `GHIDRA_INSTALL_DIR` | the Ghidra installation, an absolute path | {{install Ghidra}} |
+| `JAVA_HOME` | the JDK, an absolute path | {{install Ghidra}} |
+| `REA_GHIDRA_STARTUP_TIMEOUT_MS` | the startup deadline, 330,000 ms by default | {{mcp Ghidra first-query deadlines and recovery}} |
 | `REA_ANALYSIS_PROVIDER` | the standing provider choice that `--provider` and `provider_id` override | {{cli Choose a provider}} |
 | `REA_MCP_INPUT_SCHEMA_PROFILE` | `compact` renders every advertised input schema within 13,312 bytes | {{mcp Compact input schema profile}} |
 | `REA_MCP_MAX_RESPONSE_BYTES` | the response budget, at least 10,485,760, read at startup | {{mcp Tool results}} |
@@ -64,4 +64,4 @@ The hints column reads the four annotations of each tool in `tools/list`: `readO
 
 The capture kit also removed `PWD` and `JAVA_TOOL_OPTIONS` from the environment of every rea process (capture/README.md). The paths in the records and the Java launch then stayed the same from run to run.
 
-Sources: capture/out/00-commands.txt, 10-mcp-session.txt, 10-mcp-02-tools-list.json, 10-mcp-04-binary-session.json, 04-inspect-binary-layout.json, 16-inspect-wasm-artifact.json, 10-mcp-24-inspect-wasm-artifact.json; capture/README.md; research/sources/rea/docs-cli.md (Native analysis, Choose a provider, Import, export and compare Evidence, Output and exit status), docs-mcp-contracts.md (Compact input schema profile, Tool results); rea at a56f7bb: src/cliCommandNames.ts, src/config/environment.ts, src/config/ghidraStartupTimeout.ts; research/rea-tools.md, research/rea-640-repin.md
+Sources: capture/out/00-commands.txt, 10-mcp-session.txt, 10-mcp-02-tools-list.json, 10-mcp-04-binary-session.json, 04-inspect-binary-layout.json, 16-inspect-wasm-artifact.json, 10-mcp-24-inspect-wasm-artifact.json; capture/README.md; research/sources/rea/docs-cli.md (Native analysis, Choose a provider, Import, export and compare Evidence, Output and exit status), docs-mcp-contracts.md (Compact input schema profile, Tool results); rea at a56f7bb: src/cliCommandNames.ts, src/config/environment.ts, src/config/ghidraStartupTimeout.ts; research/rea-tools.md, research/rea-640-repin.md rea 6.4.0 source at tag a56f7bb: `src/cliCommandNames.ts`.

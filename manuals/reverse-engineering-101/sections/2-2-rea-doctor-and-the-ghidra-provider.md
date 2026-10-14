@@ -8,7 +8,7 @@ When you finish this section, you can read a doctor report, name the check that 
 
 ## What the Ghidra provider needs
 
-**Ghidra provider:** the adapter in `src/ghidra/` that drives an existing Ghidra install through `analyzeHeadless`. It needs two absolute paths from the environment, `GHIDRA_INSTALL_DIR` and `JAVA_HOME`, and it rejects relative ones (`src/config/environment.ts:24-32`). The policy fixes the versions: `SUPPORTED_GHIDRA_VERSION = "12.1.4"` and `SUPPORTED_GHIDRA_JAVA_MAJOR = 21` (`src/ghidra/GhidraInstallationPolicy.ts:2`, `:8`). The docs say what that means in practice: "It accepts Ghidra 12.1.x and the 64-bit full JDK declared by that installation's `application.java.min` and `application.java.max`." {{install Ghidra}}. The install must also hold the native decompiler for the host, under `Ghidra/Features/Decompiler/os/<platform>/`, and "REA does not build or install native tools, or change Gatekeeper quarantine settings." {{install Ghidra}}.
+**Ghidra provider:** the rea adapter that drives an existing Ghidra install through `analyzeHeadless`. It needs two absolute paths from the environment, `GHIDRA_INSTALL_DIR` and `JAVA_HOME`, and it rejects relative ones. The policy fixes the versions: `SUPPORTED_GHIDRA_VERSION = "12.1.4"` and `SUPPORTED_GHIDRA_JAVA_MAJOR = 21`. The docs say what that means in practice: "It accepts Ghidra 12.1.x and the 64-bit full JDK declared by that installation's `application.java.min` and `application.java.max`." {{install Ghidra}}. The install must also hold the native decompiler for the host, under `Ghidra/Features/Decompiler/os/<platform>/`, and "REA does not build or install native tools, or change Gatekeeper quarantine settings." {{install Ghidra}}.
 
 On the capture Mac, Homebrew put both tools in place:
 
@@ -87,7 +87,7 @@ note: Cut to the head, the first check, and the two checks that read the install
 }
 ```
 
-`inspectGhidraInstallation` runs the eight Ghidra checks without importing anything (`src/ghidra/GhidraInstallation.ts:174-182`, `:278`). Their order is `configuration`, `platform`, `architecture`, `installation`, `version`, `headless`, `native_decompiler`, and `java`, and the doctor prefixes each name with `ghidra-` (`src/ghidra/GhidraDoctor.ts:16-58`). A `node` check comes first. The table names what each one reads and the code it returns when it fails.
+`inspectGhidraInstallation` runs the eight Ghidra checks without importing anything. Their order is `configuration`, `platform`, `architecture`, `installation`, `version`, `headless`, `native_decompiler`, and `java`, and the doctor prefixes each name with `ghidra-`. A `node` check comes first. The table names what each one reads and the code it returns when it fails.
 
 | Check | What it reads | On the capture Mac | Failure code |
 |---|---|---|---|
@@ -99,9 +99,8 @@ note: Cut to the head, the first check, and the two checks that read the install
 | `ghidra-version` | `application.version` against 12.1.x | `12.1.4` | `unsupported_version` or `version_unresolved` |
 | `ghidra-headless` | `support/analyzeHeadless`, or `.bat` on Windows | `support/analyzeHeadless` | `executable_missing` |
 | `ghidra-native_decompiler` | `Ghidra/Features/Decompiler/os/mac_arm_64/decompile` and its executable header | `mach-o arm64`, which matches `darwin/arm64` | `executable_missing` |
-| `ghidra-java` | the JDK, its major version against `application.java.min`, 64-bit, `javac` present | `21.0.12.1`, 64-bit, JDK | see `src/ghidra/GhidraInstallation.ts:680-760` |
+| `ghidra-java` | the JDK, its major version against `application.java.min`, 64-bit, `javac` present | `21.0.12.1`, 64-bit, JDK | one code for each failed property |
 
-The codes come from `src/ghidra/GhidraInstallation.ts`. `not_configured` is at lines 507 to 519 and `unsupported_host` at 447 to 457. `executable_missing` is at 462 to 477 and 613 to 617, and the version codes are at 629 to 636.
 
 The native decompiler check reads the executable header of the `decompile` binary and compares it with the host. A build for another platform is therefore "reported as incompatible instead of being admitted from its directory name" {{install Ghidra}}. The docs summarize the set: "Doctor validates the platform, architecture, Ghidra 12.1.x application version, `support/analyzeHeadless` or `support/analyzeHeadless.bat`, the installation's Java major range, 64-bit JDK bitness, and the presence of `javac`/`javac.exe`." {{install Ghidra}}. [Figure](#fig-2-2) draws the nine in order.
 
@@ -115,15 +114,15 @@ caption: Read left to right, then down, and the two boxes at the bottom are the 
 
 ## healthy and environment_healthy
 
-The report has two verdicts. `healthy` is the verdict for the selected scope, here `explicit` with `providers: ["ghidra"]`, and `scope_checks` lists only the checks in that scope (`src/application/Doctor.ts:160-191`). `environment_healthy` is the verdict for the audit-wide set. It is true only when every check outside the providers passes, every configured provider passes, and at least one provider is available (`src/application/DoctorDiagnostics.ts:55-91`).
+The report has two verdicts. `healthy` is the verdict for the selected scope, here `explicit` with `providers: ["ghidra"]`, and `scope_checks` lists only the checks in that scope. `environment_healthy` is the verdict for the audit-wide set. It is true only when every check outside the providers passes, every configured provider passes, and at least one provider is available.
 
 On the capture Mac `healthy` is true and `environment_healthy` is false. Hopper and IDA are not configured there, so the formula ignores them, and Ghidra is configured and passes. The false verdict therefore comes from a check outside the Ghidra scope. That check is in the set the capture's `--filter-output` left out, which names this user's skill install and agent registrations (capture/README.md). The exit status follows the scope: `rea doctor` returned 0 (capture/out/00-commands.txt), because "unavailable optional providers remain informational for unrelated tasks" {{cli Output and exit status}}.
 
 ## When a check fails
 
-The capture kit did not record a failing doctor, because Ghidra was installed. The source says what you would see. With `GHIDRA_INSTALL_DIR` unset, the `configuration` check fails with the detail `GHIDRA_INSTALL_DIR is not set` and the remediation `Set GHIDRA_INSTALL_DIR to an extracted Ghidra 12.1.x release directory.` (`src/ghidra/GhidraInstallation.ts:507-514`). With a relative path, the detail is `GHIDRA_INSTALL_DIR must be absolute` (`:515-522`).
+The capture kit did not record a failing doctor, because Ghidra was installed. The source says what you would see. With `GHIDRA_INSTALL_DIR` unset, the `configuration` check fails with the detail `GHIDRA_INSTALL_DIR is not set` and the remediation `Set GHIDRA_INSTALL_DIR to an extracted Ghidra 12.1.x release directory.`. With a relative path, the detail is `GHIDRA_INSTALL_DIR must be absolute`.
 
-A `rea function --provider ghidra` on such a machine fails selection with the code `provider_unavailable`, the category `unavailable`, and `retryable: true` (`src/domain/analysisErrorProjection.ts:100-102`). The message is `The selected analysis provider is unavailable. Review the reported local diagnostics or run rea doctor, then retry.` (`src/domain/providerSelectionError.ts:81-82`). Its `details.rejections[].diagnostics.checks[]` holds the same eight checks as the doctor (`src/domain/providerSelectionError.ts:343-355`). [Section 2.3](#s-rea-capabilities) shows those diagnostics inside `rea capabilities`, and [the errors reference](#s-ref-errors) lists the codes.
+A `rea function --provider ghidra` on such a machine fails selection with the code `provider_unavailable`, the category `unavailable`, and `retryable: true`. The message is `The selected analysis provider is unavailable. Review the reported local diagnostics or run rea doctor, then retry.`. Its `details.rejections[].diagnostics.checks[]` holds the same eight checks as the doctor. [Section 2.3](#s-rea-capabilities) shows those diagnostics inside `rea capabilities`, and [the errors reference](#s-ref-errors) lists the codes.
 
 One check has no fix in rea. Every Ghidra record on macOS carries the limitation that "macOS sessions require a matching executable Ghidra native decompiler; REA checks for it but does not build native components or change Gatekeeper quarantine state." (capture/out/06-function-percent-change.json). If the Homebrew build of `decompile` is missing or quarantined, you repair Ghidra, not rea.
 
@@ -134,4 +133,4 @@ One check has no fix in rea. Every Ghidra record on macOS carries the limitation
 - Read `environment_healthy` as a report on the whole machine, and `healthy` as the verdict for your scope.
 ```
 
-Sources: install Ghidra (research/sources/rea/docs-installation.md); cli Output and exit status (research/sources/rea/docs-cli.md); research/rea-architecture.md; rea at a56f7bb: src/config/environment.ts, src/ghidra/GhidraInstallationPolicy.ts, src/ghidra/GhidraInstallation.ts, src/ghidra/GhidraDoctor.ts, src/application/Doctor.ts, src/application/DoctorDiagnostics.ts, src/domain/providerSelectionError.ts, src/domain/analysisErrorProjection.ts; capture/README.md; capture/out/00-commands.txt, 00-versions.txt, 01-doctor-ghidra.json, 06-function-percent-change.json
+Sources: install Ghidra (research/sources/rea/docs-installation.md); cli Output and exit status (research/sources/rea/docs-cli.md); research/rea-architecture.md; rea at a56f7bb: src/config/environment.ts, src/ghidra/GhidraInstallationPolicy.ts, src/ghidra/GhidraInstallation.ts, src/ghidra/GhidraDoctor.ts, src/application/Doctor.ts, src/application/DoctorDiagnostics.ts, src/domain/providerSelectionError.ts, src/domain/analysisErrorProjection.ts; capture/README.md; capture/out/00-commands.txt, 00-versions.txt, 01-doctor-ghidra.json, 06-function-percent-change.json rea 6.4.0 source at tag a56f7bb: `src/config/environment.ts`, `src/ghidra/GhidraInstallationPolicy.ts`, `src/ghidra/GhidraInstallation.ts`, `src/ghidra/GhidraDoctor.ts`, `src/application/Doctor.ts`, `src/application/DoctorDiagnostics.ts`, `src/domain/analysisErrorProjection.ts`, `src/domain/providerSelectionError.ts`.

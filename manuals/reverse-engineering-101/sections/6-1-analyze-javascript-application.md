@@ -6,9 +6,9 @@ You have a small Electron-style application, six files in `capture/fixtures/js-a
 
 ## The command and the record
 
-The CLI command is `rea analyze-javascript-application PATH` (`src/cli/electronCommands.ts:186-192`). The plain `rea analyze PATH` reaches the same code for a directory: "Generic `rea analyze PATH` selects this workflow for directories and `.asar` files when neither `--provider` nor `--snapshot` is supplied." {{cli cli.md:18-19}}
+The CLI command is `rea analyze-javascript-application PATH`. The plain `rea analyze PATH` reaches the same code for a directory: "Generic `rea analyze PATH` selects this workflow for directories and `.asar` files when neither `--provider` nor `--snapshot` is supplied." {{cli cli.md:18-19}}
 
-The inputs are `input_path`, `format` as `auto`, `asar`, or `directory`, and `integrity_policy` (`src/domain/javascript/javascriptApplicationAnalysis.ts:23-28`). Two resource limits are optional: `max_heap_mb`, 1024 MiB by default, and `analysis_timeout_ms`, 300,000 ms by default (`src/domain/javascript/javascriptAnalysisResourceControls.ts:37-56`). Over MCP a `detail` of `complete` or `summary` is added (`src/contracts/javascript/electronToolContracts.ts:31-34`). The parser is `@babel/parser` with `errorRecovery` on and comments left unattached (`src/domain/javascript/javascriptSourceParser.ts:41-51`).
+The inputs are `input_path`, `format` as `auto`, `asar`, or `directory`, and `integrity_policy`. Two resource limits are optional: `max_heap_mb`, 1024 MiB by default, and `analysis_timeout_ms`, 300,000 ms by default. Over MCP a `detail` of `complete` or `summary` is added. The parser is `@babel/parser` with `errorRecovery` on and comments left unattached.
 
 ```listing
 title: the head of the analyze_javascript_application record
@@ -41,7 +41,7 @@ note: The kit kept the record without graph and semantic_graph, with --filter-ou
   },
 ```
 
-This is an Evidence record like the ones in Part 5, with three differences from a Ghidra dossier. The provider is rea itself, `rea-javascript-application` version `1`. The confidence is `derived`, because rea computed relationships from syntax, and the authority is `shipped-artifact`, because the six files on disk are the source. The subject is the directory, with the SHA-256 `bb9f726c3aafe026` of its inventory as the digest. The `normalized_result` has eleven fields (`javascriptApplicationAnalysis.ts:67-79`): `input_path`, `format`, `root_artifact_sha256`, `inventory_manifest_id`, `inventory_graph_sha256`, `integrity_contradictions`, `graph`, `summary`, `statistics`, `limitations`, and `semantic_graph`.
+This is an Evidence record like the ones in Part 5, with three differences from a Ghidra dossier. The provider is rea itself, `rea-javascript-application` version `1`. The confidence is `derived`, because rea computed relationships from syntax, and the authority is `shipped-artifact`, because the six files on disk are the source. The subject is the directory, with the SHA-256 `bb9f726c3aafe026` of its inventory as the digest. The `normalized_result` has eleven fields: `input_path`, `format`, `root_artifact_sha256`, `inventory_manifest_id`, `inventory_graph_sha256`, `integrity_contradictions`, `graph`, `summary`, `statistics`, `limitations`, and `semantic_graph`.
 
 ```listing
 title: the summary and the statistics of ledger-desk
@@ -126,7 +126,7 @@ The graph for ledger-desk in `15-js-app-graph.json` has 33 nodes and 50 edges, a
 | `sends`, `exposes` | 2 each | inferred |
 | `calls`, `persists_to` | 1 each | inferred, `fetch` and `localStorage.setItem` |
 
-Every edge says how it was obtained. An AST fact has authority `ast-static-analysis`, state `observed`, confidence `exact`, and a source range (`src/application/javascript/JavaScriptArtifactGraphEvidence.ts:43-68`). A relationship has authority `static-relationship-inference`, state `inferred`, and confidence `high` by default (`:71-94`). It always carries the limitation "Static syntax does not prove that this relationship executes at runtime." The documentation states the rule for the Electron edges: "The `loads`, `exposes`, `invokes`, `handles`, and `imports` relationships remain static inferences." {{jsgraph javascript-application-graph.md:102-103}}
+Every edge says how it was obtained. An AST fact has authority `ast-static-analysis`, state `observed`, confidence `exact`, and a source range. A relationship has authority `static-relationship-inference`, state `inferred`, and confidence `high` by default. It always carries the limitation "Static syntax does not prove that this relationship executes at runtime." The documentation states the rule for the Electron edges: "The `loads`, `exposes`, `invokes`, `handles`, and `imports` relationships remain static inferences." {{jsgraph javascript-application-graph.md:102-103}}
 
 ```listing
 title: one invokes edge, from preload.js to the handler in main.js
@@ -181,7 +181,7 @@ caption: Read from the top left. Olive boxes are the application's own code, the
 
 Six files give a record of about 200 KB. The documentation warns about real applications: "The complete application Evidence can be hundreds of megabytes for a real application." {{cli cli.md:23-24}}
 
-`inspect-analysis-view` reads a view out of a record that already exists, without running the analysis again (`src/contracts/analysisViewToolContracts.ts:12-16`). Its input is a `source` and a `view`. The source is the complete record inline, or a reference to a record the MCP session retains. The view is a summary, a page of a collection, or one module. The capture asked for the summary and for the first 32 items of the `modules` collection.
+`inspect-analysis-view` reads a view out of a record that already exists, without running the analysis again. Its input is a `source` and a `view`. The source is the complete record inline, or a reference to a record the MCP session retains. The view is a summary, a page of a collection, or one module. The capture asked for the summary and for the first 32 items of the `modules` collection.
 
 Each view is an Evidence record of its own, from provider `rea-analysis-view`. The parent id is in `parameters.parent_evidence_id` and in `evidence_links`, so the chain from view to analysis is explicit.
 
@@ -243,4 +243,4 @@ A page says how much of the collection it covers: 15 of 15 items here, with no n
 - Page a large record with `inspect-analysis-view` instead of reading it whole.
 ```
 
-Sources: src/cli/electronCommands.ts, src/domain/javascript/javascriptApplicationAnalysis.ts, src/domain/javascript/javascriptAnalysisResourceControls.ts, src/domain/javascript/javascriptSourceParser.ts, src/contracts/javascript/electronToolContracts.ts, src/contracts/analysisViewToolContracts.ts, src/application/javascript/JavaScriptArtifactGraphEvidence.ts at rea-agents-6.4.0 (a56f7bb); research/rea-tools.md; research/sources/rea/docs-cli.md, docs-javascript-application-graph.md, docs-mcp-contracts.md; capture/README.md; capture/fixtures/js-app/main.js, preload.js, renderer.js, ledger.js, index.html, package.json; capture/out/00-commands.txt, 15-js-app.json, 15-js-app-graph.json, 15-js-app-view-summary.json, 15-js-app-view-modules.json
+Sources: src/cli/electronCommands.ts, src/domain/javascript/javascriptApplicationAnalysis.ts, src/domain/javascript/javascriptAnalysisResourceControls.ts, src/domain/javascript/javascriptSourceParser.ts, src/contracts/javascript/electronToolContracts.ts, src/contracts/analysisViewToolContracts.ts, src/application/javascript/JavaScriptArtifactGraphEvidence.ts at rea-agents-6.4.0 (a56f7bb); research/rea-tools.md; research/sources/rea/docs-cli.md, docs-javascript-application-graph.md, docs-mcp-contracts.md; capture/README.md; capture/fixtures/js-app/main.js, preload.js, renderer.js, ledger.js, index.html, package.json; capture/out/00-commands.txt, 15-js-app.json, 15-js-app-graph.json, 15-js-app-view-summary.json, 15-js-app-view-modules.json rea 6.4.0 source at tag a56f7bb: `src/cli/electronCommands.ts`, `src/domain/javascript/javascriptApplicationAnalysis.ts`, `src/domain/javascript/javascriptAnalysisResourceControls.ts`, `src/contracts/javascript/electronToolContracts.ts`, `src/domain/javascript/javascriptSourceParser.ts`, `javascriptApplicationAnalysis.ts`, `src/application/javascript/JavaScriptArtifactGraphEvidence.ts`, `src/contracts/analysisViewToolContracts.ts`.

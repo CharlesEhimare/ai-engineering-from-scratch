@@ -18,7 +18,7 @@ $ rea function fixtures/ledger-arm64-O1 _percent_change --provider ghidra --form
 [exit 0] (… s) -> 06-function-percent-change.json
 ```
 
-`function` takes a path and a procedure, and it runs the MCP operation `analyze_function` with `{ procedure }` as its parameters (`src/cli/coreBinaryCommands.ts:333-346`). `--provider ghidra` names the engine, and `--format json` and `--filter-output` are read at the executable boundary before the command runs (`src/cliCommandNames.ts:139-149`, `src/cliOutput.ts:29-63`). Without `--format`, the terminal output is TOON, and exit `0` means "The operation completed. Its result may include partial evidence, warnings or unresolved questions." {{cli Output and exit status}}. [Figure](#fig-1-2) follows the call through the system.
+`function` takes a path and a procedure, and it runs the MCP operation `analyze_function` with `{ procedure }` as its parameters. `--provider ghidra` names the engine, and `--format json` and `--filter-output` are read at the executable boundary before the command runs. Without `--format`, the terminal output is TOON, and exit `0` means "The operation completed. Its result may include partial evidence, warnings or unresolved questions." {{cli Output and exit status}}. [Figure](#fig-1-2) follows the call through the system.
 
 ```figure
 id: fig-1-2
@@ -30,14 +30,14 @@ caption: Read top to bottom, one numbered row per step. Rows 1 and 12 come from 
 
 ## From the command to the bridge
 
-1. The session parses the Mach-O header, reads the architecture, and hashes the file (`src/domain/binaryTarget.ts:55-57`, `src/application/BinaryTargetResolver.ts:248-263`). The record's `subject` carries the result: `mach-o`, `arm64`, and the SHA-256 that `00-fixtures.txt` lists for `ledger-arm64-O1`.
-2. The registry selects `ghidra`, because the command asked for it, and records `selection_source: "request"` (`src/application/binary/AnalysisProviderRegistry.ts:46-52`, `:145-195`).
-3. The provider builds the analysis profile, a list of versioned contract names such as `function_body_evidence: "complete-inclusive-ranges-v1"`, and hashes it (`src/ghidra/GhidraAnalysisProfile.ts:29-35`, `:70-156`). The digest `20565088524a2d03…` in the record is this hash.
-4. The client makes a private runtime root and allocates `bridge.sock`. It copies the file as `target-<sha256[0:12]>.bin` while hashing it again (`src/ghidra/GhidraClient.ts:444-559`, `src/ghidra/GhidraTargetSnapshot.ts:23-104`). Then it launches `java` with `ghidra.Ghidra ghidra.app.util.headless.AnalyzeHeadless`, `-import`, `-readOnly`, and `-deleteProject` (`src/ghidra/GhidraJavaLaunch.ts:6-94`, `src/ghidra/GhidraLauncher.ts:448-455`). The copy is `target-01b5d08b08fb.bin`, and the overview record shows that name as its `document` (capture/out/05-analyze-arm64-O1.json). The startup deadline is 330,000 ms (`src/config/ghidraStartupTimeout.ts:4`).
-5. The client sends `ping`. It accepts the session only when `run_id`, the token, the profile digest, the target SHA-256, and `analysis_complete` all match (`src/ghidra/GhidraClientStartup.ts:33-61`, `src/ghidra/GhidraSessionValues.ts:63-101`).
-6. One JSON line asks `analyze_function`, and the bridge dispatches it through its `switch` (`src/ghidra/GhidraClientWire.ts:86-87`, `bridge/ghidra/ReaGhidraBridge.java:356-400`).
-7. The reply becomes an `AnalysisExecution` with the operation's limitation strings, and `createEvidence` wraps it into the record (`src/ghidra/GhidraProviderClient.ts:526-692`, `src/server/registerEvidenceTools.ts:43-121`).
-8. The client sends `shutdown` with a 10 s deadline, and Ghidra deletes the project (`src/ghidra/GhidraClient.ts:70`).
+1. The session parses the Mach-O header, reads the architecture, and hashes the file. The record's `subject` carries the result: `mach-o`, `arm64`, and the SHA-256 that `00-fixtures.txt` lists for `ledger-arm64-O1`.
+2. The registry selects `ghidra`, because the command asked for it, and records `selection_source: "request"`.
+3. The provider builds the analysis profile, a list of versioned contract names such as `function_body_evidence: "complete-inclusive-ranges-v1"`, and hashes it. The digest `20565088524a2d03…` in the record is this hash.
+4. The client makes a private runtime root and allocates `bridge.sock`. It copies the file as `target-<sha256[0:12]>.bin` while hashing it again. Then it launches `java` with `ghidra.Ghidra ghidra.app.util.headless.AnalyzeHeadless`, `-import`, `-readOnly`, and `-deleteProject`. The copy is `target-01b5d08b08fb.bin`, and the overview record shows that name as its `document` (capture/out/05-analyze-arm64-O1.json). The startup deadline is 330,000 ms.
+5. The client sends `ping`. It accepts the session only when `run_id`, the token, the profile digest, the target SHA-256, and `analysis_complete` all match.
+6. The client writes one JSON line that asks for `analyze_function`. Ghidra runs the analysis and writes one JSON line back.
+7. rea adds the operation's limitation sentences to the answer and stores the result as one Evidence record.
+8. The client sends `shutdown` with a 10 s deadline, and Ghidra deletes the project.
 
 ## The record, field by field
 
@@ -66,7 +66,7 @@ note: Cut after the provider. The analysis profile and the results follow in the
 …
 ```
 
-`evidence_id` hashes the semantic content and leaves out `subject.name` and `subject.local_path`, so the same bytes under another path give the same id (`src/domain/evidence.ts:208-234`). `provider` names the engine and its version. The next field binds the answer to the engine's settings:
+`evidence_id` hashes the semantic content and leaves out `subject.name` and `subject.local_path`, so the same bytes under another path give the same id. `provider` names the engine and its version. The next field binds the answer to the engine's settings:
 
 ```listing
 title: the analysis profile
@@ -99,9 +99,9 @@ note: Cut to five of the 21 parameters and the digest.
   },
 ```
 
-**Analysis profile:** the provider's committed settings, hashed over RFC 8785 canonical JSON (`src/domain/analysisProfile.ts:38-75`). Change one contract version and the digest changes, which is how rea refuses an old snapshot ([section 5.3](#s-snapshots-and-the-answer-cache)). `predicate_type` is the default tag `rea.analysis` (`src/domain/evidence.ts:335`), and `operation` is the MCP name. `parameters` is the caller's input, and it is part of the identity (`src/domain/evidence.ts:208-234`).
+**Analysis profile:** the provider's committed settings, hashed over RFC 8785 canonical JSON. Change one contract version and the digest changes, which is how rea refuses an old snapshot ([section 5.3](#s-snapshots-and-the-answer-cache)). `predicate_type` is the default tag `rea.analysis`, and `operation` is the MCP name. `parameters` is the caller's input, and it is part of the identity.
 
-`raw_result` holds the provider-native dossier under `value` with its own empty `limitations`, and `normalized_result` holds the same dossier as the canonical result. `confidence` is `observed` and `authority` is `shipped-artifact`, the defaults for a static read of the file on disk (`src/domain/evidence.ts:340-341`). `environment` is `null`, because nothing ran. `limitations` has ten strings: four that every Ghidra operation carries, five for `analyze_function`, and one for macOS about the native decompiler (capture/out/02-capabilities.json, 06-function-percent-change.json). `locations` and `evidence_links` are empty. [Figure](#fig-1-3) lays the 15 fields out.
+`raw_result` holds the provider-native dossier under `value` with its own empty `limitations`, and `normalized_result` holds the same dossier as the canonical result. `confidence` is `observed` and `authority` is `shipped-artifact`, the defaults for a static read of the file on disk. `environment` is `null`, because nothing ran. `limitations` has ten strings: four that every Ghidra operation carries, five for `analyze_function`, and one for macOS about the native decompiler (capture/out/02-capabilities.json, 06-function-percent-change.json). `locations` and `evidence_links` are empty. [Figure](#fig-1-3) lays the 15 fields out.
 
 ```figure
 id: fig-1-3
@@ -172,4 +172,4 @@ Both checks are correct, and one is redundant, and only the source tells you whi
 - Compare the pseudocode with the assembly, and expect decompiler checks that the source never had.
 ```
 
-Sources: cli Output and exit status (research/sources/rea/docs-cli.md); research/rea-architecture.md; research/rea-evidence-model.md; research/rea-tools.md; rea at a56f7bb: src/cli/coreBinaryCommands.ts, src/cliCommandNames.ts, src/cliOutput.ts, src/domain/binaryTarget.ts, src/application/BinaryTargetResolver.ts, src/application/binary/AnalysisProviderRegistry.ts, src/ghidra/GhidraAnalysisProfile.ts, src/ghidra/GhidraClient.ts, src/ghidra/GhidraTargetSnapshot.ts, src/ghidra/GhidraJavaLaunch.ts, src/ghidra/GhidraLauncher.ts, src/config/ghidraStartupTimeout.ts, src/ghidra/GhidraClientStartup.ts, src/ghidra/GhidraSessionValues.ts, src/ghidra/GhidraClientWire.ts, bridge/ghidra/ReaGhidraBridge.java, src/ghidra/GhidraProviderClient.ts, src/server/registerEvidenceTools.ts, src/domain/evidence.ts, src/domain/analysisProfile.ts; capture/README.md; capture/fixtures/ledger.c; capture/out/00-commands.txt, 00-fixtures.txt, 02-capabilities.json, 05-analyze-arm64-O1.json, 06-function-percent-change.json
+Sources: cli Output and exit status (research/sources/rea/docs-cli.md); research/rea-architecture.md; research/rea-evidence-model.md; research/rea-tools.md; rea at a56f7bb: src/cli/coreBinaryCommands.ts, src/cliCommandNames.ts, src/cliOutput.ts, src/domain/binaryTarget.ts, src/application/BinaryTargetResolver.ts, src/application/binary/AnalysisProviderRegistry.ts, src/ghidra/GhidraAnalysisProfile.ts, src/ghidra/GhidraClient.ts, src/ghidra/GhidraTargetSnapshot.ts, src/ghidra/GhidraJavaLaunch.ts, src/ghidra/GhidraLauncher.ts, src/config/ghidraStartupTimeout.ts, src/ghidra/GhidraClientStartup.ts, src/ghidra/GhidraSessionValues.ts, src/ghidra/GhidraClientWire.ts, bridge/ghidra/ReaGhidraBridge.java, src/ghidra/GhidraProviderClient.ts, src/server/registerEvidenceTools.ts, src/domain/evidence.ts, src/domain/analysisProfile.ts; capture/README.md; capture/fixtures/ledger.c; capture/out/00-commands.txt, 00-fixtures.txt, 02-capabilities.json, 05-analyze-arm64-O1.json, 06-function-percent-change.json rea 6.4.0 source at tag a56f7bb: `src/cli/coreBinaryCommands.ts`, `src/cliCommandNames.ts`, `src/cliOutput.ts`, `src/domain/binaryTarget.ts`, `src/application/BinaryTargetResolver.ts`, `src/application/binary/AnalysisProviderRegistry.ts`, `src/ghidra/GhidraAnalysisProfile.ts`, `src/ghidra/GhidraClient.ts`, `src/ghidra/GhidraTargetSnapshot.ts`, `src/ghidra/GhidraJavaLaunch.ts`, `src/ghidra/GhidraLauncher.ts`, `src/config/ghidraStartupTimeout.ts`, `src/ghidra/GhidraClientStartup.ts`, `src/ghidra/GhidraSessionValues.ts`, `src/ghidra/GhidraClientWire.ts`, `bridge/ghidra/ReaGhidraBridge.java`, `src/ghidra/GhidraProviderClient.ts`, `src/server/registerEvidenceTools.ts`, `src/domain/evidence.ts`, `src/domain/analysisProfile.ts`.

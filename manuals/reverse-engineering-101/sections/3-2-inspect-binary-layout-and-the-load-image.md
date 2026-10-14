@@ -30,7 +30,7 @@ note: The whole file. The CLI exit status was 1.
 }
 ```
 
-Every failure in rea has this shape: `code`, `category`, `message`, `retryable`, `remediation.action`, and an optional `details` object (`src/contracts/errorSchemas.ts:22-32`). The provider is `pwntools-elf`. Its decoder throws `AnalysisCapabilityUnavailableError` when `process.platform` is not `linux` or `process.arch` is not `x64`, before it looks for Python (`src/native/pwntools/PwntoolsDecoder.ts:124-130`). The message is a constant in the same file (`src/native/pwntools/PwntoolsDecoder.ts:41-42`). The MCP server lists the tool as unavailable unless the host is Linux x64 and `REA_PWNTOOLS_PYTHON` is an absolute path (`src/server/createServer.ts:135-138`, `src/server/createServer.ts:147`). The exit status follows the CLI rule: "The operation could not complete." {{cli §Output and exit status}}
+Every failure in rea has this shape: `code`, `category`, `message`, `retryable`, `remediation.action`, and an optional `details` object. The provider is `pwntools-elf`. Its decoder throws `AnalysisCapabilityUnavailableError` when `process.platform` is not `linux` or `process.arch` is not `x64`, before it looks for Python. The message is a constant in the same file. The MCP server lists the tool as unavailable unless the host is Linux x64 and `REA_PWNTOOLS_PYTHON` is an absolute path. The exit status follows the CLI rule: "The operation could not complete." {{cli §Output and exit status}}
 
 The capture kit gave the tool the ELF object because `inspect_binary_layout` is written for ELF. On a Linux x64 host with pwntools 4.15.0 it returns sections, segments, symbols, and relocations. [Section 2.3](#s-rea-capabilities) shows how each operation declares its availability before you call it, and [the reference](#s-ref-errors) lists every error code the captures produced.
 
@@ -96,7 +96,7 @@ note: Cut to the tool names and three of the commands. Each entry also records t
 ],
 ```
 
-The command list is fixed in the provider (`src/native/NativeMachoInspection.ts:36-49`). It runs `file -b` and `lipo -detailed_info` to discover the slices. For each slice it runs `otool -h -l`, `nm -gjU`, `dyld_info -imports`, `dyld_info -exports`, and `dwarfdump --uuid`, with `vtool -show-build` as an optional extra. The run starts no Java and takes a few seconds. Keep one limitation of the record in mind when a name you expect is missing: "Imports and exports combine dyld_info and nm; stripped or toolchain-hidden symbols may be absent."
+The command list is fixed in the provider. It runs `file -b` and `lipo -detailed_info` to discover the slices. For each slice it runs `otool -h -l`, `nm -gjU`, `dyld_info -imports`, `dyld_info -exports`, and `dwarfdump --uuid`, with `vtool -show-build` as an optional extra. The run starts no Java and takes a few seconds. Keep one limitation of the record in mind when a name you expect is missing: "Imports and exports combine dyld_info and nm; stripped or toolchain-hidden symbols may be absent."
 
 ```figure
 id: fig-3-2
@@ -285,4 +285,4 @@ Six exports: the five functions and `__mh_execute_header` at `0x100000000`. Six 
 - Check `exhaustive` on each collection before you say a symbol is absent.
 ```
 
-Sources: capture/out/00-commands.txt, capture/out/04-inspect-binary-layout.json, capture/out/04-inspect-macho.json; rea 6.4.0 at a56f7bb: src/contracts/errorSchemas.ts, src/native/pwntools/PwntoolsDecoder.ts, src/server/createServer.ts, src/native/NativeMachoInspection.ts; research/sources/rea/docs-cli.md; research/specs-formats.md sections 1 and 4; research/rea-tools.md section 1; research/rea-gaps.md item 3
+Sources: capture/out/00-commands.txt, capture/out/04-inspect-binary-layout.json, capture/out/04-inspect-macho.json; rea 6.4.0 at a56f7bb: src/contracts/errorSchemas.ts, src/native/pwntools/PwntoolsDecoder.ts, src/server/createServer.ts, src/native/NativeMachoInspection.ts; research/sources/rea/docs-cli.md; research/specs-formats.md sections 1 and 4; research/rea-tools.md section 1; research/rea-gaps.md item 3 rea 6.4.0 source at tag a56f7bb: `src/contracts/errorSchemas.ts`, `src/native/pwntools/PwntoolsDecoder.ts`, `src/server/createServer.ts`, `src/native/NativeMachoInspection.ts`.

@@ -8,7 +8,7 @@ When you finish this section, you can run `rea analyze` on both builds and read 
 
 ## One CLI verb, one composed operation
 
-`analyze` and `inspect` are aliases of the MCP operation `binary_overview` (`src/cliCommandNames.ts:139-142`). The operation is composed from three others. It calls `list_segments`, `list_procedures`, and `list_strings` on the bound provider at the same time (`src/application/EnhancedTools.ts:459-497`). Then it returns the segments with their lengths and the two counts. The output schema has five fields: `document`, `segments`, `segment_count`, `procedure_count`, and `string_count` (`src/contracts/toolOutputSchemaGroups.ts:341-356`).
+`analyze` and `inspect` are aliases of the MCP operation `binary_overview`. The operation is composed from three others. It calls `list_segments`, `list_procedures`, and `list_strings` on the bound provider at the same time. Then it returns the segments with their lengths and the two counts. The output schema has five fields: `document`, `segments`, `segment_count`, `procedure_count`, and `string_count`.
 
 ```listing
 title: the two overview commands
@@ -22,7 +22,7 @@ $ rea analyze fixtures/ledger-x86_64-O1.o --provider ghidra --format json
 [exit 0] (…) -> 05-analyze-x86_64-O1.json
 ```
 
-**Composed operation:** a rea operation whose result is built from other operations. Its Evidence record names the provider `rea-workflow`, carries the Ghidra profile as `upstream_analysis_profile`, and has `confidence: "derived"` with the limitation "Derived by an REA composed workflow." (`src/application/WorkflowEvidence.ts:43`). A primitive operation such as `list_procedures` is `observed`.
+**Composed operation:** a rea operation whose result is built from other operations. Its Evidence record names the provider `rea-workflow`, carries the Ghidra profile as `upstream_analysis_profile`, and has `confidence: "derived"` with the limitation "Derived by an REA composed workflow.". A primitive operation such as `list_procedures` is `observed`.
 
 ```listing
 title: the provider block of a composed record
@@ -103,7 +103,7 @@ note: Cut to the result. Nine of the twelve segment entries are cut.
 ],
 ```
 
-The `document` is not the file you named. It is `target-01b5d08b08fb.bin`, the private copy that rea makes under its runtime root (`src/ghidra/GhidraTargetSnapshot.ts:33-37`). The name is `target-` plus the first twelve hex digits of the SHA-256. [Section 4.1](#s-open-binary-and-the-headless-bridge) shows that copy being made.
+The `document` is not the file you named. It is `target-01b5d08b08fb.bin`, the private copy that rea makes under its runtime root. The name is `target-` plus the first twelve hex digits of the SHA-256. [Section 4.1](#s-open-binary-and-the-headless-bridge) shows that copy being made.
 
 The twelve segments are Ghidra memory blocks, not the four `LC_SEGMENT_64` commands of [section 3.2](#s-inspect-binary-layout-and-the-load-image). Ghidra splits `__TEXT` into the 1280-byte header range and its five sections. It splits `__DATA_CONST` into `__got`, `__const`, and the 16296 bytes after them. It splits `__LINKEDIT` into the 1104 used bytes and the padding to the next page.
 
@@ -187,4 +187,4 @@ The record has no function sizes, no entry point, and no image base. The researc
 - Read `confidence: "derived"` as a sign that three primitive records stand behind this one.
 ```
 
-Sources: capture/out/00-commands.txt, capture/out/05-analyze-arm64-O1.json, capture/out/05-analyze-x86_64-O1.json; rea 6.4.0 at a56f7bb: src/cliCommandNames.ts, src/application/EnhancedTools.ts, src/application/WorkflowEvidence.ts, src/contracts/toolOutputSchemaGroups.ts, src/ghidra/GhidraTargetSnapshot.ts; research/rea-tools.md section 2.1; research/rea-640-repin.md
+Sources: capture/out/00-commands.txt, capture/out/05-analyze-arm64-O1.json, capture/out/05-analyze-x86_64-O1.json; rea 6.4.0 at a56f7bb: src/cliCommandNames.ts, src/application/EnhancedTools.ts, src/application/WorkflowEvidence.ts, src/contracts/toolOutputSchemaGroups.ts, src/ghidra/GhidraTargetSnapshot.ts; research/rea-tools.md section 2.1; research/rea-640-repin.md rea 6.4.0 source at tag a56f7bb: `src/cliCommandNames.ts`, `src/application/EnhancedTools.ts`, `src/contracts/toolOutputSchemaGroups.ts`, `src/application/WorkflowEvidence.ts`, `src/ghidra/GhidraTargetSnapshot.ts`.

@@ -55,7 +55,7 @@ note: The request arguments, three items cut from the 39, and the two string lim
 ],
 ```
 
-The bridge walks every defined data item in the program and keeps the ones with a string value (`bridge/ghidra/ReaGhidraBridge.java:1730-1760`). For each it records the charset, whether a required terminator is missing, and the byte length. Each item is a `Data` object that Ghidra's loader or analyzers created. A run of printable bytes that no analyzer turned into `Data` is not in the list. The first limitation is fixed in rea (`src/ghidra/GhidraProviderCapabilities.ts:41`), and the docs say the same:
+The bridge walks every defined data item in the program and keeps the ones with a string value. For each it records the charset, whether a required terminator is missing, and the byte length. Each item is a `Data` object that Ghidra's loader or analyzers created. A run of printable bytes that no analyzer turned into `Data` is not in the list. The first limitation is fixed in rea, and the docs say the same:
 
 ```rule
 label: what an empty result proves
@@ -110,4 +110,4 @@ The capture target has none of those, so the 39 items are the whole file. For a 
 - Read `referenced_strings` as the text a function reaches through a load. Expect the function to use more.
 ```
 
-Sources: capture/out/10-mcp-08-list-strings.json, capture/out/04-inspect-macho.json, capture/out/05-analyze-arm64-O1.json, capture/out/10-mcp-12-analyze-function-grade-label-O1.json, capture/fixtures/ledger-arm64-O1, capture/README.md; rea 6.4.0 at a56f7bb: bridge/ghidra/ReaGhidraBridge.java, src/ghidra/GhidraProviderCapabilities.ts; research/sources/rea/docs-ghidra-provider.md; research/rea-gaps.md item 10; research/specs-formats.md section 4
+Sources: capture/out/10-mcp-08-list-strings.json, capture/out/04-inspect-macho.json, capture/out/05-analyze-arm64-O1.json, capture/out/10-mcp-12-analyze-function-grade-label-O1.json, capture/fixtures/ledger-arm64-O1, capture/README.md; rea 6.4.0 at a56f7bb: bridge/ghidra/ReaGhidraBridge.java, src/ghidra/GhidraProviderCapabilities.ts; research/sources/rea/docs-ghidra-provider.md; research/rea-gaps.md item 10; research/specs-formats.md section 4 rea 6.4.0 source at tag a56f7bb: `bridge/ghidra/ReaGhidraBridge.java`, `src/ghidra/GhidraProviderCapabilities.ts`.

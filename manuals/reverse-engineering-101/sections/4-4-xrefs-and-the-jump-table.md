@@ -31,7 +31,7 @@ note: The request arguments, the result, and two of the seven limitations.
 ],
 ```
 
-The bridge asks Ghidra's `ReferenceManager` for every reference to the address (`bridge/ghidra/ReaGhidraBridge.java:1012-1033`). It skips the synthetic entry-point references, collects the distinct source addresses, and sorts them. The result is addresses only. The `incoming_references` facet of the dossier keeps the kind of each reference, call, jump, or data (`src/ghidra/GhidraProviderCapabilities.ts:145`).
+The bridge asks Ghidra's `ReferenceManager` for every reference to the address. It skips the synthetic entry-point references, collects the distinct source addresses, and sorts them. The result is addresses only. The `incoming_references` facet of the dossier keeps the kind of each reference, call, jump, or data.
 
 ## What is at 0x10000811a
 
@@ -126,4 +126,4 @@ caption: Read each column top to bottom. The left column comes from the lesson 3
 - Name what the bytes show: a jump table changes the graph, a value table changes a load.
 ```
 
-Sources: capture/out/10-mcp-07-xrefs-grade.json, capture/out/06-function-grade.json, capture/out/10-mcp-12-analyze-function-grade-label-O1.json, capture/out/10-mcp-09-analyze-function-percent-change-O1.json, capture/out/10-mcp-11-analyze-function-total-O1.json, capture/out/06-function-grade-x86_64-O1.json, capture/out/04-inspect-macho.json, capture/fixtures/ledger-arm64-O1; phases/13-tools-and-protocols/33-disassembly-and-control-flow/code/fixtures/ledger-x86_64-O0.objdump.txt; rea 6.4.0 at a56f7bb: bridge/ghidra/ReaGhidraBridge.java, src/ghidra/GhidraProviderCapabilities.ts; research/rea-gaps.md item 12; research/specs-formats.md section 4
+Sources: capture/out/10-mcp-07-xrefs-grade.json, capture/out/06-function-grade.json, capture/out/10-mcp-12-analyze-function-grade-label-O1.json, capture/out/10-mcp-09-analyze-function-percent-change-O1.json, capture/out/10-mcp-11-analyze-function-total-O1.json, capture/out/06-function-grade-x86_64-O1.json, capture/out/04-inspect-macho.json, capture/fixtures/ledger-arm64-O1; phases/13-tools-and-protocols/33-disassembly-and-control-flow/code/fixtures/ledger-x86_64-O0.objdump.txt; rea 6.4.0 at a56f7bb: bridge/ghidra/ReaGhidraBridge.java, src/ghidra/GhidraProviderCapabilities.ts; research/rea-gaps.md item 12; research/specs-formats.md section 4 rea 6.4.0 source at tag a56f7bb: `bridge/ghidra/ReaGhidraBridge.java`, `src/ghidra/GhidraProviderCapabilities.ts`.

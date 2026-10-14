@@ -30,7 +30,7 @@ note: Nothing is cut. The exit status 1 is in capture/out/00-commands.txt.
 }
 ```
 
-Over MCP the same projection travels as text. A failed `tools/call` returns `isError: true` and the `{ "error": ... }` object as JSON in `content[0].text`, with no `structuredContent`, because the advertised output schema describes success only {{mcp Progress and cancellation}}. The capture kit decoded that text into `decoded_text` beside the raw reply:
+Over MCP the same projection travels as text. A failed `tools/call` returns `isError: true` and the `{ "error":... }` object as JSON in `content[0].text`, with no `structuredContent`, because the advertised output schema describes success only {{mcp Progress and cancellation}}. The capture kit decoded that text into `decoded_text` beside the raw reply:
 
 ```listing
 title: invalid_request for a procedure that does not exist
@@ -61,7 +61,7 @@ note: The request and the raw response are cut. The raw response holds the same 
   }
 ```
 
-The bridge raised `not_found` with the message in `issues[0].message` (`bridge/ghidra/ReaGhidraBridge.java:1797`), and rea mapped a remote `not_found` to `AnalysisInputError`, whose code is `invalid_request` (`src/ghidra/GhidraProviderClient.ts:777-847`, `src/domain/analysisErrorProjection.ts:184-204`). The server log recorded the failure twice, once for the bridge layer and once for the server layer, both at level 40 (capture/out/10-mcp-server.log).
+The bridge raised `not_found` with the message in `issues[0].message`, and rea mapped a remote `not_found` to `AnalysisInputError`, whose code is `invalid_request`. The server log recorded the failure twice, once for the bridge layer and once for the server layer, both at level 40 (capture/out/10-mcp-server.log).
 
 A tool that the server does not have never reaches rea's projection. The MCP SDK answers with a JSON-RPC error object instead of a result:
 
@@ -126,17 +126,17 @@ Two results in the captures refused a conclusion and exited 0. `rea compare` ove
 
 ## The shape every rea error has
 
-| Field | Meaning | Source |
-|---|---|---|
-| `code` | the discriminator, one of 20 codes listed below | `src/contracts/errorSchemas.ts:35-69` |
-| `category` | one of ten: `invalid_input`, `unsupported_provider`, `unsupported_target`, `integrity_mismatch`, `truncated`, `cancelled`, `timeout`, `resource_constraint`, `unavailable`, `execution_failure` | `src/contracts/errorSchemas.ts:5-16` |
-| `message` | one plain sentence for a person, with provider names and internal reasons removed | `src/domain/analysisErrorPresentation.ts:187`, `docs/user-visible-errors.csv` |
-| `retryable` | true only for `artifact_changed`, `invalid_request`, `provider_timeout`, `cancelled`, `revision_conflict`, and `provider_unavailable` | `src/domain/analysisErrorProjection.ts:519-526` |
-| `remediation.action` | one sentence that says what to do | `src/contracts/errorSchemas.ts:17-21` |
-| `details` | optional, free JSON for generic codes, and a fixed object with `logical_path`, `declared_sha256`, `calculated_sha256`, and `unpacked` for `artifact_integrity_mismatch` | `src/contracts/errorSchemas.ts:22-27`, `:46-58` |
+| Field | Meaning |
+| --- | --- |
+| `code` | the discriminator, one of 20 codes listed below |
+| `category` | one of ten: `invalid_input`, `unsupported_provider`, `unsupported_target`, `integrity_mismatch`, `truncated`, `cancelled`, `timeout`, `resource_constraint`, `unavailable`, `execution_failure` |
+| `message` | one plain sentence for a person, with provider names and internal reasons removed |
+| `retryable` | true only for `artifact_changed`, `invalid_request`, `provider_timeout`, `cancelled`, `revision_conflict`, and `provider_unavailable` |
+| `remediation.action` | one sentence that says what to do |
+| `details` | optional, free JSON for generic codes, and a fixed object with `logical_path`, `declared_sha256`, `calculated_sha256`, and `unpacked` for `artifact_integrity_mismatch` |
 
-The 20 codes are `invalid_request`, `access_denied`, `artifact_changed`, `unreadable_output`, `capability_unavailable`, `unsupported_target`, `provider_unavailable`, `provider_timeout`, `resource_constraint`, `cancelled`, `artifact_integrity_mismatch`, `artifact_operation_failed`, `evidence_integrity_mismatch`, `truncated`, `process_capture_failed`, `cleanup_incomplete`, `revision_conflict`, `configuration_invalid`, `target_unavailable`, and `execution_failure`. Each internal error class maps to one code (`src/domain/analysisErrorProjection.ts:184-204`). `AnalysisInputError` maps to `invalid_request`, `AnalysisCapabilityUnavailableError` to `capability_unavailable`, `AnalysisTimeoutError` to `provider_timeout`, and `ConfigurationError` to `configuration_invalid`. `NoBinaryOpenError` maps to `target_unavailable`, and `ProviderAdapterError` to `execution_failure`. A failure whose cleanup left owned resources behind takes the code `cleanup_incomplete` whatever the underlying code was, and lists them in `details` (`:54`, `:58-68`). The same union is published as JSON Schema in `docs/error-contract.schema.json`.
+The 20 codes are `invalid_request`, `access_denied`, `artifact_changed`, `unreadable_output`, `capability_unavailable`, `unsupported_target`, `provider_unavailable`, `provider_timeout`, `resource_constraint`, `cancelled`, `artifact_integrity_mismatch`, `artifact_operation_failed`, `evidence_integrity_mismatch`, `truncated`, `process_capture_failed`, `cleanup_incomplete`, `revision_conflict`, `configuration_invalid`, `target_unavailable`, and `execution_failure`. Each internal error class maps to one code. `AnalysisInputError` maps to `invalid_request`, `AnalysisCapabilityUnavailableError` to `capability_unavailable`, `AnalysisTimeoutError` to `provider_timeout`, and `ConfigurationError` to `configuration_invalid`. `NoBinaryOpenError` maps to `target_unavailable`, and `ProviderAdapterError` to `execution_failure`. A failure whose cleanup left owned resources behind takes the code `cleanup_incomplete` whatever the underlying code was, and lists them in `details`. The rea docs publish the same union as a JSON Schema, `error-contract.schema.json`.
 
-Two codes deserve a note for the Ghidra provider. `provider_timeout` is what the first Ghidra-backed call returns when the startup deadline of [Section 8.1](#s-the-rea-mcp-server) passes. `target_unavailable` is what every provider tool returns before `open_binary`, with the message "No app is open. Ask the user which app to investigate, then call open_binary with its local path." (`docs/user-visible-errors.csv:23`). Neither appeared in the captures, because the kit set a long client deadline and opened a target first.
+Two codes deserve a note for the Ghidra provider. `provider_timeout` is what the first Ghidra-backed call returns when the startup deadline of [Section 8.1](#s-the-rea-mcp-server) passes. `target_unavailable` is what every provider tool returns before `open_binary`, with the message "No app is open. Ask the user which app to investigate, then call open_binary with its local path.". Neither appeared in the captures, because the kit set a long client deadline and opened a target first.
 
-Sources: capture/out/04-inspect-binary-layout.json, 10-mcp-13-analyze-function-missing.json, 10-mcp-24-inspect-wasm-artifact.json, 16-inspect-wasm-artifact.json, 02-capabilities.json, 14-compare-bundles.json, 10-mcp-22-verify-reconstruction.json, 10-mcp-server.log, 00-commands.txt; research/sources/rea/docs-mcp-contracts.md (Progress and cancellation); rea at a56f7bb: src/contracts/errorSchemas.ts, src/domain/analysisErrorProjection.ts, src/domain/analysisErrorPresentation.ts, src/ghidra/GhidraProviderClient.ts, bridge/ghidra/ReaGhidraBridge.java, docs/user-visible-errors.csv, docs/error-contract.schema.json; research/rea-architecture.md, research/rea-evidence-model.md
+Sources: capture/out/04-inspect-binary-layout.json, 10-mcp-13-analyze-function-missing.json, 10-mcp-24-inspect-wasm-artifact.json, 16-inspect-wasm-artifact.json, 02-capabilities.json, 14-compare-bundles.json, 10-mcp-22-verify-reconstruction.json, 10-mcp-server.log, 00-commands.txt; research/sources/rea/docs-mcp-contracts.md (Progress and cancellation); rea at a56f7bb: src/contracts/errorSchemas.ts, src/domain/analysisErrorProjection.ts, src/domain/analysisErrorPresentation.ts, src/ghidra/GhidraProviderClient.ts, bridge/ghidra/ReaGhidraBridge.java, docs/user-visible-errors.csv, docs/error-contract.schema.json; research/rea-architecture.md, research/rea-evidence-model.md rea 6.4.0 source at tag a56f7bb: `bridge/ghidra/ReaGhidraBridge.java`, `src/ghidra/GhidraProviderClient.ts`, `src/domain/analysisErrorProjection.ts`, `docs/user-visible-errors.csv`. Also: `src/contracts/errorSchemas.ts`, `src/domain/analysisErrorPresentation.ts`.

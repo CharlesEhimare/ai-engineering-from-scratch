@@ -63,13 +63,13 @@ note: Nothing is cut.
 }
 ```
 
-The source at the tag agrees with both answers. There is no `src/wasm/` directory at `a56f7bb`, and the CLI command table in `src/cliCommandNames.ts` has no WebAssembly entry. The optional-tool checks in `src/server/createServer.ts:135-164` name no WABT variable. The 170 tools in `10-mcp-02-tools-list.json` include none with `wasm` in the name. The `REA_WABT_BIN_DIRECTORY` variable that the capture kit set has no effect on this build. The architectures rea recognizes are `x86`, `x86_64`, `arm`, `arm64`, and `mips` (`src/domain/binaryTargetTypes.ts:2-8`), and a WebAssembly module is none of them.
+The source at the tag agrees with both answers. The 6.4.0 source has no WebAssembly module, the CLI command table has no WebAssembly entry, and the server checks for no WABT variable. The 170 tools in `10-mcp-02-tools-list.json` include none with `wasm` in the name. The `REA_WABT_BIN_DIRECTORY` variable that the capture kit set has no effect on this build. The architectures rea recognizes are `x86`, `x86_64`, `arm`, `arm64`, and `mips`, and a WebAssembly module is none of them.
 
 ## What main added after the release
 
-The main branch at `6e25cc3`, two days after the release, has a `src/wasm/` directory. It also has an `inspect_wasm_artifact` tool with a CLI command of the same name (research/rea-tools.md:177-187, research/rea-gaps.md:41). None of it is in 6.4.0, so this manual describes it in two paragraphs and cites the research rather than the code.
+Two days after the release, the main branch at `6e25cc3` has an `inspect_wasm_artifact` tool and a CLI command of that name. None of it is in 6.4.0, so this manual describes it in two paragraphs and cites the research rather than the code.
 
-On main the tool runs three caller-supplied WABT programs on a private copy of the module. They are `wasm-validate --enable-all`, `wasm-objdump -h -x`, and `wasm2wat --enable-all`, from the directory named by `REA_WABT_BIN_DIRECTORY`. Each program must print exactly `1.0.42` as its version, or the tool refuses to run (main `src/wasm/WabtArtifactProvider.ts:220-230`, not in 6.4.0).
+On main the tool runs three caller-supplied WABT programs on a private copy of the module. They are `wasm-validate --enable-all`, `wasm-objdump -h -x`, and `wasm2wat --enable-all`, from the directory named by `REA_WABT_BIN_DIRECTORY`. Each program must print exactly `1.0.42` as its version, or the tool refuses to run.
 
 The result on main is an Evidence record. Its `normalized_result` holds the sections parsed from the objdump rows and the imports and exports lifted from the WAT text. It also holds the whole WAT as text with its digest, and a tool profile with the three command lines. Function bodies, types, globals, and memories are not separate fields. The limits are 8 MiB of input, 30 s per program, and 32 MiB of output.
 
@@ -165,4 +165,4 @@ caption: Read each column top to bottom. Dashed rose arrows are refusals. From c
 - Write your own evidence row for every wabt output, with the file digest and the tool version.
 ```
 
-Sources: src/cliCommandNames.ts, src/server/createServer.ts, src/domain/binaryTargetTypes.ts at rea-agents-6.4.0 (a56f7bb); research/rea-tools.md, research/rea-gaps.md, research/rea-640-repin.md; capture/README.md; capture/fixtures/wasm/ledger.wat, capture/fixtures/ledger.c; capture/out/16-inspect-wasm-artifact.json, 10-mcp-24-inspect-wasm-artifact.json, 10-mcp-02-tools-list.json, 16-wabt.txt, 00-fixtures.txt, 00-versions.txt; phases/13-tools-and-protocols/35-evidence-confidence-and-unknowns
+Sources: src/cliCommandNames.ts, src/server/createServer.ts, src/domain/binaryTargetTypes.ts at rea-agents-6.4.0 (a56f7bb); research/rea-tools.md, research/rea-gaps.md, research/rea-640-repin.md; capture/README.md; capture/fixtures/wasm/ledger.wat, capture/fixtures/ledger.c; capture/out/16-inspect-wasm-artifact.json, 10-mcp-24-inspect-wasm-artifact.json, 10-mcp-02-tools-list.json, 16-wabt.txt, 00-fixtures.txt, 00-versions.txt; phases/13-tools-and-protocols/35-evidence-confidence-and-unknowns rea 6.4.0 source at tag a56f7bb: `src/domain/binaryTargetTypes.ts`.

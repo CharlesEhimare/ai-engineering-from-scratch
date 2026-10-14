@@ -29,7 +29,7 @@ Every term is defined once, in the section the last column names, with the sourc
 | Function body | The set of addresses Ghidra assigns to one function, reported as ranges with inclusive ends | [4.2](#s-list-procedures-and-function-bodies) |
 | Function match | How `compare_functions` decided that two dossiers describe the same function, `matched` by `symbol` in the captures | [5.5](#s-compare-and-compare-functions) |
 | Function starts | The table of LEB128 deltas in a Mach-O image that names each function entry | [4.4](#s-xrefs-and-the-jump-table) |
-| Ghidra provider | The adapter in `src/ghidra/` that drives an installed Ghidra through `analyzeHeadless`, pinned to 12.1.4 and JDK 21 | [2.2](#s-rea-doctor-and-the-ghidra-provider) |
+| Ghidra provider | The rea adapter that drives an installed Ghidra through `analyzeHeadless`, pinned to 12.1.4 and JDK 21 | [2.2](#s-rea-doctor-and-the-ghidra-provider) |
 | Headless import | A Ghidra run with no window that imports one file into a project and runs the default analyzers | [4.1](#s-open-binary-and-the-headless-bridge) |
 | Input grid | The list of input cells a proof harness feeds to the original and the rebuild, one class of cells per hazard | [7.2](#s-a-proof-harness-outside-rea) |
 | Jump table | A table of code addresses that an indirect jump indexes | [4.4](#s-xrefs-and-the-jump-table) |

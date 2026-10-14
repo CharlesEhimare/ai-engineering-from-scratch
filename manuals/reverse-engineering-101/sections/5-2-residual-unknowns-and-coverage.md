@@ -61,33 +61,33 @@ caption: Read each column top to bottom, from the captured value to the record's
 
 ## The ResidualUnknown record
 
-**Residual unknown:** a question that the evidence does not yet settle. It is kept as a record with an `unk_` id, a revision chain, a status, and the evidence that would close it. The schema in `src/domain/residualUnknown.ts:43-83` has these fields.
+**Residual unknown:** a question that the evidence does not yet settle. It is kept as a record with an `unk_` id, a revision chain, a status, and the evidence that would close it. A residual unknown has these fields.
 
-| Field | Values | Source |
-|---|---|---|
-| `unknown_id` | `unk_` and a SHA-256 of `domain`, `question`, and `scope_digest` | `:45`, `:203-210` |
-| `revision` | an integer from 1 | `:46` |
-| `previous_revision_digest` | the digest of the revision before, or `null` for revision 1 | `:47-50`, `:93-98` |
-| `revision_digest` | SHA-256 of the record without this field | `:51`, `:278-285` |
-| `scope_digest` | the SHA-256 of the subject artifact, or `null` | `:52-55` |
-| `question` | non-empty text, whitespace collapsed | `:56`, `:203` |
-| `status` | `open`, `investigating`, `blocked`, `contradicted`, or `resolved` | `:57-63` |
-| `severity` | `low`, `medium`, `high`, or `critical` | `:64` |
-| `domain` | free text, `function-comparison` for rea's own comparisons | `:65` |
-| `supporting_evidence_ids`, `contradicting_evidence_ids` | `ev_` ids, with no id in both lists | `:66-67`, `:134-141` |
-| `required_authority`, `required_confidence`, `required_environment` | what evidence would settle the question | `:68-78` |
-| `recommended_probes` | `operation` and `rationale` pairs | `:22-25`, `:79` |
-| `relationships` | `depends-on`, `related-to`, or `contradicts` another `unk_` id | `:26-29`, `:80` |
-| `resolution` | `null`, or `verified` with at least one `ev_` id, or `withdrawn`, or `out-of-scope` | `:30-41`, `:81` |
-| `mutation_evidence_ids` | the `ev_` ids of the records that changed this unknown, at least one | `:82` |
+| Field | Values |
+| --- | --- |
+| `unknown_id` | `unk_` and a SHA-256 of `domain`, `question`, and `scope_digest` |
+| `revision` | an integer from 1 |
+| `previous_revision_digest` | the digest of the revision before, or `null` for revision 1 |
+| `revision_digest` | SHA-256 of the record without this field |
+| `scope_digest` | the SHA-256 of the subject artifact, or `null` |
+| `question` | non-empty text, whitespace collapsed |
+| `status` | `open`, `investigating`, `blocked`, `contradicted`, or `resolved` |
+| `severity` | `low`, `medium`, `high`, or `critical` |
+| `domain` | free text, `function-comparison` for rea's own comparisons |
+| `supporting_evidence_ids`, `contradicting_evidence_ids` | `ev_` ids, with no id in both lists |
+| `required_authority`, `required_confidence`, `required_environment` | what evidence would settle the question |
+| `recommended_probes` | `operation` and `rationale` pairs |
+| `relationships` | `depends-on`, `related-to`, or `contradicts` another `unk_` id |
+| `resolution` | `null`, or `verified` with at least one `ev_` id, or `withdrawn`, or `out-of-scope` |
+| `mutation_evidence_ids` | the `ev_` ids of the records that changed this unknown, at least one |
 
-The schema refuses a record that breaks one of six rules (`residualUnknown.ts:85-152`). The revision digest must match. Only revision 1 has no predecessor. Only a resolved unknown carries a resolution. A contradicted unknown needs contradicting evidence. An unknown cannot relate to itself, and no id can both support and contradict it.
+The schema refuses a record that breaks one of six rules. The revision digest must match. Only revision 1 has no predecessor. Only a resolved unknown carries a resolution. A contradicted unknown needs contradicting evidence. An unknown cannot relate to itself, and no id can both support and contradict it.
 
-The id makes the question the identity. `createResidualUnknown` collapses whitespace in the question, then hashes canonical JSON of `domain`, `question`, and `scope_digest` (`:197-210`). The same question in the same domain about the same target always has the same `unk_` id. A second `record_unknown` with that question therefore answers `already-exists` (`src/application/investigation/EvidenceLedger.ts:227-228`). The first status is `contradicted` when the input names contradicting evidence, and `open` otherwise (`residualUnknown.ts:215-216`).
+The id makes the question the identity. `createResidualUnknown` collapses whitespace in the question, then hashes canonical JSON of `domain`, `question`, and `scope_digest`. The same question in the same domain about the same target always has the same `unk_` id. A second `record_unknown` with that question therefore answers `already-exists`. The first status is `contradicted` when the input names contradicting evidence, and `open` otherwise.
 
-A change is a new revision, never an edit. `update_unknown` takes `expected_revision` and the complete new state (`:179-193`). The ledger answers `not-found` for an unknown id and `revision-conflict` when the expected revision is stale (`EvidenceLedger.ts:290-294`). The new revision has `revision` plus one and the old `revision_digest` as its `previous_revision_digest` (`residualUnknown.ts:229-253`). `list_unknowns` filters by `status`, `severity`, and `domain`, returns the current heads in id order, and does not page (`EvidenceLedger.ts:309-326`, `src/server/registerSessionRecordTools.ts:137-155`).
+A change is a new revision, never an edit. `update_unknown` takes `expected_revision` and the complete new state. The ledger answers `not-found` for an unknown id and `revision-conflict` when the expected revision is stale. The new revision has `revision` plus one and the old `revision_digest` as its `previous_revision_digest`. `list_unknowns` filters by `status`, `severity`, and `domain`, returns the current heads in id order, and does not page.
 
-Every mutation is itself an Evidence record (`src/application/investigation/UnknownEvidence.ts:10-37`). Its provider is `rea-unknown-registry` version `1` and its predicate type is `rea.residual-unknown-mutation`. Its confidence is `derived` and its authority is `analyst-inference`. It carries one limitation: "Registry mutation evidence records analyst intent, not proof of the answer." The unknown's `mutation_evidence_ids` name those records, so the two ledgers share one hash-linked history.
+Every mutation is itself an Evidence record. Its provider is `rea-unknown-registry` version `1` and its predicate type is `rea.residual-unknown-mutation`. Its confidence is `derived` and its authority is `analyst-inference`. It carries one limitation: "Registry mutation evidence records analyst intent, not proof of the answer." The unknown's `mutation_evidence_ids` name those records, so the two ledgers share one hash-linked history.
 
 ```figure
 id: fig-5-2
@@ -99,11 +99,11 @@ caption: Read left to right. Revision 1 is the unknown that registerFunctionComp
 
 ## Unknowns that rea opens itself
 
-Agents open unknowns with `record_unknown`, and rea opens some on its own. `compare_functions` records one whenever its status is not `unchanged` (`src/server/registerFunctionComparisonTool.ts:122-155`, through `recordDerivedEvidence.ts:8-19`). The domain is `function-comparison`. A `changed` comparison gets severity `medium`, the left dossier as supporting evidence, and the right dossier as contradicting evidence, so its first status is `contradicted`. An `unknown` comparison gets severity `high`. Both ask for `shipped-artifact` authority and `observed` confidence, and both recommend one probe: `analyze_function`, with the rationale "Capture complete dossiers for both functions under the same target context."
+Agents open unknowns with `record_unknown`, and rea opens some on its own. `compare_functions` records one whenever its status is not `unchanged`. The domain is `function-comparison`. A `changed` comparison gets severity `medium`, the left dossier as supporting evidence, and the right dossier as contradicting evidence, so its first status is `contradicted`. An `unknown` comparison gets severity `high`. Both ask for `shipped-artifact` authority and `observed` confidence, and both recommend one probe: `analyze_function`, with the rationale "Capture complete dossiers for both functions under the same target context."
 
 The capture ran into this rule once. The `_total` comparison in `10-mcp-21-compare-functions-total.json` was `changed`, so the connection that ran it held one unknown from that moment. No file shows it, because both bundle exports ran before any comparison. Every count in the capture therefore reads `"unknowns": 0` or `"unknown_revisions": 0`. The `rea compare` summary keeps separate counters for unknown history, `unknowns_added`, `unknowns_advanced`, and `unknowns_diverged` (`14-compare-bundles.json`), and all of them are zero for the same reason.
 
-Workflow tools do the same when they cannot finish. The user-visible error catalog at the tag lists the question each one records, for example "Does the reconstruction satisfy every declared claim?" for reconstruction verification (`docs/user-visible-errors.csv:31`). [Lesson 35](phases/13-tools-and-protocols/35-evidence-confidence-and-unknowns) builds the same ledger in Python, with the question as the identity and the required authority as the closing condition.
+Workflow tools do the same when they cannot finish. The user-visible error catalog at the tag lists the question each one records, for example "Does the reconstruction satisfy every declared claim?" for reconstruction verification. [Lesson 35](phases/13-tools-and-protocols/35-evidence-confidence-and-unknowns) builds the same ledger in Python, with the question as the identity and the required authority as the closing condition.
 
 ```takeaways
 - Read `limitations` before you call an empty list "none".
@@ -112,4 +112,4 @@ Workflow tools do the same when they cannot finish. The user-visible error catal
 - Close an unknown only with `evidence_ids` of observed records, never with a sentence.
 ```
 
-Sources: src/domain/residualUnknown.ts, src/application/investigation/EvidenceLedger.ts, src/application/investigation/UnknownEvidence.ts, src/server/registerSessionRecordTools.ts, src/server/registerFunctionComparisonTool.ts, src/server/recordDerivedEvidence.ts, docs/user-visible-errors.csv at rea-agents-6.4.0 (a56f7bb); research/rea-evidence-model.md, research/rea-640-repin.md; research/sources/rea/docs-ghidra-provider.md, docs-tool-design.md, docs-mcp-contracts.md; capture/out/10-mcp-09-analyze-function-percent-change-O1.json, 11-inspect-evidence-bundle-O1.json, 10-mcp-14-export-evidence-bundle-O1.json, 10-mcp-21-compare-functions-total.json, 14-compare-bundles.json, 15-js-app-view-summary.json; phases/13-tools-and-protocols/35-evidence-confidence-and-unknowns
+Sources: src/domain/residualUnknown.ts, src/application/investigation/EvidenceLedger.ts, src/application/investigation/UnknownEvidence.ts, src/server/registerSessionRecordTools.ts, src/server/registerFunctionComparisonTool.ts, src/server/recordDerivedEvidence.ts, docs/user-visible-errors.csv at rea-agents-6.4.0 (a56f7bb); research/rea-evidence-model.md, research/rea-640-repin.md; research/sources/rea/docs-ghidra-provider.md, docs-tool-design.md, docs-mcp-contracts.md; capture/out/10-mcp-09-analyze-function-percent-change-O1.json, 11-inspect-evidence-bundle-O1.json, 10-mcp-14-export-evidence-bundle-O1.json, 10-mcp-21-compare-functions-total.json, 14-compare-bundles.json, 15-js-app-view-summary.json; phases/13-tools-and-protocols/35-evidence-confidence-and-unknowns rea 6.4.0 source at tag a56f7bb: `residualUnknown.ts`, `src/application/investigation/EvidenceLedger.ts`, `EvidenceLedger.ts`, `src/server/registerSessionRecordTools.ts`, `src/application/investigation/UnknownEvidence.ts`, `docs/user-visible-errors.csv`.

@@ -6,9 +6,9 @@ Your agent's MCP connection closes tonight, and with it the eight records it col
 
 ## export_evidence_bundle
 
-**Evidence bundle:** one JSON object with seven arrays (`src/domain/evidenceBundle.ts:36-44`). They are `artifacts`, `providers`, `environments`, `scenarios`, `captures`, `unknowns`, and `records`. The first five are built from the records themselves (`:72-100`). They hold the distinct subjects as digest, format, and architecture, the distinct providers, and the distinct environments. Then come the controlled-replay records and the process-capture records. Records are sorted by `evidence_id`, and the order carries no meaning (`:76-78`).
+**Evidence bundle:** one JSON object with seven arrays. They are `artifacts`, `providers`, `environments`, `scenarios`, `captures`, `unknowns`, and `records`. The first five are built from the records themselves. They hold the distinct subjects as digest, format, and architecture, the distinct providers, and the distinct environments. Then come the controlled-replay records and the process-capture records. Records are sorted by `evidence_id`, and the order carries no meaning.
 
-The MCP tool takes a `path` and an `overwrite` flag (`src/server/registerSessionRecordTools.ts:37-66`). It answers with the path, the byte count, and the record and unknown counts.
+The MCP tool takes a `path` and an `overwrite` flag. It answers with the path, the byte count, and the record and unknown counts.
 
 ```listing
 title: export_evidence_bundle after eight calls on ledger-arm64-O1
@@ -26,7 +26,7 @@ note: The request and the text copy of the result are cut.
 }
 ```
 
-The write is canonical and atomic. `writeEvidenceBundle` validates the bundle again and streams canonical JSON parts (`src/application/EvidenceBundleFiles.ts:66-97`). `writeTextParts` creates a staging file with `wx` and mode `0600` and syncs it (`src/application/JsonFiles.ts:164-186`). It then renames the file over the destination when `overwrite` is true, or hard-links it when the destination must not exist. The contract says the same: "Complete bundle exports stream canonical JSON into an atomically published file." {{mcp mcp-contracts.md:307-308}}
+The write is canonical and atomic. `writeEvidenceBundle` validates the bundle again and streams canonical JSON parts. `writeTextParts` creates a staging file with `wx` and mode `0600` and syncs it. It then renames the file over the destination when `overwrite` is true, or hard-links it when the destination must not exist. The contract says the same: "Complete bundle exports stream canonical JSON into an atomically published file." {{mcp mcp-contracts.md:307-308}}
 
 The capture copied the file the server wrote to `11-bundle-O1.json`, with the capture directory masked and a newline added. Its seven arrays hold one artifact, one provider, no environments, no scenarios, no captures, no unknowns, and eight records.
 
@@ -42,7 +42,7 @@ note: Nothing is cut.
 
 ## inspect-evidence-bundle
 
-You do not need rea's engine, or a session, to read a bundle. `rea inspect-evidence-bundle` takes a JSON argument with `path`, `detail`, and optional `filters` (`src/cli/analysisViewCommands.ts:25-39`) and prints one row per record without the payloads. The MCP tool `get_evidence_bundle` shares the projection for the records of a live session (`src/server/registerSessionRecordTools.ts:68-82`).
+You do not need rea's engine, or a session, to read a bundle. `rea inspect-evidence-bundle` takes a JSON argument with `path`, `detail`, and optional `filters` and prints one row per record without the payloads. The MCP tool `get_evidence_bundle` shares the projection for the records of a live session.
 
 ```listing
 title: the summary of bundle O1, first record
@@ -77,7 +77,7 @@ The eight rows name four `analyze_function` dossiers, `_percent_change`, `_grade
 
 ## evidence-export and evidence-import on the CLI
 
-`rea evidence-export SOURCE OUTPUT` reads a bundle, validates it, and writes it again in canonical form (`src/cliEvidenceCommands.ts:31-49`, `src/application/EvidenceBundleCommands.ts:27-38`). The answer is the path, the byte count, and the record count (`:62-72`). The capture exported `11-bundle-O1.json` to a work file and compared the digests.
+`rea evidence-export SOURCE OUTPUT` reads a bundle, validates it, and writes it again in canonical form. The answer is the path, the byte count, and the record count. The capture exported `11-bundle-O1.json` to a work file and compared the digests.
 
 ```listing
 title: the MCP export and the CLI export of the same records
@@ -93,11 +93,11 @@ same JSON content as the MCP export: yes
 
 The one byte of difference is the newline the kit appended to its copy. Strip it, and the copy has 171,729 bytes and the digest `9659bb79c304ea69`, the digest of the CLI file. The MCP server and the CLI write the same canonical bytes for the same records, which is what the thesis of this section promised.
 
-`rea evidence-import PATH` validates a bundle and reports its counts. On the CLI there is no session, so `imported` and `total` are both the number of records in the file (`EvidenceBundleCommands.ts:14-24`): `{"imported": 8, "unknowns_added": 0, "total": 8}` in `13-evidence-import.json`. The CLI documentation draws the line: "Separate CLI calls consume full saved records." {{cli cli.md:158}}
+`rea evidence-import PATH` validates a bundle and reports its counts. On the CLI there is no session, so `imported` and `total` are both the number of records in the file: `{"imported": 8, "unknowns_added": 0, "total": 8}` in `13-evidence-import.json`. The CLI documentation draws the line: "Separate CLI calls consume full saved records." {{cli cli.md:158}}
 
 ## import_evidence_bundle into a live session
 
-In MCP the same verb merges into the connection's ledger. The handler reads and validates the file, calls `importEvidenceBundle`, and answers with the records added, the unknown revisions added, and the new total (`src/server/registerSessionRecordTools.ts:84-118`). The ledger adds each record it does not hold and keeps a record it already holds (`src/application/investigation/EvidenceLedger.ts:73-118`). It refuses a record whose id it holds with different content: "Conflicting evidence record".
+In MCP the same verb merges into the connection's ledger. The handler reads and validates the file, calls `importEvidenceBundle`, and answers with the records added, the unknown revisions added, and the new total. The ledger adds each record it does not hold and keeps a record it already holds. It refuses a record whose id it holds with different content: "Conflicting evidence record".
 
 ```listing
 title: bundle O1 imported into the session that analysed O2
@@ -114,7 +114,7 @@ note: The request and the text copy of the result are cut.
 
 Six of eight, and a total of fourteen. The session had closed O1 before, and `close_binary` empties the ledger: "Opening another target preserves retained records; `close_binary` clears them, even when no binary is active." {{mcp mcp-contracts.md:393-395}}
 
-So the O1 records were gone when O2 opened. Then `compare_functions` ran twice, with the O1 dossiers of `_percent_change` and `_total` passed inline. The tool records both sides before its own result (`src/server/registerFunctionComparisonTool.ts:79-82`, `sessionEvidence.ts:7-16`). Those two O1 records were back in the ledger, so the import added the other six.
+So the O1 records were gone when O2 opened. Then `compare_functions` ran twice, with the O1 dossiers of `_percent_change` and `_total` passed inline. The tool records both sides before its own result. Those two O1 records were back in the ledger, so the import added the other six.
 
 The fourteen are the six new records and eight that were already there:
 
@@ -141,4 +141,4 @@ caption: Read left to right. Solid teal is a durable write, solid ink a call. Fr
 - Expect `imported` below the record count when the session already holds some of the records.
 ```
 
-Sources: src/domain/evidenceBundle.ts, src/server/registerSessionRecordTools.ts, src/application/EvidenceBundleFiles.ts, src/application/EvidenceBundleCommands.ts, src/application/JsonFiles.ts, src/cliEvidenceCommands.ts, src/cli/analysisViewCommands.ts, src/application/investigation/EvidenceLedger.ts, src/server/registerFunctionComparisonTool.ts, src/server/sessionEvidence.ts at rea-agents-6.4.0 (a56f7bb); research/rea-evidence-model.md, research/rea-tools.md; research/sources/rea/docs-mcp-contracts.md, docs-cli.md; capture/README.md; capture/out/10-mcp-14-export-evidence-bundle-O1.json, 10-mcp-23-import-evidence-bundle-O1.json, 11-bundle-O1.json, 11-bundles.txt, 11-inspect-evidence-bundle-O1.json, 11-inspect-evidence-bundle-O2.json, 12-evidence-export.json, 12-evidence-export.txt, 13-evidence-import.json
+Sources: src/domain/evidenceBundle.ts, src/server/registerSessionRecordTools.ts, src/application/EvidenceBundleFiles.ts, src/application/EvidenceBundleCommands.ts, src/application/JsonFiles.ts, src/cliEvidenceCommands.ts, src/cli/analysisViewCommands.ts, src/application/investigation/EvidenceLedger.ts, src/server/registerFunctionComparisonTool.ts, src/server/sessionEvidence.ts at rea-agents-6.4.0 (a56f7bb); research/rea-evidence-model.md, research/rea-tools.md; research/sources/rea/docs-mcp-contracts.md, docs-cli.md; capture/README.md; capture/out/10-mcp-14-export-evidence-bundle-O1.json, 10-mcp-23-import-evidence-bundle-O1.json, 11-bundle-O1.json, 11-bundles.txt, 11-inspect-evidence-bundle-O1.json, 11-inspect-evidence-bundle-O2.json, 12-evidence-export.json, 12-evidence-export.txt, 13-evidence-import.json rea 6.4.0 source at tag a56f7bb: `src/domain/evidenceBundle.ts`, `src/server/registerSessionRecordTools.ts`, `src/application/EvidenceBundleFiles.ts`, `src/application/JsonFiles.ts`, `src/cli/analysisViewCommands.ts`, `src/cliEvidenceCommands.ts`, `src/application/EvidenceBundleCommands.ts`, `EvidenceBundleCommands.ts`, `src/application/investigation/EvidenceLedger.ts`, `src/server/registerFunctionComparisonTool.ts`, `sessionEvidence.ts`.

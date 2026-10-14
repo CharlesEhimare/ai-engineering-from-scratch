@@ -6,7 +6,7 @@ You rebuilt `ledger.c` at `-O2` and want to know which functions the compiler ch
 
 ## Two dossiers in, one derived record out
 
-`compare_functions` takes two complete Evidence records as `left` and `right` (`src/domain/functionComparisonSchemas.ts:19-23`). Each is parsed with `parseEvidence`, so a record with a tampered id is refused (`src/server/registerFunctionComparisonTool.ts:43-54`). Each must be an `analyze_function` record with predicate type `rea.analysis`, or the tool answers "Expected analyze_function Evidence" (`:55-68`). The capture passed the dossiers it had received a few calls earlier.
+`compare_functions` takes two complete Evidence records as `left` and `right`. Each is parsed with `parseEvidence`, so a record with a tampered id is refused. Each must be an `analyze_function` record with predicate type `rea.analysis`, or the tool answers "Expected analyze_function Evidence". The capture passed the dossiers it had received a few calls earlier.
 
 ```listing
 title: the request for _percent_change across the two builds
@@ -27,7 +27,7 @@ note: The kit kept each evidence_id and replaced the complete dossier with a mar
 }
 ```
 
-The answer is a new Evidence record from provider `rea-function-comparison` version `1` (`registerFunctionComparisonTool.ts:85-101`). Its predicate type is `rea.function-comparison`, its confidence `derived`, and its authority `analyst-inference`. Both input ids appear as parameters and as `evidence_links`. The record has no subject, so it carries the automatic limitation about artifact identity ([the Evidence record](#s-the-evidence-record)). Before it is recorded, both inputs are recorded in the session ledger (`:79-82`), which is why [import](#s-evidence-bundles-export-and-import) later found two O1 records already present.
+The answer is a new Evidence record from provider `rea-function-comparison` version `1`. Its predicate type is `rea.function-comparison`, its confidence `derived`, and its authority `analyst-inference`. Both input ids appear as parameters and as `evidence_links`. The record has no subject, so it carries the automatic limitation about artifact identity ([the Evidence record](#s-the-evidence-record)). Before it is recorded, both inputs are recorded in the session ledger, which is why [import](#s-evidence-bundles-export-and-import) later found two O1 records already present.
 
 ```listing
 title: the head of the _percent_change comparison
@@ -52,11 +52,11 @@ note: The dimensions, the changes, and the limitations are cut.
   },
 ```
 
-**Function match:** how rea decided that the two dossiers describe the same function. `matched` by `symbol` means the two procedure names are equal (`functionComparisonSchemas.ts:66-72`). A `mismatched` or `ambiguous` match is reported with method `explicit`, and an ambiguous match makes the whole comparison `unknown` (`src/domain/functionComparisonResults.ts:68-81`).
+**Function match:** how rea decided that the two dossiers describe the same function. `matched` by `symbol` means the two procedure names are equal. A `mismatched` or `ambiguous` match is reported with method `explicit`, and an ambiguous match makes the whole comparison `unknown`.
 
 ## The eight dimensions
 
-`compareDimensions` runs eight comparisons in a fixed order: `identity`, `pseudocode`, `assembly`, `comments`, `calls`, `references`, `strings_names`, and `cfg` (`src/domain/functionComparisonDimensions.ts:30-55`, names in `functionComparisonSchemas.ts:7-16`). Each dimension has a status of `unchanged`, `changed`, or `unknown`, and a left and right digest (`functionComparisonSchemas.ts:39-64`). It also has a left and right count, a `text_delta` for the two text dimensions, and a `conclusion_kind`. The overall status is `unknown` if any dimension is unknown, else `changed` if any dimension changed, else `unchanged` (`functionComparisonResults.ts:68-81`).
+`compareDimensions` runs eight comparisons in a fixed order: `identity`, `pseudocode`, `assembly`, `comments`, `calls`, `references`, `strings_names`, and `cfg`. Each dimension has a status of `unchanged`, `changed`, or `unknown`, and a left and right digest. It also has a left and right count, a `text_delta` for the two text dimensions, and a `conclusion_kind`. The overall status is `unknown` if any dimension is unknown, else `changed` if any dimension changed, else `unchanged`.
 
 | Dimension | What is compared | `_percent_change` | `_total` |
 |---|---|---|---|
@@ -69,7 +69,7 @@ note: The dimensions, the changes, and the limitations are cut.
 | `strings_names` | referenced strings and names | unchanged, 1 and 1 | changed, 2 to 11 |
 | `cfg` | the basic blocks and edges, address-normalized | unchanged, 3 and 3 | changed, 5 to 16 |
 
-The two text dimensions are line diffs with a budget: 100 ms and 10,000 edits (`functionComparisonDimensions.ts:80-83`). A diff that runs out of budget makes the dimension `unknown` with the limitation "Bounded line diff exceeded its time or edit-distance limit." (`:84-93`). The counts are code points of the text (`:110-111`). The `text_delta` reports added lines, removed lines, and hunks.
+The two text dimensions are line diffs with a budget: 100 ms and 10,000 edits. A diff that runs out of budget makes the dimension `unknown` with the limitation "Bounded line diff exceeded its time or edit-distance limit.". The counts are code points of the text. The `text_delta` reports added lines, removed lines, and hunks.
 
 For `_total`, the pseudocode grew by 109 lines and lost 11 in 11 hunks (`10-mcp-21-compare-functions-total.json`). The assembly grew by 61 lines and lost 12 in 2 hunks. The `-O2` build of `_total` has 16 basic blocks where the `-O1` build has 5, and 13 references where it had 4. Those are the facts rea states, and the record stops there. Why the compiler made that change is your question to answer with the two assembly listings.
 
@@ -114,13 +114,13 @@ note: Nothing inside the dimension is cut.
 },
 ```
 
-The string comes from `functionComparisonDimensions.ts:63-68`, and it is attached before any diff runs. The dossier's assembly is Ghidra's listing text, with the addresses and the resolved operands inside the text. The tool compares that text line by line. It does not decode the instructions, it does not know which operand bytes a linker will patch, and it cannot mask them. Two copies of the same code at different addresses diff as `changed`, and a relocatable object compared with its linked image diffs as `changed`. The same holds across engines: when the two dossiers come from different providers, both text dimensions become `unknown` with "Exact text comparison requires one provider identity." (`:69-79`).
+rea attaches this string before any diff runs. The dossier's assembly is Ghidra's listing text, with the addresses and the resolved operands inside the text. The tool compares that text line by line. It does not decode the instructions, it does not know which operand bytes a linker will patch, and it cannot mask them. Two copies of the same code at different addresses diff as `changed`, and a relocatable object compared with its linked image diffs as `changed`. The same holds across engines: when the two dossiers come from different providers, both text dimensions become `unknown` with "Exact text comparison requires one provider identity.".
 
-An `unchanged` assembly dimension therefore means equal text from one engine, and a `changed` one means different text. Neither is a statement about bytes. The byte-level proof zeroes the relocation fields and compares the referenced table as well. [Lesson 36](phases/13-tools-and-protocols/36-rebuild-and-prove-equal) builds that proof, and Part 7 runs it against the same fixture. The references dimension has a limit of its own, because it compares the endpoints and not the kinds: "Reference endpoints differ independently of provider reference-kind metadata." (`functionComparisonDimensions.ts:185`).
+An `unchanged` assembly dimension therefore means equal text from one engine, and a `changed` one means different text. Neither is a statement about bytes. The byte-level proof zeroes the relocation fields and compares the referenced table as well. [Lesson 36](phases/13-tools-and-protocols/36-rebuild-and-prove-equal) builds that proof, and Part 7 runs it against the same fixture. The references dimension has a limit of its own, because it compares the endpoints and not the kinds: "Reference endpoints differ independently of provider reference-kind metadata.".
 
 ## rea compare on two bundles
 
-`rea compare LEFT RIGHT`, also spelled `rea compare-bundles`, compares two bundle files without a session (`src/cliEvidenceCommands.ts:50-65`, `src/application/EvidenceBundleCommands.ts:41-60`). It works by `evidence_id`: a record in both bundles is compared, and a record in one bundle only is an unresolved branch (`src/domain/bundleComparison.ts:184-191`). The overall status is `unknown` as soon as one change is unresolved (`:100-110`).
+`rea compare LEFT RIGHT`, also spelled `rea compare-bundles`, compares two bundle files without a session. It works by `evidence_id`: a record in both bundles is compared, and a record in one bundle only is an unresolved branch. The overall status is `unknown` as soon as one change is unresolved.
 
 ```listing
 title: rea compare on the O1 and O2 bundles
@@ -162,7 +162,7 @@ note: Nine of the ten changes are cut, and so are the closing limitations.
     },
 ```
 
-Ten unresolved, none unchanged, none removed. The two bundles come from two different files, `ledger-arm64-O1` and `ledger-arm64-O2`. No `evidence_id` is in both, and every one of the ten records is one-sided. The tool does not call a one-sided record `removed`, because a bundle has no marker of completeness (`bundleComparison.ts:120`).
+Ten unresolved, none unchanged, none removed. The two bundles come from two different files, `ledger-arm64-O1` and `ledger-arm64-O2`. No `evidence_id` is in both, and every one of the ten records is one-sided. The tool does not call a one-sided record `removed`, because a bundle has no marker of completeness.
 
 The digests it reports are digests of the canonical bytes. `9659bb79c304ea69` is the digest of bundle O1 without the kit's trailing newline ([export and import](#s-evidence-bundles-export-and-import)). `rea compare` answers the question "what changed in this evidence set" for two bundles of one build. For two builds, `compare_functions` is the tool, one function at a time.
 
@@ -173,4 +173,4 @@ The digests it reports are digests of the canonical bytes. `9659bb79c304ea69` is
 - Run `rea compare` on bundles of one build, or expect every record to be unresolved.
 ```
 
-Sources: src/domain/functionComparisonSchemas.ts, src/domain/functionComparisonDimensions.ts, src/domain/functionComparisonResults.ts, src/domain/bundleComparison.ts, src/server/registerFunctionComparisonTool.ts, src/cliEvidenceCommands.ts, src/application/EvidenceBundleCommands.ts at rea-agents-6.4.0 (a56f7bb); research/rea-gaps.md, research/rea-tools.md; capture/out/10-mcp-20-compare-functions-percent-change.json, 10-mcp-21-compare-functions-total.json, 14-compare-bundles.json, 12-evidence-export.txt; phases/13-tools-and-protocols/36-rebuild-and-prove-equal
+Sources: src/domain/functionComparisonSchemas.ts, src/domain/functionComparisonDimensions.ts, src/domain/functionComparisonResults.ts, src/domain/bundleComparison.ts, src/server/registerFunctionComparisonTool.ts, src/cliEvidenceCommands.ts, src/application/EvidenceBundleCommands.ts at rea-agents-6.4.0 (a56f7bb); research/rea-gaps.md, research/rea-tools.md; capture/out/10-mcp-20-compare-functions-percent-change.json, 10-mcp-21-compare-functions-total.json, 14-compare-bundles.json, 12-evidence-export.txt; phases/13-tools-and-protocols/36-rebuild-and-prove-equal rea 6.4.0 source at tag a56f7bb: `src/domain/functionComparisonSchemas.ts`, `src/server/registerFunctionComparisonTool.ts`, `registerFunctionComparisonTool.ts`, `functionComparisonSchemas.ts`, `src/domain/functionComparisonResults.ts`, `functionComparisonResults.ts`, `functionComparisonDimensions.ts`, `src/cliEvidenceCommands.ts`, `src/application/EvidenceBundleCommands.ts`, `src/domain/bundleComparison.ts`, `bundleComparison.ts`.
