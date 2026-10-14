@@ -3,8 +3,9 @@ name: learn-reverse-engineering
 description: >
   Focused interactive tutor for the Reverse Engineering path in AI Engineering
   from Scratch. Start or resume this route when a learner wants to read a
-  compiled program: file formats, disassembly, control flow, lifting to
-  pseudocode, evidence, and proving a rebuilt function equal. Teaches one
+  compiled program: file formats, disassembly, control flow, lifting, evidence,
+  proof, calling conventions, compiler idioms, linking, types, debugging,
+  bytecode, diffing, symbolic execution, and AI-assisted analysis. Teaches one
   lesson per invocation and records evidence in REVERSE-ENGINEERING-LEARNING.md.
 ---
 
@@ -43,7 +44,7 @@ https://raw.githubusercontent.com/rohitg00/ai-engineering-from-scratch/main/<pat
 ```
 
 Read the manifest before choosing a lesson. Follow `lessons` by `order`. The
-required path is Phase 13 lessons 32, 33, 34, 35, 36.
+required path is Phase 13 lessons 32 to 45, in manifest order.
 
 For each selected lesson, read its `docs/en.md` and `quiz.json`. Read or run
 files under `code/` only when the current lab needs them. The companion manual
@@ -82,8 +83,8 @@ If it does not exist, create it without an interview:
 
 ## Route
 - Started: <YYYY-MM-DD>
-- Required time: about 10 hours 35 minutes
-- Current: 1 of 5
+- Required time: about 32 hours 25 minutes
+- Current: 1 of 14
 
 ## Prerequisite check
 - Python, hexadecimal, and command line: Confirmed or Pending
@@ -99,6 +100,15 @@ If it does not exist, create it without an interview:
 | 3 | 13/34 Lifting to pseudocode | Locked | | |
 | 4 | 13/35 Evidence, confidence, and unknowns | Locked | | |
 | 5 | 13/36 Rebuild and prove equal | Locked | | |
+| 6 | 13/37 The reverse engineering landscape | Locked | | |
+| 7 | 13/38 Calling conventions and stack frames | Locked | | |
+| 8 | 13/39 Compiler idioms and optimization | Locked | | |
+| 9 | 13/40 Linking, loading, and stripped binaries | Locked | | |
+| 10 | 13/41 Recovering data and types | Locked | | |
+| 11 | 13/42 Dynamic analysis of your own program | Locked | | |
+| 12 | 13/43 Bytecode and managed formats | Locked | | |
+| 13 | 13/44 Binary diffing and symbolic execution | Locked | | |
+| 14 | 13/45 AI-assisted reverse engineering | Locked | | |
 
 ## Notes
 ```
@@ -142,6 +152,15 @@ without the learner's confirmation.
   limitations, and residual unknowns, and recompute its evidence id.
 - **13/36:** run the differential grid and the relocation-masked byte
   comparison on a rebuilt function, and record the result as evidence.
+- **13/37:** run the comparison harness on the four fixture functions and explain each place where a tool invents or misses code, then name the same pipeline stage in three tools.
+- **13/38:** infer parameter count, frame size, and saved registers for one function under three ABIs, and cite the spec rule behind each inference.
+- **13/39:** recover a divisor from its magic multiplier and shift, and classify the switch lowering of one function at -O0 and -O2 with the evidence instructions.
+- **13/40:** trace one imported call through its stub and fixup in a Mach-O build, and name the functions of a stripped build with signatures made from the unstripped one.
+- **13/41:** infer a struct layout from memory accesses and match every field against the DWARF reader, then resolve one virtual call to its vtable slot.
+- **13/42:** grade the static claims for one build as confirmed, refuted, or not observed from a debugger transcript, and explain the -O2 build where breakpoints never hit.
+- **13/43:** parse the same function from a .pyc, a class file, and a Wasm module, match each listing against the reference tool, and list what each container keeps.
+- **13/44:** match functions between two optimization levels with the staged matcher, show the relocation case that masking fixes, and solve one input for each path of grade.
+- **13/45:** score the candidate reconstructions on all six scorecard fields and explain the failing evidence for each candidate that does not pass.
 
 ## Close
 

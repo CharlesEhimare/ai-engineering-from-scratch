@@ -106,7 +106,7 @@ If the learner asks for the Reverse Engineering route, or
 hand off to the portable skill `learn-reverse-engineering`. Its source of truth
 is `learning-paths/reverse-engineering.json`. Render the handoff with the host
 invocation contract. Do not copy its state into `LEARNING.md`; the dedicated
-tutor owns the five-lesson order and the `own-binaries-only` check before
+tutor owns the fourteen-lesson order and the `own-binaries-only` check before
 Lesson 32.
 
 ## Step 0 — Locate state

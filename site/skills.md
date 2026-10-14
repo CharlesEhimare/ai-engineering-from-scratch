@@ -170,4 +170,4 @@ A long manual about one tool at one pinned version, with sources, a table of con
 
 ## 06 Lesson artifacts
 
-400 skills and 100 prompts live under `phases/**/outputs/`. Install with `python3 scripts/install_skills.py <target> --phase <n>` or `--tag <tag>`.
+409 skills and 100 prompts live under `phases/**/outputs/`. Install with `python3 scripts/install_skills.py <target> --phase <n>` or `--tag <tag>`.
