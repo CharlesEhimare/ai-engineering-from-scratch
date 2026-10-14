@@ -156,4 +156,4 @@ The record is not a format parse. It holds no load commands, no sections, no sym
 - Carry the subject `sha256` into every later record about the same file.
 ```
 
-Sources: capture/out/00-commands.txt, capture/out/00-fixtures.txt, capture/out/03-inspect-artifact.json; rea 6.4.0 at a56f7bb: src/application/InvestigationProviders.ts, src/domain/artifactInspection.ts; research/rea-tools.md section 7, research/rea-evidence-model.md section 1 rea 6.4.0 source at tag a56f7bb: `src/application/InvestigationProviders.ts`, `src/domain/artifactInspection.ts`.
+Sources: capture/out/00-commands.txt, capture/out/00-fixtures.txt, capture/out/03-inspect-artifact.json; rea 6.4.0 at a56f7bb: src/application/InvestigationProviders.ts, src/domain/artifactInspection.ts

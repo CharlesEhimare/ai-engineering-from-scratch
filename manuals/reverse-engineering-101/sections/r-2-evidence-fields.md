@@ -2,7 +2,7 @@
 
 > The 15 fields of every Evidence record at 6.4.0, with their types, their allowed values, and one value each from the captured dossier of _percent_change.
 
-The Evidence schema is one strict Zod object with 15 fields. A record with a sixteenth field, or without one of the 15, is rejected. The main branch adds `relationship_coverage` as a sixteenth field, and 6.4.0 does not have it (`research/rea-640-repin.md`). The dossier column takes its values from the `analyze_function` record of `_percent_change` in `ledger-arm64-O1`, `ev_0000b698` (capture/out/10-mcp-09-analyze-function-percent-change-O1.json). The derived column takes them from the `verify_reconstruction` record `ev_5897face` (capture/out/10-mcp-22-verify-reconstruction.json). [Section 5.1](#s-the-evidence-record) reads the record in prose.
+The Evidence schema is one strict Zod object with 15 fields. A record with a sixteenth field, or without one of the 15, is rejected. The main branch adds `relationship_coverage` as a sixteenth field, and 6.4.0 does not have it. The dossier column takes its values from the `analyze_function` record of `_percent_change` in `ledger-arm64-O1`, `ev_0000b698` (capture/out/10-mcp-09-analyze-function-percent-change-O1.json). The derived column takes them from the `verify_reconstruction` record `ev_5897face` (capture/out/10-mcp-22-verify-reconstruction.json). [Section 5.1](#s-the-evidence-record) reads the record in prose.
 
 ## The 15 fields
 
@@ -37,7 +37,7 @@ The `normalized_result` of a dossier has the keys `procedure`, `pseudocode`, `as
 | `subject.format` | `hopper`, `analysis-database`, `mach-o`, `elf`, `pe`, `dos-mz`, `dos-com`, `zip`, `ipa`, `apk`, `msix`, `appx`, `asar`, `dmg`, `pkg`, `plist`, `javascript`, `source-map`, `directory`, `file`, `unknown`, `mach-o-universal`, `javascript-bundle`, `entitlements` |
 | `subject.architecture` | `x86`, `x86_64`, `arm`, `arm64`, `mips`, or `null` |
 
-The `raw-binary` format and the `6502` and RISC-V architectures are on the main branch only (`research/rea-640-repin.md`).
+The `raw-binary` format and the `6502` and RISC-V architectures are on the main branch only.
 
 ## The id
 
@@ -45,4 +45,4 @@ The id hashes the semantic projection of the record. That projection keeps the s
 
 Two other id prefixes appear in the captures. `unk_` ids name residual unknowns and hash `{ domain, question, scope_digest }` ([Section 5.2](#s-residual-unknowns-and-coverage)). The `analysis_profile.digest` is the SHA-256 of the canonical JSON of the provider and its parameters. Two records with different digests are not comparable in `compare_functions`.
 
-Sources: capture/out/10-mcp-09-analyze-function-percent-change-O1.json, 10-mcp-22-verify-reconstruction.json; capture/README.md; rea at a56f7bb: src/domain/evidence.ts, src/domain/binaryTargetTypes.ts, src/domain/residualUnknown.ts, src/domain/analysisProfile.ts; research/rea-evidence-model.md, research/rea-640-repin.md rea 6.4.0 source at tag a56f7bb: `src/domain/evidence.ts`, `src/domain/analysisProfile.ts`. Also: `src/domain/binaryTargetTypes.ts`.
+Sources: capture/out/10-mcp-09-analyze-function-percent-change-O1.json, 10-mcp-22-verify-reconstruction.json; capture/README.md; rea at a56f7bb: src/domain/evidence.ts, src/domain/binaryTargetTypes.ts, src/domain/residualUnknown.ts, src/domain/analysisProfile.ts

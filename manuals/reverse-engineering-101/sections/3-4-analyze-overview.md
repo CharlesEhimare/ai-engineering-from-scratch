@@ -187,4 +187,4 @@ The record has no function sizes, no entry point, and no image base. The researc
 - Read `confidence: "derived"` as a sign that three primitive records stand behind this one.
 ```
 
-Sources: capture/out/00-commands.txt, capture/out/05-analyze-arm64-O1.json, capture/out/05-analyze-x86_64-O1.json; rea 6.4.0 at a56f7bb: src/cliCommandNames.ts, src/application/EnhancedTools.ts, src/application/WorkflowEvidence.ts, src/contracts/toolOutputSchemaGroups.ts, src/ghidra/GhidraTargetSnapshot.ts; research/rea-tools.md section 2.1; research/rea-640-repin.md rea 6.4.0 source at tag a56f7bb: `src/cliCommandNames.ts`, `src/application/EnhancedTools.ts`, `src/contracts/toolOutputSchemaGroups.ts`, `src/application/WorkflowEvidence.ts`, `src/ghidra/GhidraTargetSnapshot.ts`.
+Sources: capture/out/00-commands.txt, capture/out/05-analyze-arm64-O1.json, capture/out/05-analyze-x86_64-O1.json; rea 6.4.0 at a56f7bb: src/cliCommandNames.ts, src/application/EnhancedTools.ts, src/application/WorkflowEvidence.ts, src/contracts/toolOutputSchemaGroups.ts, src/ghidra/GhidraTargetSnapshot.ts

@@ -15,7 +15,7 @@ source: readme line 327
 "REA provides tools for lawful reverse-engineering research, analysis, and reconstruction. You are responsible for obtaining any required authorization and complying with applicable laws. The project does not endorse illegal or unauthorized use."
 ```
 
-The rule is one paragraph under the heading `Disclaimer` at line 325 of `README.md` (research/sources/rea/README.md). It is the whole of what rea 6.4.0 says about use. The tag has no `DISCLAIMER.md`. That file exists only on `main` after 6.4.0, at commit `6e25cc3`, and the vendored copy is `research/sources/rea/DISCLAIMER-main-6e25cc3.md`. Its list of uses the project will not help with names DRM, licence checks, anti-cheat systems, game cheats, bypassing authentication, and copying proprietary software. The 6.4.0 README states the principle and leaves the list to you.
+The rule is one paragraph under the heading `Disclaimer` at line 325 of `README.md` (sources/rea/README.md). It is the whole of what rea 6.4.0 says about use. The tag has no `DISCLAIMER.md`. That file exists only on `main` after 6.4.0, at commit `6e25cc3`, and `sources/rea/` keeps a copy. Its list of uses the project will not help with names DRM, licence checks, anti-cheat systems, game cheats, bypassing authentication, and copying proprietary software. The 6.4.0 README states the principle and leaves the list to you.
 
 ## United States: 17 U.S.C. 1201
 
@@ -31,7 +31,7 @@ Section 1201(f) is an exception to the anti-circumvention rule only. It does not
 
 Article 1(2) sets the ground: "Ideas and principles which underlie any element of a computer program, including those which underlie its interfaces, are not protected by copyright under this Directive." {{law Directive 2009/24/EC Article 1(2)}}. Two articles then give a lawful user two rights.
 
-Article 5(3) is the right to study a running program: "The person having a right to use a copy of a computer program shall be entitled, without the authorisation of the rightholder, to observe, study or test the functioning of the program in order to determine the ideas and principles which underlie any element of the program if he does so while performing any of the acts of loading, displaying, running, transmitting or storing the program which he is entitled to do." {{law Directive 2009/24/EC Article 5(3)}}. The Court of Justice applied it in C-406/10. There a licensee studied the SAS System to reproduce its functionality in a second program, without decompilation, and did not infringe (research/legal.md).
+Article 5(3) is the right to study a running program: "The person having a right to use a copy of a computer program shall be entitled, without the authorisation of the rightholder, to observe, study or test the functioning of the program in order to determine the ideas and principles which underlie any element of the program if he does so while performing any of the acts of loading, displaying, running, transmitting or storing the program which he is entitled to do." {{law Directive 2009/24/EC Article 5(3)}}. The Court of Justice applied it in C-406/10. There a licensee studied the SAS System to reproduce its functionality in a second program, without decompilation, and did not infringe.
 
 Article 6(1) is the decompilation right. It needs no authorisation "where reproduction of the code and translation of its form within the meaning of points (a) and (b) of Article 4(1) are indispensable to obtain the information necessary to achieve the interoperability of an independently created computer program with other programs" {{law Directive 2009/24/EC Article 6(1)}}. Three conditions follow. First, the acts are done by a person with a right to use a copy. Second, "the information necessary to achieve interoperability has not previously been readily available" {{law Directive 2009/24/EC Article 6(1)(b)}}. Third, "those acts are confined to the parts of the original program which are necessary in order to achieve interoperability" {{law Directive 2009/24/EC Article 6(1)(c)}}.
 
@@ -43,14 +43,14 @@ In Sega Enterprises Ltd. v. Accolade, Inc., 977 F.2d 1510 (9th Cir. 1992), Accol
 
 In Sony Computer Entertainment, Inc. v. Connectix Corp., 203 F.3d 596 (9th Cir. 2000), Connectix copied the PlayStation BIOS into memory many times while it built an emulator that contained none of Sony's code. The court held: "The intermediate copies made and used by Connectix during the course of its reverse engineering of the Sony BIOS were protected fair use, necessary to permit Connectix to make its non-infringing Virtual Game Station function with PlayStation games." {{law Sony v. Connectix, 203 F.3d 596}}.
 
-The court listed four ways to reach the functional elements of a program (research/legal.md). Two of them are the static examination of the instructions and the dynamic examination of a running program, and it called both disassembly. Both decisions protect the intermediate copies and say nothing about copied code in the finished product.
+The court listed four ways to reach the functional elements of a program. Two of them are the static examination of the instructions and the dynamic examination of a running program, and it called both disassembly. Both decisions protect the intermediate copies and say nothing about copied code in the finished product.
 
 ```figure
 id: fig-2-1
 kind: decision
 title: five questions before the first command
 claim: Five questions from 17 USC 1201(f), Directive 2009/24/EC, Sega, and Connectix stand before the first command, and the fixtures of this manual answer all five by construction.
-caption: Read the five questions from the top down, and follow a dashed rose arrow at the first no. The references are those of research/legal.md, and the file names come from capture/out/00-fixtures.txt.
+caption: Read the five questions from the top down, and follow a dashed rose arrow at the first no. The references are the statutes and decisions in the Sources line, and the file names come from capture/out/00-fixtures.txt.
 ```
 
 ## The rule of this manual
@@ -90,4 +90,4 @@ Check that the facts are not already published. Confine the work to the parts yo
 - Keep intermediate copies for analysis, and keep copied code out of anything you release.
 ```
 
-Sources: readme line 327 (research/sources/rea/README.md); research/sources/rea/DISCLAIMER-main-6e25cc3.md; law: 17 U.S.C. 1201(a)(1)(A), (a)(3)(A), (c)(1), (f)(1), (f)(4), (j)(1), Directive 2009/24/EC Articles 1(2), 5(1), 5(3), 6(1), 6(2)(c), 8, CJEU C-406/10 and C-13/20, Sega v. Accolade, 977 F.2d 1510, Sony v. Connectix, 203 F.3d 596 (research/legal.md); research/brief.md; research/rea-640-repin.md; capture/out/00-fixtures.txt
+Sources: readme line 327 (sources/rea/README.md); sources/rea/DISCLAIMER-main-6e25cc3.md; law: 17 U.S.C. 1201(a)(1)(A), (a)(3)(A), (c)(1), (f)(1), (f)(4), (j)(1), Directive 2009/24/EC Articles 1(2), 5(1), 5(3), 6(1), 6(2)(c), 8, CJEU C-406/10 and C-13/20, Sega v. Accolade, 977 F.2d 1510, Sony v. Connectix, 203 F.3d 596; capture/out/00-fixtures.txt

@@ -276,7 +276,7 @@ One unknown stays open after the demo: `unk_f2eb0d7f84c80a19…`, "Does grade(sc
 
 ## A Cache of Answers Is Not a Database of Analysis
 
-rea has three things that look like a cache (`manuals/reverse-engineering-101/research/rea-architecture.md`, section 5). The Ghidra target snapshot is a private copy of the input, imported with `-readOnly -deleteProject` and deleted on close. The in-memory `AnalysisSnapshotCache` holds up to 10,000 entries for one binary identity. The snapshot file holds `target`, `binding`, `entries`, `workflow_entries`, and an `evidence_bundle`.
+rea has three things that look like a cache. The Ghidra target snapshot is a private copy of the input, imported with `-readOnly -deleteProject` and deleted on close. The in-memory `AnalysisSnapshotCache` holds up to 10,000 entries for one binary identity. The snapshot file holds `target`, `binding`, `entries`, `workflow_entries`, and an `evidence_bundle`.
 
 The cache key is `query_` plus SHA-256 over `{target, binding, operation, parameters}`. `target` is `{sha256, kind, format, architecture}`. `binding` is the provider and the whole analysis profile, digest included. Change any of the 21 profile parameters, for example `jump_table_evidence` from `typed-case-default-blocks-v1` to a `v2`, and the digest changes, so every key changes.
 

@@ -38,7 +38,7 @@ Article 6 permits decompilation without the rightholder's authorisation when it 
 | *Sega v. Accolade* | Disassembly as fair use | The only way to reach the ideas and functional elements, a legitimate reason |
 | *Sony v. Connectix* | Intermediate copies during reverse engineering | A non-infringing final product |
 
-These notes come from the statutes and the opinions, and they are not legal advice. When a future target is not yours, obtain written authorization before you open the file and keep the authorization with your evidence. The research file `manuals/reverse-engineering-101/research/legal.md` holds the full citations, the CJEU cases, and the disclosure norms.
+These notes come from the statutes and the opinions, and they are not legal advice. When a future target is not yours, obtain written authorization before you open the file and keep the authorization with your evidence. Section 2.1 of the Reverse Engineering 101 manual gives the full citations and the CJEU cases.
 
 ## The Problem
 

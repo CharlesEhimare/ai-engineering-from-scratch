@@ -60,8 +60,8 @@ The hints column reads the four annotations of each tool in `tools/list`: `readO
 | `REA_ANALYSIS_PROVIDER` | the standing provider choice that `--provider` and `provider_id` override | {{cli Choose a provider}} |
 | `REA_MCP_INPUT_SCHEMA_PROFILE` | `compact` renders every advertised input schema within 13,312 bytes | {{mcp Compact input schema profile}} |
 | `REA_MCP_MAX_RESPONSE_BYTES` | the response budget, at least 10,485,760, read at startup | {{mcp Tool results}} |
-| `REA_WABT_BIN_DIRECTORY` | none, 6.4.0 has no WebAssembly tool | `research/rea-640-repin.md` |
+| `REA_WABT_BIN_DIRECTORY` | none, 6.4.0 has no WebAssembly tool | the main branch after 6.4.0 |
 
 The capture kit also removed `PWD` and `JAVA_TOOL_OPTIONS` from the environment of every rea process (capture/README.md). The paths in the records and the Java launch then stayed the same from run to run.
 
-Sources: capture/out/00-commands.txt, 10-mcp-session.txt, 10-mcp-02-tools-list.json, 10-mcp-04-binary-session.json, 04-inspect-binary-layout.json, 16-inspect-wasm-artifact.json, 10-mcp-24-inspect-wasm-artifact.json; capture/README.md; research/sources/rea/docs-cli.md (Native analysis, Choose a provider, Import, export and compare Evidence, Output and exit status), docs-mcp-contracts.md (Compact input schema profile, Tool results); rea at a56f7bb: src/cliCommandNames.ts, src/config/environment.ts, src/config/ghidraStartupTimeout.ts; research/rea-tools.md, research/rea-640-repin.md rea 6.4.0 source at tag a56f7bb: `src/cliCommandNames.ts`.
+Sources: capture/out/00-commands.txt, 10-mcp-session.txt, 10-mcp-02-tools-list.json, 10-mcp-04-binary-session.json, 04-inspect-binary-layout.json, 16-inspect-wasm-artifact.json, 10-mcp-24-inspect-wasm-artifact.json; capture/README.md; sources/rea/docs-cli.md (Native analysis, Choose a provider, Import, export and compare Evidence, Output and exit status), docs-mcp-contracts.md (Compact input schema profile, Tool results); rea at a56f7bb: src/cliCommandNames.ts, src/config/environment.ts, src/config/ghidraStartupTimeout.ts

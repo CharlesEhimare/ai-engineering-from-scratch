@@ -140,7 +140,7 @@ note: Cut from normalized_result to the header, the entry point, and the build m
       …
 ```
 
-**Load command:** one record in the list that follows the Mach-O header, with a `cmd` type and a `cmdsize`. Apple publishes no prose specification, so the `loader.h` header in the XNU source is the reference, and research/specs-formats.md section 4 lists the values. `file_type` 2 is `MH_EXECUTE`. The flags `0x00200085` are `MH_NOUNDEFS` 0x1, `MH_DYLDLINK` 0x4, `MH_TWOLEVEL` 0x80, and `MH_PIE` 0x200000 added together. The entry point comes from `LC_MAIN`, whose `entryoff` is 1488, or 0x5d0. Add it to the `__TEXT` address below and you get `0x1000005d0`, the `_main` export.
+**Load command:** one record in the list that follows the Mach-O header, with a `cmd` type and a `cmdsize`. Apple publishes no prose specification, so the `loader.h` header in the XNU source is the reference. `file_type` 2 is `MH_EXECUTE`. The flags `0x00200085` are `MH_NOUNDEFS` 0x1, `MH_DYLDLINK` 0x4, `MH_TWOLEVEL` 0x80, and `MH_PIE` 0x200000 added together. The entry point comes from `LC_MAIN`, whose `entryoff` is 1488, or 0x5d0. Add it to the `__TEXT` address below and you get `0x1000005d0`, the `_main` export.
 
 The four `LC_SEGMENT_64` commands are the load image. Each `segment_command_64` names a `vmaddr`, a `vmsize`, a `fileoff`, a `filesize`, two protection fields, and `nsects`, and its `section_64` records follow inside the same command.
 
@@ -285,4 +285,4 @@ Six exports: the five functions and `__mh_execute_header` at `0x100000000`. Six 
 - Check `exhaustive` on each collection before you say a symbol is absent.
 ```
 
-Sources: capture/out/00-commands.txt, capture/out/04-inspect-binary-layout.json, capture/out/04-inspect-macho.json; rea 6.4.0 at a56f7bb: src/contracts/errorSchemas.ts, src/native/pwntools/PwntoolsDecoder.ts, src/server/createServer.ts, src/native/NativeMachoInspection.ts; research/sources/rea/docs-cli.md; research/specs-formats.md sections 1 and 4; research/rea-tools.md section 1; research/rea-gaps.md item 3 rea 6.4.0 source at tag a56f7bb: `src/contracts/errorSchemas.ts`, `src/native/pwntools/PwntoolsDecoder.ts`, `src/server/createServer.ts`, `src/native/NativeMachoInspection.ts`.
+Sources: capture/out/00-commands.txt, capture/out/04-inspect-binary-layout.json, capture/out/04-inspect-macho.json; rea 6.4.0 at a56f7bb: src/contracts/errorSchemas.ts, src/native/pwntools/PwntoolsDecoder.ts, src/server/createServer.ts, src/native/NativeMachoInspection.ts; sources/rea/docs-cli.md

@@ -18,8 +18,7 @@ rea, the `rea-agents` package at 6.4.0, with the Ghidra 12.1.4 provider, from th
 | `front.md`, `sections/` | the text, one file per section |
 | `figures/src/` | the figure sources, built to `figures/*.svg` |
 | `capture/` | the kit, its fixtures, and its recorded output in `capture/out/` |
-| `research/sources/rea/` | the vendored README and ten documentation pages at the tag, with the MIT license |
-| `research/*.md` | the briefs on rea's architecture, tools, evidence model, and reconstruction, the format and ISA notes, the legal notes, and the re-pin ledger |
+| `sources/rea/` | rea's README and ten documentation pages at the tag, with its MIT license, for the quote check |
 
 ## The pin
 
@@ -30,7 +29,7 @@ rea, the `rea-agents` package at 6.4.0, with the Ghidra 12.1.4 provider, from th
 | JDK | OpenJDK 21.0.12.1 |
 | Verified | 2026-10-13 |
 
-The `main` branch of rea at `6e25cc3` is ahead of the release. Its WebAssembly and Go providers, its raw-binary format, and its `DISCLAIMER.md` are not in 6.4.0, and `research/rea-640-repin.md` lists every claim that moved.
+The `main` branch of rea at `6e25cc3` is ahead of the release. Its WebAssembly and Go providers, its raw-binary format, and its `DISCLAIMER.md` are not in 6.4.0. Every claim in this manual describes 6.4.0.
 
 ## The recording host
 

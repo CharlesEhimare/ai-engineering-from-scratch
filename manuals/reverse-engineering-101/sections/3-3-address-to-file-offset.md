@@ -97,4 +97,4 @@ This is why the limitation says the offsets are not virtual-address arithmetic. 
 - Quote the file offset when you point another person at bytes in a hex viewer.
 ```
 
-Sources: capture/out/00-commands.txt, capture/out/04-inspect-macho.json, capture/out/08-address-to-file-offset.json, capture/fixtures/ledger-arm64-O1; rea 6.4.0 at a56f7bb: bridge/ghidra/ReaGhidraBridge.java, src/contracts/toolOutputSchemaGroups.ts; research/specs-formats.md sections 1 and 4; research/rea-tools.md section 2.1 rea 6.4.0 source at tag a56f7bb: `bridge/ghidra/ReaGhidraBridge.java`, `src/contracts/toolOutputSchemaGroups.ts`.
+Sources: capture/out/00-commands.txt, capture/out/04-inspect-macho.json, capture/out/08-address-to-file-offset.json, capture/fixtures/ledger-arm64-O1; rea 6.4.0 at a56f7bb: bridge/ghidra/ReaGhidraBridge.java, src/contracts/toolOutputSchemaGroups.ts

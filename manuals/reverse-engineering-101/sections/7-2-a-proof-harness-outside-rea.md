@@ -31,7 +31,7 @@ note: One of the eight dimension objects. The counts are characters of provider 
 
 For `total` the same comparison reported `changed` in five dimensions (capture/out/10-mcp-21-compare-functions-total.json). The pseudocode grew from 300 to 2,904 characters and the assembly from 336 to 1,866. The two records came from one source line compiled at `-O1` and `-O2`. A text comparison therefore says nothing about behaviour in either direction. The same function can print as different text, and a wrong function can print as the same text.
 
-The research brief for this manual records that rea has no compiler replay and no relocation-aware byte comparison (`research/rea-reconstruction.md`). The two legs below are the part rea leaves to you.
+rea 6.4.0 has no compiler replay and no relocation-aware byte comparison. The two legs below are the part rea leaves to you.
 
 ## Leg one: execute and compare
 
@@ -237,11 +237,11 @@ caption: Read top down. Each grey box is one check of leg two. The dashed rose b
 
 ## What the 2026 measurements add
 
-The hazards in the grid are not special to this fixture. Liu, Raff, and Micinski measured eight decompilation systems in nine configurations in 2026 ([arXiv 2609.05370](https://arxiv.org/abs/2609.05370), `research/landscape-ml-research.md`). Candidates that passed every test of the benchmark still diverged on fuzzed inputs. That happened for 4.9 percent of them overall and for up to 13 percent in one system. The test set was 300 library functions and 287 functions with disclosed vulnerabilities. There the strongest refinement model raised Ghidra's build rate from 75 to 90 percent, and the behavioural match rate fell from 74 to 62 percent.
+The hazards in the grid are not special to this fixture. Liu, Raff, and Micinski measured eight decompilation systems in nine configurations in 2026 ([arXiv 2609.05370](https://arxiv.org/abs/2609.05370)). Candidates that passed every test of the benchmark still diverged on fuzzed inputs. That happened for 4.9 percent of them overall and for up to 13 percent in one system. The test set was 300 library functions and 287 functions with disclosed vulnerabilities. There the strongest refinement model raised Ghidra's build rate from 75 to 90 percent, and the behavioural match rate fell from 74 to 62 percent.
 
 They traced the cause to invented fields, types, callees, and guards that replaced the visible unknowns a decompiler leaves behind. `percent_change_wide.c` is an invented type, and `grade_thresholds.c` is an invented guard. Both compile, both pass the ten naive cases, and both count as re-executable under a benchmark that recompiles and runs the assertions it includes. The authors propose per-function driver synthesis and fuzzing from the reference, which is leg one with a generated grid.
 
-The lesson adds a third source for the constant check. The rea evidence pages describe a reconstruction project that compared instruction bytes while trusting the relocation target (`research/rea-reconstruction.md`). A source literal of `0.0` passed against a target literal of `128.0` until the project audited 1,548 floating-point references. `grade_case10_wrong.c` is this manual's version of that defect, and `read_table()` is the audit.
+The lesson adds a third source for the constant check. The rea evidence pages describe a reconstruction project that compared instruction bytes while trusting the relocation target. A source literal of `0.0` passed against a target literal of `128.0` until the project audited 1,548 floating-point references. `grade_case10_wrong.c` is this manual's version of that defect, and `read_table()` is the audit.
 
 ```takeaways
 - Write the rebuild from the listing widths, then run it over a grid that wraps every intermediate.
@@ -250,4 +250,4 @@ The lesson adds a third source for the constant check. The rea evidence pages de
 - Record the host and the compiler with every proof, because the trap cell and the bytes depend on both.
 ```
 
-Sources: capture/out/17-harness-grid.json, 17-harness-execute-plausible.json, 17-harness-execute-equal.json, 17-harness-bytes.json, 17-harness.txt, 10-mcp-20-compare-functions-percent-change.json, 10-mcp-21-compare-functions-total.json, 00-versions.txt; capture/README.md; phases/13-tools-and-protocols/36-rebuild-and-prove-equal/code/main.py, driver.c, fixtures/candidates/; rea at a56f7bb: src/domain/functionComparisonDimensions.ts; research/rea-reconstruction.md, research/landscape-ml-research.md (Liu, Raff, Micinski, arXiv 2609.05370, 2026), research/specs-isa.md; Intel 64 and IA-32 Architectures Software Developer's Manual, Volume 2, IDIV; Arm Architecture Reference Manual for A-profile, DDI 0487, SDIV rea 6.4.0 source at tag a56f7bb: `src/domain/functionComparisonDimensions.ts`.
+Sources: capture/out/17-harness-grid.json, 17-harness-execute-plausible.json, 17-harness-execute-equal.json, 17-harness-bytes.json, 17-harness.txt, 10-mcp-20-compare-functions-percent-change.json, 10-mcp-21-compare-functions-total.json, 00-versions.txt; capture/README.md; phases/13-tools-and-protocols/36-rebuild-and-prove-equal/code/main.py, driver.c, fixtures/candidates/; rea at a56f7bb: src/domain/functionComparisonDimensions.ts (Liu, Raff, Micinski, arXiv 2609.05370, 2026); Intel 64 and IA-32 Architectures Software Developer's Manual, Volume 2, IDIV; Arm Architecture Reference Manual for A-profile, DDI 0487, SDIV

@@ -73,7 +73,7 @@ On main the tool runs three caller-supplied WABT programs on a private copy of t
 
 The result on main is an Evidence record. Its `normalized_result` holds the sections parsed from the objdump rows and the imports and exports lifted from the WAT text. It also holds the whole WAT as text with its digest, and a tool profile with the three command lines. Function bodies, types, globals, and memories are not separate fields. The limits are 8 MiB of input, 30 s per program, and 32 MiB of output.
 
-The main documentation adds that the WAT is a decoded representation and not the original source (research/rea-tools.md:187). [Figure](#fig-6-2) sets the two refusals beside what wabt returns.
+The main documentation adds that the WAT is a decoded representation and not the original source. [Figure](#fig-6-2) sets the two refusals beside what wabt returns.
 
 ## Reading the module with wabt directly
 
@@ -165,4 +165,4 @@ caption: Read each column top to bottom. Dashed rose arrows are refusals. From c
 - Write your own evidence row for every wabt output, with the file digest and the tool version.
 ```
 
-Sources: src/cliCommandNames.ts, src/server/createServer.ts, src/domain/binaryTargetTypes.ts at rea-agents-6.4.0 (a56f7bb); research/rea-tools.md, research/rea-gaps.md, research/rea-640-repin.md; capture/README.md; capture/fixtures/wasm/ledger.wat, capture/fixtures/ledger.c; capture/out/16-inspect-wasm-artifact.json, 10-mcp-24-inspect-wasm-artifact.json, 10-mcp-02-tools-list.json, 16-wabt.txt, 00-fixtures.txt, 00-versions.txt; phases/13-tools-and-protocols/35-evidence-confidence-and-unknowns rea 6.4.0 source at tag a56f7bb: `src/domain/binaryTargetTypes.ts`.
+Sources: src/cliCommandNames.ts, src/server/createServer.ts, src/domain/binaryTargetTypes.ts at rea-agents-6.4.0 (a56f7bb); capture/README.md; capture/fixtures/wasm/ledger.wat, capture/fixtures/ledger.c; capture/out/16-inspect-wasm-artifact.json, 10-mcp-24-inspect-wasm-artifact.json, 10-mcp-02-tools-list.json, 16-wabt.txt, 00-fixtures.txt, 00-versions.txt; phases/13-tools-and-protocols/35-evidence-confidence-and-unknowns; rea 6.4.0 at a56f7bb: src/domain/binaryTargetTypes.ts
