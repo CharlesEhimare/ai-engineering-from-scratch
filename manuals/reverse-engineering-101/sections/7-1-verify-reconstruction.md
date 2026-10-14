@@ -1,0 +1,179 @@
+# verify_reconstruction
+
+> verify_reconstruction grades each declared claim against one comparison record, and its pass says the provider text matched, never that two functions are equal.
+
+You have two builds of `ledger.c` on disk, the `-O1` and the `-O2` executables, and two `compare_functions` records from [Section 5.5](#s-compare-and-compare-functions). You want rea to tell you whether `total` is the same function in both. The tool for that question is `verify_reconstruction`, and the capture called it once, with four claims, and got two passes and two failures. When you finish this section, you can write a specification of structural claims and read the status rea returns for each claim. You can also say what a pass does and does not prove.
+
+## The specification
+
+**Specification:** the input of `verify_reconstruction`: a `name` and a list of at least one claim. Each claim has a `claim_id`, a `title`, a `kind`, a `dimension`, and a `comparison_evidence_id` (capture/out/10-mcp-02-tools-list.json). The last one is the `ev_` id of one comparison record already in the session. The kind names the producer of that record (`src/domain/reconstructionVerification.ts:42-60`). A `behavioral` claim points at a `compare_process_captures` record, a `structural-function` claim at a `compare_functions` record, and a `structural-artifact` claim at a `compare_artifacts` record. A `structural-function` claim names one of nine dimensions: `overall`, `identity`, `pseudocode`, `assembly`, `comments`, `calls`, `references`, `strings_names`, or `cfg`.
+
+The capture kit built four claims over the two comparison records of [Section 5.5](#s-compare-and-compare-functions): pseudocode and assembly for `percent_change`, and pseudocode and assembly for `total`.
+
+```listing
+title: the specification the capture sent
+source: capture/out/10-mcp-22-verify-reconstruction.json
+lang: json
+note: The second and third claims are cut. The response follows the request in the same file.
+---
+{
+  "request": {
+    "jsonrpc": "2.0",
+    "id": 22,
+    "method": "tools/call",
+    "params": {
+      "name": "verify_reconstruction",
+      "arguments": {
+        "specification": {
+          "name": "ledger functions rebuilt at -O2 against the -O1 build",
+          "claims": [
+            {
+              "claim_id": "percent-change-pseudocode",
+              "title": "percent_change: the Ghidra pseudocode is the same text in the -O1 and -O2 builds",
+              "kind": "structural-function",
+              "dimension": "pseudocode",
+              "comparison_evidence_id": "ev_f52769989622771ca8f07ce69a4053f5c70692f867db845ee949c66a0fd68058"
+            },
+            …
+            {
+              "claim_id": "total-assembly",
+              "title": "total: the Ghidra assembly is the same text in the -O1 and -O2 builds",
+              "kind": "structural-function",
+              "dimension": "assembly",
+              "comparison_evidence_id": "ev_0fe621b65771a5ee1f08d48f852a1463b591e96cbc14da05f2a1bb4c16672ab6"
+            }
+          ]
+        }
+      }
+    }
+  },
+  …
+}
+```
+
+The tool has no CLI command. It is one of the 53 MCP tools that `src/cliCommandNames.ts:152-206` lists without a command, at line 198, so a one-shot `rea` call cannot run it. Over MCP the handler takes the bundle of the current connection with `session.exportEvidenceBundle()` and verifies the specification against it (`src/server/registerInvestigationTools.ts:240-243`). A claim whose comparison id is not in that bundle fails the whole call with `Missing comparison Evidence` (`src/domain/reconstructionVerification.ts:124-127`). A comparison whose two sources are not `analyze_function` records fails the source check (`:171-180`).
+
+That rule explains the order of the capture. `close_binary` at step 15 cleared the retained records of the `-O1` target. The two `-O1` dossiers came back into the ledger at steps 20 and 21. `compare_functions` records its two inline inputs before it records the comparison. The `import_evidence_bundle` call at step 23 then reported `imported: 6` and `total: 14` (capture/out/10-mcp-23-import-evidence-bundle-O1.json). Bundle `O1` holds eight records, and the two comparisons had already restored two of them.
+
+## What rea returned
+
+The response is an Evidence record like every other result, with `subject: null`, provider `rea-reconstruction-verifier` version `1`, predicate `rea.reconstruction-verification`, `confidence: "derived"`, and `authority: "analyst-inference"`. The `parameters` hold the SHA-256 of the specification and the claim ids, so the id of the record changes when a claim changes.
+
+```listing
+title: the verification record, head and summary
+source: capture/out/10-mcp-22-verify-reconstruction.json
+lang: json
+note: The analysis_profile, the per-claim items, the probes, and the evidence links are cut.
+---
+      "structuredContent": {
+        "evidence_id": "ev_5897face4631c5b3812d91cf46a75ff821c3d242aaeb41dfb60a8abc549151a4",
+        "subject": null,
+        "provider": {
+          "id": "rea-reconstruction-verifier",
+          "name": "REA reconstruction verifier",
+          "version": "1"
+        },
+        …
+        "normalized_result": {
+          "status": "fail",
+          "specification_sha256": "bb337f344824a009408039dae385aa37783233de6e220db042e42d1425882c9d",
+          "summary": {
+            "total": 4,
+            "passed": 2,
+            "failed": 2,
+            "unknown": 0,
+            "behavioral": 0,
+            "structural": 4
+          },
+          …
+          "limitations": [
+            "Pass means every declared claim passed; it does not establish global implementation equivalence."
+          ]
+        },
+        "confidence": "derived",
+        "authority": "analyst-inference",
+        …
+```
+
+The overall `status` follows one rule: `fail` when any claim failed, otherwise `unknown` when any claim is unresolved, otherwise `pass` (`src/domain/reconstructionVerification.ts:90`). The `summary` counts the claims by status and by kind. The record's own `limitations` add "Artifact identity is unavailable for this observation.", which `createEvidence` appends to any record without a subject (`src/domain/evidence.ts:343-349`).
+
+## The status of one claim
+
+**Claim status:** `pass`, `fail`, or `unknown`, computed from three inputs in a fixed order (`src/domain/reconstructionVerification.ts:323-331`). Any authority limitation makes the claim `unknown`. An observed status of `changed`, `added`, `removed`, or `contradiction` makes it `fail`. An observed status of `unknown` or `truncated`, or any open residual unknown attached to the comparison, makes it `unknown`. Only then is the claim `pass`. For a `structural-function` claim the observed status is the `status` of the named dimension in the comparison record.
+
+```listing
+title: the total-assembly claim
+source: capture/out/10-mcp-22-verify-reconstruction.json
+lang: json
+note: The evidence_links array and 26 of the 28 limitation strings are cut. The Residual unknown line is the one this claim adds to the limitations of the comparison record.
+---
+                "claim_id": "total-assembly",
+                "kind": "structural-function",
+                "dimension": "assembly",
+                "status": "fail",
+                "observed_status": "changed",
+                "comparison_evidence_id": "ev_0fe621b65771a5ee1f08d48f852a1463b591e96cbc14da05f2a1bb4c16672ab6",
+                "left_evidence_ids": [
+                  "ev_4c2f020b378297935c737659e7abac4be91d6379a3b4445ab15af6872d8794cb"
+                ],
+                "right_evidence_ids": [
+                  "ev_6b95d417dd77d1a5f848f88cc7e1a84387e46443d50b9a29b53cbe10320bb0d8"
+                ],
+                …
+                "unknown_ids": [
+                  "unk_391244e5e7898bafb442d68966a5cf7130699e29714fd6f2620add0748372daa"
+                ],
+                "limitations": [
+                  "Artifact identity is unavailable for this observation.",
+                  …
+                  "Residual unknown: Function comparison is changed (comparison ev_0fe621b65771a5ee1f08d48f852a1463b591e96cbc14da05f2a1bb4c16672ab6)",
+                  …
+                ]
+```
+
+The two `percent_change` claims pass because the comparison record `ev_f5276998` reports all eight dimensions `unchanged`. The two `total` claims fail because `ev_0fe621b6` reports `changed` for pseudocode and assembly, and five of its eight dimensions changed in all. The `unknown_ids` entry is not something the verifier invented. `compare_functions` records a residual unknown whenever its status is not `unchanged`, with the question `Function comparison is changed (comparison ev_...)` and severity `medium` for a change (`src/server/registerFunctionComparisonTool.ts:131-139`). The verifier found that unknown in the bundle, listed its id on both `total` claims, and copied its question into the limitations. The claim still reads `fail`, because a changed observation outranks an open unknown in the order above.
+
+Had every claim passed, the call would still have recorded one more unknown of its own. When the overall status is `unknown`, the handler records the question "Does the reconstruction satisfy every declared claim?" with the probes the verifier recommends (`src/server/registerInvestigationTools.ts:269-281`). A `pass` and a `fail` record nothing new, and `recommended_probes` was empty here.
+
+```figure
+id: fig-7-1
+kind: tree
+title: four claims over two comparison records
+claim: Each claim takes its status from one dimension of one comparison record, and the total claims also carry the unknown that compare_functions recorded.
+caption: Read top down. The verification record cites four claims, each claim cites one comparison record, and each comparison record cites a left and a right dossier. Amber claims passed and dashed rose claims failed. Ids are cut to their first eight hex digits. From capture/out/10-mcp-22-verify-reconstruction.json.
+```
+
+## What a pass does not prove
+
+The fixed limitation of every verification record says it: "Pass means every declared claim passed; it does not establish global implementation equivalence." (`src/domain/reconstructionVerification.ts:111`). The claim a `structural-function` dimension can pass is "same provider text", because `compare_functions` line-diffs the pseudocode and the assembly that Ghidra printed (`src/domain/functionComparisonDimensions.ts:63-83`). The assembly dimension carries its own caveat in every comparison record: "Assembly is opaque provider text; relocation normalization is unavailable." (capture/out/10-mcp-20-compare-functions-percent-change.json). Nothing in rea 6.4.0 runs a function or compiles one. A passed claim says that two decompiler outputs matched line for line, and a failed claim says they did not.
+
+Two consequences follow for the `ledger` fixture. The `total` claims failed although both builds came from the same source line. `-O2` unrolled the loop into 62 instructions where `-O1` had 13 (capture/out/10-mcp-11-analyze-function-total-O1.json, capture/out/10-mcp-18-analyze-function-total-O2.json). Different text does not mean different behaviour.
+
+The reverse holds too. A rebuild with a wrong constant in a lookup table has the same assembly text as the original. The text never shows the one data byte that differs, so a text claim can pass on a wrong function. [Section 7.2](#s-a-proof-harness-outside-rea) builds the two checks that settle both cases.
+
+The rea repository has a wider verifier for its own use. `docs/reconstruction-readiness.md` describes `npm run verify:readiness`, a nine-stage conformance run with a stage named `verify-reconstruction-closure`, and says what it is:
+
+```rule
+label: the readiness verifier is not a tool
+source: readiness Reconstruction readiness conformance
+---
+"The report evaluator is part of the repository verifier, not a public REA tool."
+```
+
+Its aggregation rule is the one to copy into your own harness:
+
+```rule
+label: nothing weaker than pass adds up to pass
+source: readiness Required stages
+---
+"fail, unknown, unsupported, truncated, and skipped never aggregate to pass."
+```
+
+```takeaways
+- Put both dossiers and the comparison record into one connection before you call verify_reconstruction.
+- Read observed_status and unknown_ids of each claim before you read the overall status.
+- Treat a passed structural claim as "same Ghidra text", and prove behaviour and bytes yourself.
+- Export the bundle before close_binary, because the close clears the retained records.
+```
+
+Sources: capture/out/10-mcp-22-verify-reconstruction.json, 10-mcp-20-compare-functions-percent-change.json, 10-mcp-21-compare-functions-total.json, 10-mcp-11-analyze-function-total-O1.json, 10-mcp-18-analyze-function-total-O2.json, 10-mcp-23-import-evidence-bundle-O1.json, 10-mcp-02-tools-list.json, 10-mcp-session.txt; rea at a56f7bb: src/domain/reconstructionVerification.ts, src/server/registerInvestigationTools.ts, src/server/registerFunctionComparisonTool.ts, src/domain/functionComparisonDimensions.ts, src/domain/evidence.ts, src/cliCommandNames.ts; research/sources/rea/docs-reconstruction-readiness.md; research/rea-reconstruction.md, research/rea-evidence-model.md, research/rea-640-repin.md
