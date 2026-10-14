@@ -325,7 +325,7 @@ Total estimated time: ~332 hours, at your own pace.
 | 24 | [Multimodal RAG and Cross-Modal Retrieval](phases/12-multimodal-ai/24-multimodal-rag-cross-modal) | ✅ | ~180 min |
 | 25 | [Multimodal Agents and Computer-Use (Capstone)](phases/12-multimodal-ai/25-multimodal-agents-computer-use) | ✅ | ~240 min |
 
-## Phase 13: Tools & Protocols — ✅ (~43 hours)
+## Phase 13: Tools & Protocols — ✅ (~54 hours)
 
 | # | Lesson | Status | Est. |
 |---|--------|--------|------|

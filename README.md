@@ -11,7 +11,7 @@ Implement model internals, retrieval pipelines, and agent runtimes. Test them, i
 
 Free, open source, MIT. Learn on the website, with a coding agent, or by running local code.
 
-> 528 lessons. 20 phases. Python, TypeScript, Rust, Julia.
+> 533 lessons. 20 phases. Python, TypeScript, Rust, Julia.
 
 <p align="center">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-1a1a1a?style=flat-square&labelColor=fafaf5" alt="MIT License"></a>
@@ -760,7 +760,7 @@ Twenty phases. Click any phase to expand its lesson list.
 </details>
 
 <details id="phase-13">
-<summary><b>Phase 13 — Tools & Protocols</b> &nbsp;<code>31 lessons</code>&nbsp; <em>The interfaces between AI and the real world.</em></summary>
+<summary><b>Phase 13 — Tools & Protocols</b> &nbsp;<code>36 lessons</code>&nbsp; <em>The interfaces between AI and the real world.</em></summary>
 <br/>
 
 | # | Lesson | Type | Lang |
@@ -1259,7 +1259,7 @@ Other curricula end with *"congratulations, you learned X."* Each lesson here en
 <details>
 <summary>Install lesson artifacts</summary>
 
-**The lesson artifacts.** The repo ships 400 skills and 100 prompts under
+**The lesson artifacts.** The repo ships 405 skills and 100 prompts under
 `phases/**/outputs/`; install them via `scripts/install_skills.py`. Requires
 cloning the repo. Supports tag filters, dry-runs, and per-agent layouts:
 
@@ -1410,7 +1410,7 @@ relative links inside lesson docs.
 <p align="center"><sub><b>114,584</b> readers &nbsp;·&nbsp; <b>181,995</b> page views in the last 30 days &nbsp;·&nbsp; as of 2026-08-29</sub></p>
 <!-- STATS:END -->
 
-Free, MIT-licensed, 528 lessons. Thank you to the sponsors and backers who make the work possible.
+Free, MIT-licensed, 533 lessons. Thank you to the sponsors and backers who make the work possible.
 [See all sponsors and backers](BACKERS.md).
 
 Want to support the work? See [sponsorship options](SPONSORS.md), including
