@@ -1,0 +1,170 @@
+# open_binary and the headless bridge
+
+> open_binary binds one target to one provider in milliseconds, and the first Ghidra-backed call pays for a headless import, auto-analysis, and a private socket.
+
+Your agent opened `ledger-arm64-O1` over MCP in a few milliseconds and then waited several seconds for `list_procedures`. Nothing was wrong. The open call did not start Ghidra. The first question did, and every question after it came back in milliseconds.
+
+When you finish this section, you can read the server log of a session and name the process that the first query started. You can also predict which calls will be slow.
+
+## open_binary
+
+```listing
+title: the open_binary exchange
+source: capture/out/10-mcp-03-open-binary-O1.json
+lang: json
+note: The request and the result. The text copy of the result is cut by the capture kit.
+---
+"method": "tools/call",
+"params": {
+  "name": "open_binary",
+  "arguments": {
+    "path": "$CAPTURE/fixtures/ledger-arm64-O1",
+    "provider_id": "ghidra"
+  }
+}
+…
+"structuredContent": {
+  "result": {
+    "path": "$CAPTURE/fixtures/ledger-arm64-O1",
+    "format": "mach-o",
+    "kind": "executable",
+    "sha256": "01b5d08b08fb94678be5919d0e753d44b505a53107c95b94634f0e5d41c9e375",
+    "architecture": "arm64"
+  }
+}
+```
+
+The handler calls `session.open` with the path and the provider id, then returns five fields: `path`, `format`, `kind`, `sha256`, and `architecture` (`src/server/registerSessionTools.ts:188-225`). To fill them rea reads the magic bytes: `7f 45 4c 46` for ELF, `MZ` for DOS and PE, and four Mach-O values (`src/domain/binaryTarget.ts:47-60`). It hashes the whole file in 64 KiB chunks (`src/application/BinaryTargetResolver.ts:248-264`). It selects the provider you asked for, and `binary_session` records that choice.
+
+```listing
+title: the binding that binary_session reports
+source: capture/out/10-mcp-04-binary-session.json
+lang: json
+note: Cut to the provider binding and the server identity. The capabilities, candidates, and tool availability lists are cut.
+---
+"open": true,
+…
+"analysis_provider_binding": {
+  "provider": {
+    "id": "ghidra",
+    "name": "Ghidra",
+    "version": "12.1.4"
+  },
+  "selection_source": "request",
+  "analysis_profile": {
+    …
+    "digest": "20565088524a2d0359b9b96f46ac48e679d774c7b0092c56abc06de8fdbec11c"
+  }
+},
+…
+"server_identity": {
+  "package": {
+    "name": "rea-agents",
+    "version": "6.4.0",
+    …
+  },
+  …
+  "sdk": {
+    "server": "2.3.1",
+    …
+  },
+  "negotiated_protocol_version": "2025-06-18",
+  …
+```
+
+`selection_source: "request"` says the agent chose Ghidra. The profile digest is the one every Ghidra record of this target carries. The docs state the limit of the open call in one sentence:
+
+```rule
+label: what open_binary does not do
+source: mcp §Startup and deadlines
+---
+"open_binary then selects a target and provider binding; it does not establish that Ghidra has finished importing the target."
+```
+
+## The first Ghidra-backed call
+
+```listing
+title: six calls from the session index
+source: capture/out/10-mcp-session.txt
+lang: text
+note: Lines 03 to 08 of the index. The time in parentheses is measured by the capture client around each call, changes on every run, and is cut.
+---
+03  tools/call open_binary              ok     -> 10-mcp-03-open-binary-O1.json  (…)
+04  tools/call binary_session           ok     -> 10-mcp-04-binary-session.json  (…)
+05  tools/call list_procedures          ok     -> 10-mcp-05-list-procedures.json  (…)
+06  tools/call procedure_assembly       ok     -> 10-mcp-06-procedure-assembly-grade.json  (…)
+07  tools/call xrefs                    ok     -> 10-mcp-07-xrefs-grade.json  (…)
+08  tools/call list_strings             ok     -> 10-mcp-08-list-strings.json  (…)
+```
+
+```listing
+title: the same calls in the server log
+source: capture/out/10-mcp-server.log
+lang: jsonl
+note: The first five lines of the stderr of rea mcp. durationMs is measured inside the server. The time and durationMs values change on every run and are cut.
+---
+{"level":30,"time":…,"application":"rea","mode":"mcp","layer":"server","tool":"open_binary","durationMs":…,"status":"ok","msg":"MCP tool execution completed"}
+{"level":30,"time":…,"application":"rea","mode":"mcp","layer":"server","tool":"list_procedures","durationMs":…,"status":"ok","msg":"MCP tool execution completed"}
+{"level":30,"time":…,"application":"rea","mode":"mcp","layer":"server","tool":"procedure_assembly","durationMs":…,"status":"ok","msg":"MCP tool execution completed"}
+{"level":30,"time":…,"application":"rea","mode":"mcp","layer":"server","tool":"xrefs","durationMs":…,"status":"ok","msg":"MCP tool execution completed"}
+{"level":30,"time":…,"application":"rea","mode":"mcp","layer":"server","tool":"list_strings","durationMs":…,"status":"ok","msg":"MCP tool execution completed"}
+```
+
+The capture kit records the pattern in its README. The first Ghidra-backed call after `open_binary` takes 5 to 7 s. Every later call on the same target takes under 100 ms. The difference is the Ghidra start. `GhidraClient.callTool` awaits `start()` before it queues any request (`src/ghidra/GhidraClient.ts:231-243`), so the first call pays for the whole sequence in `#startWithin` (`src/ghidra/GhidraClient.ts:444-500`):
+
+1. Create a private runtime root named `rea-ghidra-` and a random suffix under the session root.
+2. Allocate the endpoint, a Unix socket on macOS and Linux (`src/ghidra/GhidraTransport.ts:11`).
+3. Copy the target into the root as `target-01b5d08b08fb.bin`, hashing while copying, and refuse a digest mismatch (`src/ghidra/GhidraTargetSnapshot.ts:23-37`).
+4. Mint a 32-byte random token and a run id.
+5. Write `session.json` with `transport`, `endpoint_path`, `token`, `run_id`, `target_sha256`, `provider_version`, and `profile_digest` (`src/ghidra/GhidraLauncher.ts:135-147`).
+6. Start Java and wait for the bridge to accept a connection.
+
+**Headless import:** a Ghidra run with no window that imports one file into a project and runs the default analyzers. On macOS and Linux, rea does not run the `analyzeHeadless` shell script. It asks Ghidra's `LaunchSupport.jar` for the environment and the JVM arguments, then runs `java` itself (`src/ghidra/GhidraJavaLaunch.ts:78-93`). The heap is `-Xmx2G` unless `GHIDRA_HEADLESS_MAXMEM` or `GHIDRA_MAXMEM` is set. The command adds `-Djava.awt.headless=true` and names the class `ghidra.Ghidra` with `ghidra.app.util.headless.AnalyzeHeadless`. The docs give the reason: "Apple platform shell wrappers hide their environments from ownership inspection, so retaining those wrappers would prevent verified process-group cancellation during startup." {{install §Ghidra}}
+
+The headless arguments come in one fixed order (`src/ghidra/GhidraLauncher.ts:398-482`):
+
+- the project root and the project name `rea-project`
+- `-import` with the copied target
+- `-readOnly` and `-deleteProject`
+- `-log` and `-scriptlog` into the runtime root, and `-scriptPath` at the bridge directory
+- `-postScript ReaGhidraNoReturnFix.java`
+- `-postScript ReaGhidraBridge.java` with the path of `session.json`, last
+
+```figure
+id: fig-4-1
+kind: sequence
+title: one open and three questions over MCP
+claim: The open call returns in milliseconds with no Ghidra process, the first question starts Java and waits seconds, and the next question takes under 100 ms.
+caption: Time runs down. Solid arrows are calls, dashed arrows are replies. The violet lanes are rea's Ghidra client and the Java bridge inside analyzeHeadless. The times are the ranges in capture/README.md. From capture/out/10-mcp-server.log and 10-mcp-session.txt.
+```
+
+## The bridge on the Java side
+
+`ReaGhidraBridge.java` is a Ghidra script that runs after the import and the analyzers. Its `run()` reads `session.json` and deletes it, then requires an imported program (`bridge/ghidra/ReaGhidraBridge.java:165-182`). It checks that the Ghidra version equals `provider_version` and compares the program's own SHA-256 with `target_sha256` in constant time (`bridge/ghidra/ReaGhidraBridge.java:189-200`). It then ends the script transaction, initializes the decompiler, and serves (`bridge/ghidra/ReaGhidraBridge.java:201-220`). On a Unix socket it binds the path, sets the mode to `rw-------`, and accepts one client (`bridge/ghidra/ReaGhidraBridge.java:234-241`).
+
+Each request is one JSON line, `{ id, token, method, params }` (`src/ghidra/GhidraClientWire.ts:86-87`). Each reply is `{ id, ok: true, result }` or `{ id, ok: false, error: { code, message } }`, and rea parses it with a strict schema (`src/ghidra/protocol.ts:6-22`). `list_procedures` was request number 2 on that socket, after the `ping` of the handshake, and it took the Java side a few milliseconds. The seconds before it were the import and the analyzers.
+
+```figure
+id: fig-4-2
+kind: tree
+title: the private runtime root of one session
+claim: One session owns one directory with the project, the hashed target copy, the descriptor, the socket, and the logs, and close_binary deletes it.
+caption: Read top to bottom. Each entry names the file or directory and what writes it. From src/ghidra/GhidraLauncher.ts and src/ghidra/GhidraClient.ts at rea 6.4.0, and capture/out/05-analyze-arm64-O1.json for the document name.
+```
+
+## Deadlines and the close
+
+rea allows 330,000 ms for the start, set by `REA_GHIDRA_STARTUP_TIMEOUT_MS` (`src/config/ghidraStartupTimeout.ts:4`). On the capture Mac the start took 5 to 7 s, and the client limit is the one to watch: "The pinned client SDK 2.3.1 defaults to 60,000 ms and can cancel earlier than REA's startup deadline." {{mcp §Startup and deadlines}}
+
+The docs record about 64 s on a Linux fixture and about 163 s on Windows. Set the client deadline from your own first run on your own machine.
+
+`close_binary` takes a fraction of a second in the log. The client sends `shutdown` to the bridge with a 10 s limit (`src/ghidra/GhidraClient.ts:70`), the bridge disposes the decompiler, and `-deleteProject` removes the project. The next `open_binary` on `ledger-arm64-O2` took about a millisecond, and its first `analyze_function` again took seconds, because "Each new provider session still imports the target into a fresh temporary project." {{mcp §Startup and deadlines}}
+
+```takeaways
+- Expect the first Ghidra-backed call after `open_binary` to take seconds and the rest milliseconds.
+- Set the MCP client deadline from a measured cold start on your own machine.
+- Ask every question you have before `close_binary`, because the project is deleted.
+- Read `durationMs` in the server log to separate rea time from Ghidra time.
+```
+
+Sources: capture/out/10-mcp-03-open-binary-O1.json, capture/out/10-mcp-04-binary-session.json, capture/out/10-mcp-session.txt, capture/out/10-mcp-server.log, capture/out/05-analyze-arm64-O1.json, capture/README.md; rea 6.4.0 at a56f7bb: src/server/registerSessionTools.ts, src/domain/binaryTarget.ts, src/application/BinaryTargetResolver.ts, src/ghidra/GhidraClient.ts, src/ghidra/GhidraTransport.ts, src/ghidra/GhidraTargetSnapshot.ts, src/ghidra/GhidraLauncher.ts, src/ghidra/GhidraJavaLaunch.ts, src/ghidra/GhidraClientWire.ts, src/ghidra/protocol.ts, src/config/ghidraStartupTimeout.ts, bridge/ghidra/ReaGhidraBridge.java; research/sources/rea/docs-mcp-contracts.md, research/sources/rea/docs-installation.md; research/rea-architecture.md sections 3, 4, and 7
