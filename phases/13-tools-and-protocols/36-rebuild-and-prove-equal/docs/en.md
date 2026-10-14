@@ -455,5 +455,5 @@ Write the rebuild from the listing and name the record it came from. Run it agai
 - [x86-64 psABI repository, relocation types](https://gitlab.com/x86-psABIs/x86-64-ABI)
 - [Intel 64 and IA-32 Architectures Software Developer's Manual, Volume 2, IDIV](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html)
 - [Arm Architecture Reference Manual for A-profile, DDI 0487, SDIV](https://developer.arm.com/documentation/ddi0487/latest)
-- [rea 6.4.0 MCP contracts](https://github.com/morluto/rea/blob/6e25cc3c761da358f799e306c2be3545830b6a3b/docs/mcp-contracts.md)
-- [rea 6.4.0 reconstruction obligation ledgers](https://github.com/morluto/rea/blob/6e25cc3c761da358f799e306c2be3545830b6a3b/docs/reconstruction-obligation-ledgers.md)
+- [rea 6.4.0 MCP contracts](https://github.com/morluto/rea/blob/rea-agents-6.4.0/docs/mcp-contracts.md)
+- [rea 6.4.0 reconstruction obligation ledgers](https://github.com/morluto/rea/blob/rea-agents-6.4.0/docs/reconstruction-obligation-ledgers.md)

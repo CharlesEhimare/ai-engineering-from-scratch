@@ -24,7 +24,7 @@ You open the same object in `llvm-objdump -d` and see four blocks after the jump
 
 A listing answers one question only: which bytes form which instruction. It does not say which instructions run, in what order, or from where. To answer them you need three more structures: the bytes that control flow can reach, the basic blocks, and the edges between them.
 
-rea 6.4.0 has no disassembler of its own. Its README asks you to bring Ghidra, Hopper, or IDA (`README.md:152`, `:231-235`). Its call graph stops at unresolved targets: "Callers/callees contain only resolved functions. ... Targetless computed flow remains unknown." (`docs/ghidra-provider.md:53`). This lesson builds the part that produces those facts, so you can judge them when a tool reports them.
+rea 6.4.0 has no disassembler of its own. Its README asks you to bring Ghidra, Hopper, or IDA. Its call graph stops at unresolved targets: "Callers/callees contain only resolved functions.... Targetless computed flow remains unknown.". This lesson builds the part that produces those facts, so you can judge them when a tool reports them.
 
 ```figure
 re-33-sweep-vs-descent
@@ -68,9 +68,9 @@ Take `8d 44 08 fa` from `grade` at `-O0`. The opcode `8D` is `lea`. ModRM `44` i
 
 ### The displacement is where the link editor writes
 
-`48 8d 0d 00 00 00 00` is `leaq (%rip), %rcx`. The four zero bytes are the displacement field of a RIP-relative operand. In a relocatable object they are placeholders. The entry in `.rela.text` at offset `0x69` says `R_X86_64_PC32 .rodata-0x4`. The psABI (Table 4.9) defines `R_X86_64_PC32` as `S + A - P`: the symbol address plus the addend minus the address of the field.
+`48 8d 0d 00 00 00 00` is `leaq (%rip), %rcx`. The four zero bytes are the displacement field of a RIP-relative operand. In a relocatable object they are placeholders. The entry in `.rela.text` at offset `0x69` says `R_X86_64_PC32.rodata-0x4`. The psABI (Table 4.9) defines `R_X86_64_PC32` as `S + A - P`: the symbol address plus the addend minus the address of the field.
 
-The processor adds the field to the address of the next instruction, so the final target is `S + A + (end - P)`. For this `lea` the field is the last four bytes, so `end - P` is 4 and the target is `.rodata + (-4) + 4 = .rodata + 0x0`. The addend of -4 compensates for those four bytes in advance. Every RIP-relative operand in the fixtures carries this -4 inside its addend, so `.rodata+0x10` on the `-O1` `lea` means `.rodata+0x14`.
+The processor adds the field to the address of the next instruction, so the final target is `S + A + (end - P)`. For this `lea` the field is the last four bytes, so `end - P` is 4 and the target is `.rodata + (-4) + 4 =.rodata + 0x0`. The addend of -4 compensates for those four bytes in advance. Every RIP-relative operand in the fixtures carries this -4 inside its addend, so `.rodata+0x10` on the `-O1` `lea` means `.rodata+0x14`.
 
 The decoder records the offset of the displacement field inside each instruction. `resolve_reference()` looks that offset up in the relocation table and reports where the operand will point after linking. That one function is what turns `leaq (%rip), %rcx` into "the table at `.rodata+0x0`".
 
@@ -332,9 +332,9 @@ The lesson from the two builds is to name what the bytes show. A jump table chan
 
 ## What rea and Ghidra Give You Here
 
-rea 6.4.0 with the Ghidra 12.1.4 provider returns the Listing text of a function from `procedure_assembly` as one string (`bridge/ghidra/ReaGhidraBridge.java:674-683`). `inspect_native_instruction` returns the bytes, length, decoder text, operand tokens, typed references, and flow of one instruction, with the return classified from p-code (`src/contracts/officialToolContracts.ts:56`). `xrefs` returns the sorted unique source addresses from Ghidra's `ReferenceManager.getReferencesTo` (`ReaGhidraBridge.java:1189-1210`). `analyze_function` carries the CFG and `body` of the function. `procedure_info` gives the body as inclusive ranges and warns that "Gaps and shared tails must not be treated as owned bytes" (`docs/ghidra-dos.md:94-116`).
+rea 6.4.0 with the Ghidra 12.1.4 provider returns the Listing text of a function from `procedure_assembly` as one string. `inspect_native_instruction` returns the bytes, length, decoder text, operand tokens, typed references, and flow of one instruction, with the return classified from p-code. `xrefs` returns the sorted unique source addresses from Ghidra's `ReferenceManager.getReferencesTo`. `analyze_function` carries the CFG and `body` of the function. `procedure_info` gives the body as inclusive ranges and warns that "Gaps and shared tails must not be treated as owned bytes".
 
-Every one of those facts is Ghidra's recursive descent plus its analyzers, serialised. The rea analysis profile pins contract versions for `instruction_flow_evidence`, `function_references`, and `jump_table_evidence` (`src/ghidra/GhidraAnalysisProfile.ts:96-116`). A result therefore names the rules that produced it. What it cannot do is show its work. When Ghidra does not find the table, the flow is "unknown", and the case blocks are missing from callers, callees, and the CFG.
+Every one of those facts is Ghidra's recursive descent plus its analyzers, serialised. The rea analysis profile pins contract versions for `instruction_flow_evidence`, `function_references`, and `jump_table_evidence`. A result therefore names the rules that produced it. What it cannot do is show its work. When Ghidra does not find the table, the flow is "unknown", and the case blocks are missing from callers, callees, and the CFG.
 
 You now have the work. Run `python3 code/main.py cfg` on the same object and compare block starts, edge counts, and the recovered table with what the provider returns. Where they agree you have two independent derivations. Where they differ you have a specific address to look at, which is what lesson 35 records as an unknown.
 
@@ -540,3 +540,4 @@ Decode against an oracle, walk control flow from known entries, and account for 
 - [Cooper, Harvey, Kennedy, "A Simple, Fast Dominance Algorithm" (2001)](https://www.cs.tufts.edu/~nr/cs257/archive/keith-cooper/dom14.pdf)
 - [Lengauer, Tarjan, "A fast algorithm for finding dominators in a flowgraph" (1979)](https://doi.org/10.1145/357062.357071)
 - [Capstone 6.0.0-Alpha10 release notes](https://github.com/capstone-engine/capstone/releases/tag/6.0.0-Alpha10)
+- rea 6.4.0 source at tag `a56f7bb` that this lesson describes: `README.md`, `docs/ghidra-provider.md`, `bridge/ghidra/ReaGhidraBridge.java`, `src/contracts/officialToolContracts.ts`, `ReaGhidraBridge.java`, `docs/ghidra-dos.md`, `src/ghidra/GhidraAnalysisProfile.ts`.

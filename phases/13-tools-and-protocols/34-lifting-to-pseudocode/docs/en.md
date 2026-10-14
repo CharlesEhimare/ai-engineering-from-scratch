@@ -42,9 +42,9 @@ undefined1  [16] percent_change(int param_1,int param_2,ulong param_3)
 
 The source is four lines long. It takes two `int` values and returns one `int`. Ghidra reports a 16-byte return value and a third parameter that the source does not have. The sixteen bytes of machine code are correct, and Ghidra decoded every one of them correctly. The signature is a guess, and nothing in the text marks it as one.
 
-rea returns this text as the `procedure_pseudo_code` result and attaches one limitation to the record. The limitation reads "Pseudocode is Ghidra decompiler output, not original source and not text-equivalent to Hopper output". The `compare_functions` tool diffs pseudocode as lines of text. Its own dimension record says "Assembly is opaque provider text" and that relocation normalization is unavailable (`src/domain/functionComparisonDimensions.ts:63-93`). rea cannot look inside the text, and neither can an agent that only reads it.
+rea returns this text as the `procedure_pseudo_code` result and attaches one limitation to the record. The limitation reads "Pseudocode is Ghidra decompiler output, not original source and not text-equivalent to Hopper output". The `compare_functions` tool diffs pseudocode as lines of text. Its own dimension record says "Assembly is opaque provider text" and that relocation normalization is unavailable. rea cannot look inside the text, and neither can an agent that only reads it.
 
-rea's DX-Ball record shows the cost. The first decompiler result was `FUN_00406400(void)` calling `__ftol()`. The instruction view showed a stack input and an x87 expression (`website/evidence/dx-ball-sound-pan.md:36-37`). The agent kept going only because the two views disagreed.
+rea's DX-Ball record shows the cost. The first decompiler result was `FUN_00406400(void)` calling `__ftol()`. The instruction view showed a stack input and an x87 expression. The agent kept going only because the two views disagreed.
 
 This lesson builds the derivation that the decompiler hides. You start from the 56 instructions that lesson 33 decoded, lift them to an IR, rename into SSA, simplify, and structure. Then you place your pseudocode next to Ghidra's for `percent_change`, `grade`, and `total`, and account for every difference. The tests compile your output with clang and run it against the source over an input grid.
 
@@ -120,7 +120,7 @@ The decoder follows the byte order of the Intel SDM, Volume 2, section 2.1. Pref
 | `70` to `7f`, `eb`, `e8` | `jcc rel8`, `jmp rel8`, `call rel32` | `74 09` `je 0xd` |
 | `99`, `c3`, `90`, `0f 1f` | `cltd`, `retq`, `nop` | `66 0f 1f 44 00 00` `nopw (%rax,%rax)` |
 
-The `leaq (%rip), %rcx` at `grade+0x23` is seven bytes with a zero displacement. The object carries a relocation `R_X86_64_PC32 .rodata+0x10` at offset `0x36`, the displacement field. The lifter resolves it in stage 3.
+The `leaq (%rip), %rcx` at `grade+0x23` is seven bytes with a zero displacement. The object carries a relocation `R_X86_64_PC32.rodata+0x10` at offset `0x36`, the displacement field. The lifter resolves it in stage 3.
 
 ## Stage 2: Blocks and Dominators
 
@@ -187,7 +187,7 @@ The frame instructions themselves produce no IR, and neither do `subq` and `addq
 
 ### Relocations
 
-The `leaq (%rip), %rcx` in `grade` has displacement zero in the file. The relocation at offset `0x36` says `R_X86_64_PC32 .rodata+0x10`. The linker will write `S + A - P` into the field. `S` is the address of `.rodata`, `A` is the addend `0x10`, and `P` is the address of the field. The instruction then computes `next_ip + disp = (P + 4) + S + A - P = S + A + 4`.
+The `leaq (%rip), %rcx` in `grade` has displacement zero in the file. The relocation at offset `0x36` says `R_X86_64_PC32.rodata+0x10`. The linker will write `S + A - P` into the field. `S` is the address of `.rodata`, `A` is the addend `0x10`, and `P` is the address of the field. The instruction then computes `next_ip + disp = (P + 4) + S + A - P = S + A + 4`.
 
 The lifter applies the same arithmetic without a linker. The target offset is the addend plus the distance from the field to the end of the instruction, `0x10 + 4 = 0x14`. The IR says `rcx = &.rodata+0x14`, and the table there holds the five `int` values `1, 2, 3, 4, 4`.
 
@@ -241,7 +241,7 @@ The "lite" part is the way out of SSA. `coalesce_webs()` joins each phi with its
 | `x + (-6)` | `x - 6` |
 | `trunc32(zext64(x))` where `x` is 32-bit | `x` |
 | `trunc32(a + b)` on 64-bit operands | `trunc32(a) + trunc32(b)` |
-| `(signfill(x) : x) / d` | `x / d` at width 32 |
+| `(signfill(x): x) / d` | `x / d` at width 32 |
 | `load32(base + idx * 4)` | `base[idx]` |
 | `trunc32(p >>s 34) + trunc32(p >>u 63)` with `p = sext64(x) * 0x66666667` | `x / 10` |
 
@@ -294,7 +294,7 @@ For a `Branch` with join `j`:
 
 - If `j` is the jump target, emit `if (!cond) { fallthrough region }` and continue at `j`.
 - If `j` is the fallthrough, emit `if (cond) { target region }` and continue at `j`.
-- If `j` is the function exit, both arms return. Emit the smaller arm as `if (cond) { ... }` and the other arm after it, without an `else`. This is the early return in `percent_change` and `total`.
+- If `j` is the function exit, both arms return. Emit the smaller arm as `if (cond) {... }` and the other arm after it, without an `else`. This is the early return in `percent_change` and `total`.
 - Otherwise emit `if (cond) { target } else { fallthrough }` and continue at `j`. This is `percent_change` at `-O0`, where both arms store `local_4` and meet at the epilogue.
 
 For a loop header:
@@ -524,10 +524,10 @@ Add `switch` recovery for `grade` at `-O0`.
 
 Requirements:
 
-- Read the five relocations in `.rela.rodata` of `ledger-x86_64-O0.o`, each `R_X86_64_PC32 .text+offset`, and compute the five case targets from the table at `.rodata+0x0`.
+- Read the five relocations in `.rela.rodata` of `ledger-x86_64-O0.o`, each `R_X86_64_PC32.text+offset`, and compute the five case targets from the table at `.rodata+0x0`.
 - Add a `Switch` terminator to the IR with the index expression, the target list, and the default from the `ja` before the table load.
 - Give the switch block one successor per target so that dominators, post-dominators, and SSA keep working.
-- Emit `switch (local_10) { case 0: ... }` with one `case` per target and the shared epilogue after the join.
+- Emit `switch (local_10) { case 0:... }` with one `case` per target and the shared epilogue after the join.
 - Keep the note for any indirect jump whose table you cannot bound.
 - Compile the result with clang and compare it with the source over the score grid in the tests.
 
@@ -601,4 +601,5 @@ Treat pseudocode as a derivation you have not seen. Reproduce it from the instru
 - [LLM4Decompile, EMNLP 2024](https://arxiv.org/abs/2403.05286)
 - [DecompileBench, Findings of ACL 2025](https://aclanthology.org/2025.findings-acl.1194/)
 - [Liu, Raff, Micinski, When LLM Decompilers Recompile More and Preserve Less, 2026](https://arxiv.org/abs/2609.05370)
-- [rea 6.4.0 Ghidra provider notes](https://github.com/morluto/rea/blob/6e25cc3c761da358f799e306c2be3545830b6a3b/docs/ghidra-provider.md)
+- [rea 6.4.0 Ghidra provider notes](https://github.com/morluto/rea/blob/rea-agents-6.4.0/docs/ghidra-provider.md)
+- rea 6.4.0 source at tag `a56f7bb` that this lesson describes: `src/domain/functionComparisonDimensions.ts`, `website/evidence/dx-ball-sound-pan.md`.

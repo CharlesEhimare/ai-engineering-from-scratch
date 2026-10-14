@@ -22,9 +22,9 @@ You ask an agent what `grade` in `ledger-x86_64-O1.o` returns for a score of 55.
 
 The expression and the instruction both produce 0 for every input. The agent did not know that. It trusted the text because a tool produced it. A 2026 study ran three agents on 24 reverse engineering tasks ([NDSS BAR 2026](https://www.ndss-symposium.org/wp-content/uploads/bar2026-58.pdf)). It named four recurring weaknesses: training bias, over-trust in observations, context limits, and plan persistence. Another 2026 study planted text inside binaries and found that models proposed the planted unsafe action in 35 of 40 cases ([arXiv 2607.12507](https://arxiv.org/abs/2607.12507)).
 
-rea 6.4.0 gives the agent a vocabulary for this. Every successful tool call produces one `Evidence` record with a `confidence` of `observed`, `derived`, or `inferred`, an `authority`, and a list of `limitations` (`src/domain/evidence.ts:100-119`). The packaged skill tells the agent: "Every conclusion must distinguish observations, inferences, and unknowns. Cite Evidence IDs, preserve limitations and incomplete coverage, and never imply that static analysis observed execution." (`.agents/skills/reverse-engineer-anything/SKILL.md:156-158`).
+rea 6.4.0 gives the agent a vocabulary for this. Every successful tool call produces one `Evidence` record with a `confidence` of `observed`, `derived`, or `inferred`, an `authority`, and a list of `limitations`. The packaged skill tells the agent: "Every conclusion must distinguish observations, inferences, and unknowns. Cite Evidence IDs, preserve limitations and incomplete coverage, and never imply that static analysis observed execution.".
 
-Three things rea leaves to you. Its snapshots cache exact query results, not analysis (`docs/cli.md:137-140`). Its verification passes a claim when a comparison dimension is unchanged, and its own comment says that a pass "does not establish global implementation equivalence." (`src/domain/reconstructionVerification.ts:110-112`). Its obligation ledger takes candidates only from JavaScript and managed graphs, so a native function never reaches `verified` through it (`src/application/ReconstructionObligationCandidates.ts:69-76`).
+Three things rea leaves to you. Its snapshots cache exact query results, not analysis. Its verification passes a claim when a comparison dimension is unchanged, and its own comment says that a pass "does not establish global implementation equivalence.". Its obligation ledger takes candidates only from JavaScript and managed graphs, so a native function never reaches `verified` through it.
 
 This lesson builds the missing piece in plain Python. You write a ledger that stores every fact about the fixture as a record with a content hash. You make predictions about `percent_change` and `grade`, mark them inferred, and check them against runs of a test program you compile yourself. You import two real rea records and the snapshot they came from, and your ledger recomputes every hash rea wrote.
 
@@ -34,7 +34,7 @@ re-evidence-ledger
 
 ## Three Words for Confidence, Five for Authority
 
-`confidence` is an enum with three values, never a number (`src/domain/evidence.ts:111`). `authority` has five values (`:85-91`). When a producer says nothing, rea uses `shipped-artifact` with `observed` (`:340-341`).
+`confidence` is an enum with three values, never a number. `authority` has five values. When a producer says nothing, rea uses `shipped-artifact` with `observed`.
 
 | Value | Meaning on the fixture | Records in this lesson |
 |---|---|---|
@@ -47,26 +47,26 @@ re-evidence-ledger
 | `historical-reference` | An older source tree or document | none here |
 | `external-service` | A service outside the file and the host | none here |
 
-Two confusions cost the most time. The first treats pseudocode as an observation of behaviour. It is an observation of what Ghidra printed. The second treats an empty list as proof of absence. rea's design note is strict: "Missing coverage is unknown, not absence." (`docs/tool-design.md:53`). The ledger in `code/main.py` encodes both rules.
+Two confusions cost the most time. The first treats pseudocode as an observation of behaviour. It is an observation of what Ghidra printed. The second treats an empty list as proof of absence. rea's design note is strict: "Missing coverage is unknown, not absence.". The ledger in `code/main.py` encodes both rules.
 
 ## The Record
 
-A record has exactly fifteen fields, and rea 6.4.0 rejects any other field (`src/domain/evidence.ts:99-117`). `code/main.py` keeps the same names as rea so that a record from either side validates on the other. It also accepts an optional `relationship_coverage` field, which the rea main branch added after 6.4.0 to say how complete a list of callers or references is.
+A record has exactly fifteen fields, and rea 6.4.0 rejects any other field. `code/main.py` keeps the same names as rea so that a record from either side validates on the other. It also accepts an optional `relationship_coverage` field, which the rea main branch added after 6.4.0 to say how complete a list of callers or references is.
 
-| Field | What it holds | Source in rea |
-|---|---|---|
-| `evidence_id` | `ev_` and 64 hex digits, a hash of the content | `src/domain/evidence.ts:233-234` |
-| `subject` | `name`, `digest.sha256`, `format`, `architecture`, `local_path`, or `null` | `:71-86` |
-| `provider` | `id`, `name`, `version` or `null` | `:36-40` |
-| `analysis_profile` | the provider's settings and their digest, or `null`, always present | `:128`, `docs/mcp-contracts.md:289-291` |
-| `predicate_type` | a tag, `rea.analysis` by default | `:129` |
-| `operation`, `parameters` | the tool and its input | `:130-131` |
-| `raw_result`, `normalized_result` | provider output and the canonical result | `:132-133` |
-| `confidence`, `authority` | the enums above | `:134-135` |
-| `environment` | `id`, `platform`, `architecture`, `isolation`, or `null` | `:116-121` |
-| `limitations` | plain sentences | `:137` |
-| `locations` | `address`, `address-range`, `artifact-path`, `file-offset`, `file-offset-range` | `:89-106` |
-| `evidence_links` | the `ev_` ids this record rests on | `:140` |
+| Field | What it holds |
+| --- | --- |
+| `evidence_id` | `ev_` and 64 hex digits, a hash of the content |
+| `subject` | `name`, `digest.sha256`, `format`, `architecture`, `local_path`, or `null` |
+| `provider` | `id`, `name`, `version` or `null` |
+| `analysis_profile` | the provider's settings and their digest, or `null`, always present |
+| `predicate_type` | a tag, `rea.analysis` by default |
+| `operation`, `parameters` | the tool and its input |
+| `raw_result`, `normalized_result` | provider output and the canonical result |
+| `confidence`, `authority` | the enums above |
+| `environment` | `id`, `platform`, `architecture`, `isolation`, or `null` |
+| `limitations` | plain sentences |
+| `locations` | `address`, `address-range`, `artifact-path`, `file-offset`, `file-offset-range` |
+| `evidence_links` | the `ev_` ids this record rests on |
 
 This is the real record rea wrote for `grade`, cut to the fields that matter here. The full file is `code/fixtures/rea-evidence-grade.json`, 36,257 bytes.
 
@@ -106,7 +106,7 @@ Note what the record does not say. `environment` is `null` because Ghidra read a
 
 ## The Id Is a Hash of Content, and the Path Is Not in It
 
-rea computes `evidence_id` as `ev_` plus SHA-256 over the RFC 8785 canonical JSON of a projection of the record (`src/domain/evidence.ts:233-234`). The projection keeps the subject's `digest`, `format`, and `architecture` and drops `name` and `local_path` (`:207-229`). Everything else, including `raw_result` and every limitation, is hashed.
+rea computes `evidence_id` as `ev_` plus SHA-256 over the RFC 8785 canonical JSON of a projection of the record. The projection keeps the subject's `digest`, `format`, and `architecture` and drops `name` and `local_path`. Everything else, including `raw_result` and every limitation, is hashed.
 
 RFC 8785 sorts object keys, removes whitespace, and fixes the number and string forms. For records whose numbers are integers, Python's standard library produces the same bytes:
 
@@ -125,9 +125,9 @@ def canonical_json(value):
 | `query_7681c1d24903ac01…` for the `grade` snapshot entry | equal |
 | `query_f2529622ffc4b241…` for the `percent_change` entry | equal |
 
-Why exclude the path? The same observation of the same bytes gets the same id on any machine and in any folder. The `local_path` in the listing above names a folder on one Mac. The id does not change when you copy the fixture to `/home/you/re`. `rebind_subject_path()` lets you show a record under a new path, and it refuses when `sha256`, `format`, or `architecture` differ. rea 6.4.0 has no such function. The rea main branch added one after the release (`src/domain/evidence.ts:293-327` at commit 6e25cc3).
+Why exclude the path? The same observation of the same bytes gets the same id on any machine and in any folder. The `local_path` in the listing above names a folder on one Mac. The id does not change when you copy the fixture to `/home/you/re`. `rebind_subject_path()` lets you show a record under a new path, and it refuses when `sha256`, `format`, or `architecture` differ. rea 6.4.0 has no such function. The rea main branch added one after the release.
 
-`validate_evidence()` recomputes the id and rejects a mismatch with rea's sentence, "Evidence semantic identifier does not match its record" (`:171-181`). It also rejects a record whose `analysis_profile.provider` differs from its `provider` (`:145-164`). The test `test_tampered_id_and_mismatched_profile_are_rejected` edits one line of pseudocode inside the real `grade` record and watches the ledger refuse it.
+`validate_evidence()` recomputes the id and rejects a mismatch with rea's sentence, "Evidence semantic identifier does not match its record". It also rejects a record whose `analysis_profile.provider` differs from its `provider`. The test `test_tampered_id_and_mismatched_profile_are_rejected` edits one line of pseudocode inside the real `grade` record and watches the ledger refuse it.
 
 ## Observe the Object Yourself
 
@@ -248,17 +248,17 @@ A claim moves from inferred to supported only through observed runs. `check_clai
 
 The range claim shows the partial case. Only two of its eleven inputs, 95 and 100, appear in the run grid. `check_claim()` returns `unknown` with `covered` 2 of 11, and `promote_claim()` refuses with "2 of 11 inputs have observed runs". The ledger does not round that up.
 
-`completion_ledger()` mirrors rea's `EvidenceCompletionLedger` (`src/domain/evidenceCompletionLedger.ts:13-26`). Its id is `ecl_` plus the hash of its records, and `complete` is true only when `pass` equals `total` (`:69-85`). The demo prints `ecl_da64933ea13befed…` with `complete: false`, because of that one range claim.
+`completion_ledger()` mirrors rea's `EvidenceCompletionLedger`. Its id is `ecl_` plus the hash of its records, and `complete` is true only when `pass` equals `total`. The demo prints `ecl_da64933ea13befed…` with `complete: false`, because of that one range claim.
 
 ## Unknowns Are Records with a Hash Chain
 
-rea stores a residual unknown as a strict record (`src/domain/residualUnknown.ts:44-100`). `code/main.py` keeps the same fields and the same invariants.
+rea stores a residual unknown as a strict record. `code/main.py` keeps the same fields and the same invariants.
 
-The id is `unk_` plus SHA-256 over `{domain, question, scope_digest}`, with the question's whitespace collapsed to single spaces (`:23-40`). Two analysts who ask the same question about the same file get the same id. The `scope_digest` is the SHA-256 of the object.
+The id is `unk_` plus SHA-256 over `{domain, question, scope_digest}`, with the question's whitespace collapsed to single spaces. Two analysts who ask the same question about the same file get the same id. The `scope_digest` is the SHA-256 of the object.
 
-Every change is a new revision. Revision 1 has `previous_revision_digest` `null`. Every later revision names the `revision_digest` of the one before it, and the digest covers every field except itself (`:145-150`, `:382-387`). `verify_unknown_chain()` walks the list and recomputes each digest. It checks that each link points at the previous revision. It checks that the mutation evidence each revision names is in the ledger.
+Every change is a new revision. Revision 1 has `previous_revision_digest` `null`. Every later revision names the `revision_digest` of the one before it, and the digest covers every field except itself. `verify_unknown_chain()` walks the list and recomputes each digest. It checks that each link points at the previous revision. It checks that the mutation evidence each revision names is in the ledger.
 
-Each mutation is itself an evidence record, as rea does with provider `rea-unknown-registry` (`src/application/investigation/UnknownEvidence.ts:9-14`). Ours carries `confidence` `derived`, `authority` `analyst-inference`, and no subject. Its limitation reads "A registry mutation records what the analyst decided. It is not proof of the answer."
+Each mutation is itself an evidence record, as rea does with provider `rea-unknown-registry`. Ours carries `confidence` `derived`, `authority` `analyst-inference`, and no subject. Its limitation reads "A registry mutation records what the analyst decided. It is not proof of the answer."
 
 That is why the demo's 81 records include 36 derived mutation records: 18 openings and 18 updates.
 
@@ -268,23 +268,23 @@ Three invariants are enforced on every revision:
 - A `contradicted` unknown names at least one contradicting id, and no id appears in both lists.
 - A `verified` resolution names at least one evidence id with the required confidence and authority.
 
-The third rule is where the ledger refuses most often. rea's workflow notes say "Only qualifying observed evidence can verify a resolution." (`.agents/skills/reverse-engineer-anything/references/evidence-workflows.md:17-19`). `resolve_unknown()` therefore rejects the table model, rejects an observed record with authority `shipped-artifact`, and accepts the run record `ev_f4ffbe8f922ec7fe…`. The resolved revision for `grade(95)` is revision 2, and its `previous_revision_digest` is `ffca840b55a8a188…`, the digest of revision 1.
+The third rule is where the ledger refuses most often. rea's workflow notes say "Only qualifying observed evidence can verify a resolution.". `resolve_unknown()` therefore rejects the table model, rejects an observed record with authority `shipped-artifact`, and accepts the run record `ev_f4ffbe8f922ec7fe…`. The resolved revision for `grade(95)` is revision 2, and its `previous_revision_digest` is `ffca840b55a8a188…`, the digest of revision 1.
 
-`update_unknown()` takes `expected_revision` and raises `revision-conflict` when it is stale, as rea's `update_unknown` tool does (`src/domain/residualUnknown.ts:180-195`). The right reaction is the one rea's notes give: reread the current revision and decide again.
+`update_unknown()` takes `expected_revision` and raises `revision-conflict` when it is stale, as rea's `update_unknown` tool does. The right reaction is the one rea's notes give: reread the current revision and decide again.
 
 One unknown stays open after the demo: `unk_f2eb0d7f84c80a19…`, "Does grade(score) == 4 for every score from 90 to 100 hold when the compiled function runs?". Its status is `investigating`, its supporting ids include the two runs, and its probe still names the nine inputs without a run.
 
 ## A Cache of Answers Is Not a Database of Analysis
 
-rea has three things that look like a cache (`manuals/reverse-engineering-101/research/rea-architecture.md`, section 5). The Ghidra target snapshot is a private copy of the input, imported with `-readOnly -deleteProject` and deleted on close. The in-memory `AnalysisSnapshotCache` holds up to 10,000 entries for one binary identity (`src/application/binary/AnalysisSnapshotCache.ts:60`). The snapshot file holds `target`, `binding`, `entries`, `workflow_entries`, and an `evidence_bundle` (`src/domain/analysisSnapshot.ts:125-131`).
+rea has three things that look like a cache (`manuals/reverse-engineering-101/research/rea-architecture.md`, section 5). The Ghidra target snapshot is a private copy of the input, imported with `-readOnly -deleteProject` and deleted on close. The in-memory `AnalysisSnapshotCache` holds up to 10,000 entries for one binary identity. The snapshot file holds `target`, `binding`, `entries`, `workflow_entries`, and an `evidence_bundle`.
 
-The cache key is `query_` plus SHA-256 over `{target, binding, operation, parameters}` (`:517-525`). `target` is `{sha256, kind, format, architecture}`. `binding` is the provider and the whole analysis profile, digest included. Change any of the 21 profile parameters, for example `jump_table_evidence` from `typed-case-default-blocks-v1` to a `v2`, and the digest changes, so every key changes.
+The cache key is `query_` plus SHA-256 over `{target, binding, operation, parameters}`. `target` is `{sha256, kind, format, architecture}`. `binding` is the provider and the whole analysis profile, digest included. Change any of the 21 profile parameters, for example `jump_table_evidence` from `typed-case-default-blocks-v1` to a `v2`, and the digest changes, so every key changes.
 
-`code/fixtures/rea-snapshot.json` is the file rea wrote during the two runs, 137,700 bytes. rea wrote it with owner-only permissions, and the committed copy is readable by everyone. It has two entries and an evidence bundle with the same two records. `AnswerCache.import_snapshot()` recomputes each `query_id` and refuses the file when any differs. It refuses a snapshot whose `target` or `binding` differs from the active one, with rea's wording `profile_mismatch` (`src/application/binary/AnalysisSnapshotCache.ts:197-206`). It refuses a snapshot whose `format_version` is not `course-answer-cache-1`.
+`code/fixtures/rea-snapshot.json` is the file rea wrote during the two runs, 137,700 bytes. rea wrote it with owner-only permissions, and the committed copy is readable by everyone. It has two entries and an evidence bundle with the same two records. `AnswerCache.import_snapshot()` recomputes each `query_id` and refuses the file when any differs. It refuses a snapshot whose `target` or `binding` differs from the active one, with rea's wording `profile_mismatch`. It refuses a snapshot whose `format_version` is not `course-answer-cache-1`.
 
-Three measurements from this machine. The first `grade` query took 11 s, with a fresh Ghidra import. The `percent_change` query against the same snapshot took 9 s, because a different query is a cache miss. A third `grade` query took 2.3 s and returned the identical record with the identical `evidence_id`. The in-memory replay in rea adds the limitation "Loaded from a local REA analysis snapshot; this call did not re-run the provider." (`:313-316`). Our `lookup()` adds a sentence of the same kind, so a reader can tell a replay from a fresh answer.
+Three measurements from this machine. The first `grade` query took 11 s, with a fresh Ghidra import. The `percent_change` query against the same snapshot took 9 s, because a different query is a cache miss. A third `grade` query took 2.3 s and returned the identical record with the identical `evidence_id`. The in-memory replay in rea adds the limitation "Loaded from a local REA analysis snapshot; this call did not re-run the provider.". Our `lookup()` adds a sentence of the same kind, so a reader can tell a replay from a fresh answer.
 
-A mutation ends the cache. In rea 6.4.0, a rename or a comment that succeeds clears the snapshot cache, because the analysis behind every stored answer can now differ (`src/application/binary/BinarySession.ts:603-605`). A metadata import that changes the database does the same (`src/application/binary/BinarySessionRecords.ts:97`).
+A mutation ends the cache. In rea 6.4.0, a rename or a comment that succeeds clears the snapshot cache, because the analysis behind every stored answer can now differ. A metadata import that changes the database does the same.
 
 ## Why an Agent Needs This
 
@@ -337,7 +337,7 @@ Keep one ledger per target and per investigation. Put the target's SHA-256 in ev
 
 Write limitations at the moment you know them. The reader that applies no relocation says so. The run of a host build says so. The model that infers a divisor says so. A record written without its limitations looks stronger than the facts allow, and a later reader cannot repair that.
 
-Treat every provider text as data. Strings and pseudocode from the target are text that the target controls. They never become instructions, and they never become observations of behaviour. rea 6.4.0 does not mark such results. The main branch added a `_meta.provenance` marker with `untrusted_content: true` after the release (`docs/mcp-contracts.md:132-138` at commit 6e25cc3).
+Treat every provider text as data. Strings and pseudocode from the target are text that the target controls. They never become instructions, and they never become observations of behaviour. rea 6.4.0 does not mark such results. The main branch added a `_meta.provenance` marker with `untrusted_content: true` after the release.
 
 ## Interactive Lab
 
@@ -479,3 +479,4 @@ Record what you read, what you computed, and what you expect as three kinds of r
 - [When Binaries Talk Back: Representation-Confusion Attacks on LLM-Assisted Reverse Engineering, arXiv 2607.12507](https://arxiv.org/abs/2607.12507)
 - [Agentic decompilation study, arXiv 2606.06838](https://arxiv.org/abs/2606.06838)
 - [When LLM Decompilers Recompile More and Preserve Less, arXiv 2609.05370](https://arxiv.org/abs/2609.05370)
+- rea 6.4.0 source at tag `a56f7bb` that this lesson describes: `src/domain/evidence.ts`, `.agents/skills/reverse-engineer-anything/SKILL.md`, `docs/cli.md`, `src/domain/reconstructionVerification.ts`, `src/application/ReconstructionObligationCandidates.ts`, `docs/tool-design.md`, `src/domain/evidenceCompletionLedger.ts`, `src/domain/residualUnknown.ts`, `src/application/investigation/UnknownEvidence.ts`, `.agents/skills/reverse-engineer-anything/references/evidence-workflows.md`, `src/application/binary/AnalysisSnapshotCache.ts`, `src/domain/analysisSnapshot.ts`, `src/application/binary/BinarySession.ts`, `src/application/binary/BinarySessionRecords.ts`, `docs/mcp-contracts.md`.
