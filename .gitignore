@@ -101,3 +101,8 @@ site/manuals-data.js
 site/manuals.html
 
 !manuals/*/capture/out/*.log
+
+# Model weights (too large for git)
+*.pt
+*.pth
+*.safetensors
