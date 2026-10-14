@@ -1,0 +1,142 @@
+# Errors seen in the captures
+
+> Four error envelopes, two unavailability codes, and two refused conclusions appear in the captures, and every rea error has the same five fields.
+
+The capture kit recorded four calls that failed and kept each reply whole. Two came from rea's own error projection, one from the MCP SDK below rea, and one from the CLI dispatcher above it. Two more files hold codes that are not errors: the availability of a provider that is not installed, and a comparison that reached no conclusion. This section lists all of them, then the schema they follow.
+
+## The four error envelopes
+
+The CLI printed its envelope to stdout and exited 1 when `inspect-binary-layout` met a Mach-O file on macOS:
+
+```listing
+title: capability_unavailable from the CLI
+source: capture/out/04-inspect-binary-layout.json
+lang: json
+note: Nothing is cut. The exit status 1 is in capture/out/00-commands.txt.
+---
+{
+  "code": "capability_unavailable",
+  "category": "unsupported_provider",
+  "message": "The initial real-verified pwntools artifact profile supports Linux x64 only.",
+  "retryable": false,
+  "remediation": {
+    "action": "The initial real-verified pwntools artifact profile supports Linux x64 only."
+  },
+  "details": {
+    "provider_id": "pwntools-elf",
+    "operation": "inspect_binary_layout",
+    "reason": "The initial real-verified pwntools artifact profile supports Linux x64 only."
+  }
+}
+```
+
+Over MCP the same projection travels as text. A failed `tools/call` returns `isError: true` and the `{ "error": ... }` object as JSON in `content[0].text`, with no `structuredContent`, because the advertised output schema describes success only {{mcp Progress and cancellation}}. The capture kit decoded that text into `decoded_text` beside the raw reply:
+
+```listing
+title: invalid_request for a procedure that does not exist
+source: capture/out/10-mcp-13-analyze-function-missing.json
+lang: json
+note: The request and the raw response are cut. The raw response holds the same object as one JSON string.
+---
+  "decoded_text": {
+    "error": {
+      "code": "invalid_request",
+      "category": "invalid_input",
+      "message": "Analysis input is invalid. Check the arguments and try again.",
+      "retryable": true,
+      "remediation": {
+        "action": "Correct the listed arguments and retry."
+      },
+      "details": {
+        "operation": "analyze_function",
+        "issues": [
+          {
+            "path": [],
+            "reason": "invalid_value",
+            "message": "Unknown Ghidra procedure name or address: _nothing"
+          }
+        ]
+      }
+    }
+  }
+```
+
+The bridge raised `not_found` with the message in `issues[0].message` (`bridge/ghidra/ReaGhidraBridge.java:1797`), and rea mapped a remote `not_found` to `AnalysisInputError`, whose code is `invalid_request` (`src/ghidra/GhidraProviderClient.ts:777-847`, `src/domain/analysisErrorProjection.ts:184-204`). The server log recorded the failure twice, once for the bridge layer and once for the server layer, both at level 40 (capture/out/10-mcp-server.log).
+
+A tool that the server does not have never reaches rea's projection. The MCP SDK answers with a JSON-RPC error object instead of a result:
+
+```listing
+title: a tool that 6.4.0 does not have
+source: capture/out/10-mcp-24-inspect-wasm-artifact.json
+lang: json
+note: The request is cut. It named inspect_wasm_artifact with the path of the WASM fixture.
+---
+  "response": {
+    "jsonrpc": "2.0",
+    "id": 24,
+    "error": {
+      "code": -32602,
+      "message": "Tool inspect_wasm_artifact not found"
+    }
+  }
+```
+
+The CLI dispatcher answers the same absence with its own envelope, which has a different shape from the projection:
+
+```listing
+title: a command that 6.4.0 does not have
+source: capture/out/16-inspect-wasm-artifact.json
+lang: json
+note: The two suggested commands are cut.
+---
+{
+  "code": "COMMAND_NOT_FOUND",
+  "message": "'inspect-wasm-artifact' is not a command for 'rea'. Did you mean 'inspect-artifact'?",
+  "cta": {
+    "description": "Suggested commands:",
+    …
+  }
+}
+```
+
+`COMMAND_NOT_FOUND` and `cta` belong to the command-line parser, not to `analysisErrorProjectionSchema`. A script that reads rea errors needs a branch for a misspelt or missing command before it reads `category`. Both WebAssembly files record the same fact from two sides. The tool and the command exist on the main branch of rea and not in the published 6.4.0 package ([Section 6.2](#s-wasm-in-rea-6-4-0)).
+
+## Codes that are not errors
+
+`rea capabilities` lists every provider with an `availability` object. Two providers were absent on the capture host, and their codes name the cause without failing the command:
+
+```listing
+title: two unavailable providers
+source: capture/out/02-capabilities.json
+lang: json
+note: Two of the availability objects. The diagnostics that follow each one are cut.
+---
+      "availability": {
+        "status": "unavailable",
+        "code": "executable_missing",
+        "reason": "Hopper launcher is missing or not executable: /Applications/Hopper Disassembler.app/Contents/MacOS/hopper",
+…
+      "availability": {
+        "status": "unavailable",
+        "code": "not_configured",
+        "reason": "Set REA_IDA_MCP_CONFIG to an upstream IDA MCP JSON registration; see docs/ida-provider.md.",
+```
+
+Two results in the captures refused a conclusion and exited 0. `rea compare` over the two bundles returned `status: "unknown"` with ten unresolved records (capture/out/14-compare-bundles.json, [Section 5.5](#s-compare-and-compare-functions)). No record is a member of both bundles, and a bundle carries no completeness marker. `verify_reconstruction` returned `status: "fail"` with two failed claims (capture/out/10-mcp-22-verify-reconstruction.json, [Section 7.1](#s-verify-reconstruction)). Neither is an error envelope, and both are results that say the question stays open or the claim is false. A script that treats a non-zero exit as the only failure signal misses both.
+
+## The shape every rea error has
+
+| Field | Meaning | Source |
+|---|---|---|
+| `code` | the discriminator, one of 20 codes listed below | `src/contracts/errorSchemas.ts:35-69` |
+| `category` | one of ten: `invalid_input`, `unsupported_provider`, `unsupported_target`, `integrity_mismatch`, `truncated`, `cancelled`, `timeout`, `resource_constraint`, `unavailable`, `execution_failure` | `src/contracts/errorSchemas.ts:5-16` |
+| `message` | one plain sentence for a person, with provider names and internal reasons removed | `src/domain/analysisErrorPresentation.ts:187`, `docs/user-visible-errors.csv` |
+| `retryable` | true only for `artifact_changed`, `invalid_request`, `provider_timeout`, `cancelled`, `revision_conflict`, and `provider_unavailable` | `src/domain/analysisErrorProjection.ts:519-526` |
+| `remediation.action` | one sentence that says what to do | `src/contracts/errorSchemas.ts:17-21` |
+| `details` | optional, free JSON for generic codes, and a fixed object with `logical_path`, `declared_sha256`, `calculated_sha256`, and `unpacked` for `artifact_integrity_mismatch` | `src/contracts/errorSchemas.ts:22-27`, `:46-58` |
+
+The 20 codes are `invalid_request`, `access_denied`, `artifact_changed`, `unreadable_output`, `capability_unavailable`, `unsupported_target`, `provider_unavailable`, `provider_timeout`, `resource_constraint`, `cancelled`, `artifact_integrity_mismatch`, `artifact_operation_failed`, `evidence_integrity_mismatch`, `truncated`, `process_capture_failed`, `cleanup_incomplete`, `revision_conflict`, `configuration_invalid`, `target_unavailable`, and `execution_failure`. Each internal error class maps to one code (`src/domain/analysisErrorProjection.ts:184-204`). `AnalysisInputError` maps to `invalid_request`, `AnalysisCapabilityUnavailableError` to `capability_unavailable`, `AnalysisTimeoutError` to `provider_timeout`, and `ConfigurationError` to `configuration_invalid`. `NoBinaryOpenError` maps to `target_unavailable`, and `ProviderAdapterError` to `execution_failure`. A failure whose cleanup left owned resources behind takes the code `cleanup_incomplete` whatever the underlying code was, and lists them in `details` (`:54`, `:58-68`). The same union is published as JSON Schema in `docs/error-contract.schema.json`.
+
+Two codes deserve a note for the Ghidra provider. `provider_timeout` is what the first Ghidra-backed call returns when the startup deadline of [Section 8.1](#s-the-rea-mcp-server) passes. `target_unavailable` is what every provider tool returns before `open_binary`, with the message "No app is open. Ask the user which app to investigate, then call open_binary with its local path." (`docs/user-visible-errors.csv:23`). Neither appeared in the captures, because the kit set a long client deadline and opened a target first.
+
+Sources: capture/out/04-inspect-binary-layout.json, 10-mcp-13-analyze-function-missing.json, 10-mcp-24-inspect-wasm-artifact.json, 16-inspect-wasm-artifact.json, 02-capabilities.json, 14-compare-bundles.json, 10-mcp-22-verify-reconstruction.json, 10-mcp-server.log, 00-commands.txt; research/sources/rea/docs-mcp-contracts.md (Progress and cancellation); rea at a56f7bb: src/contracts/errorSchemas.ts, src/domain/analysisErrorProjection.ts, src/domain/analysisErrorPresentation.ts, src/ghidra/GhidraProviderClient.ts, bridge/ghidra/ReaGhidraBridge.java, docs/user-visible-errors.csv, docs/error-contract.schema.json; research/rea-architecture.md, research/rea-evidence-model.md
