@@ -15,7 +15,7 @@ source: readme line 327
 "REA provides tools for lawful reverse-engineering research, analysis, and reconstruction. You are responsible for obtaining any required authorization and complying with applicable laws. The project does not endorse illegal or unauthorized use."
 ```
 
-The rule is one paragraph under the heading `Disclaimer` at line 325 of `README.md` (sources/rea/README.md). It is the whole of what rea 6.4.0 says about use. The tag has no `DISCLAIMER.md`. That file exists only on `main` after 6.4.0, at commit `6e25cc3`, and `sources/rea/` keeps a copy. Its list of uses the project will not help with names DRM, licence checks, anti-cheat systems, game cheats, bypassing authentication, and copying proprietary software. The 6.4.0 README states the principle and leaves the list to you.
+The rule is one paragraph under the heading `Disclaimer` at line 325 of the rea README. It is the whole of what rea 6.4.0 says about use. The tag has no `DISCLAIMER.md`. That file exists only on `main` after 6.4.0, at commit `6e25cc3`, and `sources/rea/` keeps a copy. Its list of uses the project will not help with names DRM, licence checks, anti-cheat systems, game cheats, bypassing authentication, and copying proprietary software. The 6.4.0 README states the principle and leaves the list to you.
 
 ## United States: 17 U.S.C. 1201
 
