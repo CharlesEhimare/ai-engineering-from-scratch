@@ -418,7 +418,7 @@ The 35 tests prove:
 - the agent run targets the committed object by SHA-256, in order, with `ev_` ids on every Evidence step
 - the `read_bytes` record equals the table the ELF reader finds
 - the client drives the fake server and records the same evidence ids as the real run
-- an error result from the server is reported, not hidden
+- an error result from the server goes into the run record
 - `aggregate()` is fail-closed and the proof id recomputes from its content
 
 ## Production Failure Modes

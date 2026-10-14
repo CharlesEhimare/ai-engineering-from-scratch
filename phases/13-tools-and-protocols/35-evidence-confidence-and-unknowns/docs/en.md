@@ -143,7 +143,7 @@ Before any provider, the ledger reads the file. `observe_object()` parses the EL
 
 `llvm-objdump -t` agrees: `grade` at `0000000000000010` with size `2e`. The three relocations in `.rela.text` are `R_X86_64_PC32` against `.rodata` at offsets `0x36`, `0x84`, and `0x93`, with addends `0x10`, `0x24`, and `-0x4`. Each record carries a `file-offset-range` location and one limitation: "Section bytes are read from the file on disk. The reader applies no relocation and runs no code."
 
-Lesson 32 builds this reader in full. Here it is 60 lines, because the point is what you record about the read, not the read itself.
+Lesson 32 builds this reader in full. Here it is 60 lines, because this lesson is about what you record about the read.
 
 ## Derive the Table, and Say That You Derived It
 
@@ -290,7 +290,7 @@ A mutation ends the cache. In rea 6.4.0, a rename or a comment that succeeds cle
 
 An agent that drives rea through MCP sees the full record on every call and can cite `evidence_id` in its report. The research from 2026 says where that goes wrong. Over-trust in tool output was one of the four weaknesses in the NDSS BAR study. In the planted-text study, showing binary content as data alone still left 15 unsafe proposals of 40, and provenance checks with tool authorization removed them. A third study watched an agent drive Ghidra through MCP ([arXiv 2606.06838](https://arxiv.org/abs/2606.06838)). In binaries with hundreds of functions, only 10 to 15 percent received real analysis before the agent produced stubs.
 
-The ledger answers each of these with a record, and the agent reports from the ledger rather than from memory. A claim without an observed run is `unsupported`. A claim with some runs is `unknown`. A provider text is `observed` about the provider and nothing more. Give the agent the skill file in `outputs/` and make the ledger the only place it writes conclusions. That holds for Claude, Cursor, Codex, OpenClaw, Hermes, or any agent that reads SKILL.md.
+The ledger answers each of these with a record, and the agent reports only what the ledger holds. A claim without an observed run is `unsupported`. A claim with some runs is `unknown`. A provider text is `observed` about the provider and nothing more. Give the agent the skill file in `outputs/` and make the ledger the only place it writes conclusions. That holds for Claude, Cursor, Codex, OpenClaw, Hermes, or any agent that reads SKILL.md.
 
 ## Build It
 
