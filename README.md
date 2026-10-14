@@ -259,6 +259,7 @@ remains pending until the preflight is available. Read the lessons at
 | [`course-guide`](skills/course-guide/SKILL.md) | Topic router. "Where do I learn attention?" or "my loss is NaN" → the exact lessons, with links. |
 | [`learn-mcp`](skills/learn-mcp/SKILL.md) | Focused Model Context Protocol (MCP) tutor. Creates `MCP-LEARNING.md`, follows the 17-lesson manifest, and records wire, security, reliability, and conformance evidence. |
 | [`learn-agent-skills`](skills/learn-agent-skills/SKILL.md) | Focused Agent Skills tutor. Creates `AGENT-SKILLS-LEARNING.md`, teaches lessons 22, 24, 25, 26, and 27, and records real-host evidence. |
+| [`learn-reverse-engineering`](skills/learn-reverse-engineering/SKILL.md) | Focused Reverse Engineering tutor. Creates `REVERSE-ENGINEERING-LEARNING.md`, teaches Phase 13 lessons 32 to 36 on programs you build yourself, and records lab evidence. |
 | [`claude-certification`](skills/claude-certification/SKILL.md) | Certification tutor. Chooses CCAO-F, CCDV-F, CCAR-F, or CCAR-P; teaches each lesson; runs labs; reviews artifacts; administers diagnostics and mocks; saves progress. |
 | [`mcpa-certification`](skills/mcpa-certification/SKILL.md) | MCPA tutor. Follows the 34-lesson `mcpa-f` route on the 2026-07-28 protocol; teaches each lesson; runs labs and the wire checker; administers the diagnostic and three mocks; saves progress. |
 | [`find-your-level`](skills/find-your-level/SKILL.md) | Ten-question placement quiz. Maps your knowledge to a starting phase and produces a personalized path with hour estimates. |
@@ -323,12 +324,13 @@ or the [website prerequisites guide](https://aiengineeringfromscratch.com/prereq
 Compare four core domains and six career routes in the [AI Engineering Learning Paths](https://aiengineeringfromscratch.com/learning-paths.html).
 
 <details>
-<summary>Focused MCP and Agent Skills paths</summary>
+<summary>Focused MCP, Agent Skills, and Reverse Engineering paths</summary>
 
 | Your goal | Learn on GitHub | Learn on the website |
 |---|---|---|
 | I want to build with Model Context Protocol (MCP) | [Model Context Protocol (MCP) route](phases/13-tools-and-protocols/README.md#model-context-protocol-mcp-path) | [Model Context Protocol (MCP) path](https://aiengineeringfromscratch.com/lesson?path=phases/13-tools-and-protocols/06-mcp-fundamentals&learningPath=model-context-protocol) |
 | I want to write and ship Agent Skills | [Focused Agent Skills route](phases/13-tools-and-protocols/README.md#agent-skills-fast-path) | [Agent Skills path](https://aiengineeringfromscratch.com/lesson?path=phases/13-tools-and-protocols/22-skills-and-agent-sdks&learningPath=agent-skills) |
+| I want to read compiled programs | [Reverse Engineering route](phases/13-tools-and-protocols/README.md#reverse-engineering-path) | [Reverse Engineering path](https://aiengineeringfromscratch.com/lesson?path=phases/13-tools-and-protocols/32-program-anatomy-elf-from-scratch&learningPath=reverse-engineering) |
 
 </details>
 
@@ -351,6 +353,7 @@ Compare four core domains and six career routes in the [AI Engineering Learning 
 | Senior engineer, only want agent engineering | Phase 14 — Agent Engineering | ~60 hours |
 | Only want to build production MCP systems | [Model Context Protocol (MCP) path](learning-paths/model-context-protocol.json) | ~23 hours 15 min |
 | Only want to build production Agent Skills | [Agent Skills Engineering path](learning-paths/agent-skills.json) | ~9.5 hours |
+| Only want to learn reverse engineering | [Reverse Engineering path](learning-paths/reverse-engineering.json) | ~10.5 hours |
 
 </details>
 

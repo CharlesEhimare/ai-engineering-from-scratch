@@ -40,6 +40,7 @@ const GROUPS = [
     skills: {
       'learn-mcp': { line: 'One lesson at a time through the Model Context Protocol path: clients, servers, transports, security, gateways, and conformance.', say: ['teach me MCP', 'continue the MCP path'], writes: 'MCP-LEARNING.md' },
       'learn-agent-skills': { line: 'One lesson at a time through the Agent Skills path: write, find, run, secure, test, package, and port skills.', say: ['teach me agent skills', 'continue the skills path'], writes: 'AGENT-SKILLS-LEARNING.md' },
+      'learn-reverse-engineering': { line: 'One lesson at a time through the Reverse Engineering path: read a compiled program you built, decode it, lift it, record evidence, and prove a rebuild equal.', say: ['teach me reverse engineering', 'continue the reverse engineering path'], writes: 'REVERSE-ENGINEERING-LEARNING.md' },
     },
   },
   {

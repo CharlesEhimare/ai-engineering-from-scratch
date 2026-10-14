@@ -1,0 +1,106 @@
+{
+  "schemaVersion": 1,
+  "id": "reverse-engineering",
+  "title": "Reverse Engineering",
+  "summary": "Read a compiled program you built yourself: parse the file, decode the instructions, lift them to pseudocode, record evidence, and prove a rebuilt function equal.",
+  "estimatedMinutes": 635,
+  "stateFile": "REVERSE-ENGINEERING-LEARNING.md",
+  "prerequisites": [
+    {
+      "type": "knowledge",
+      "required": true,
+      "title": "Python, hexadecimal, and the command line",
+      "description": "You can read Python, run a command, and convert between hexadecimal and decimal. No prior assembly or binary analysis experience is required."
+    },
+    {
+      "type": "software",
+      "required": true,
+      "title": "Python 3.10 or later",
+      "description": "Every reader, decoder, lifter, and ledger in the path uses the Python standard library only. The compiled fixtures are in the repository."
+    },
+    {
+      "type": "software",
+      "required": false,
+      "title": "clang for rebuilding fixtures and Lesson 36",
+      "description": "clang rebuilds the fixtures from source and compiles the Lesson 36 differential driver. Without it, Lesson 36 reads the committed objects and reports its behaviour claims as unknown."
+    },
+    {
+      "id": "own-binaries-only",
+      "type": "knowledge",
+      "required": true,
+      "title": "Analyze only programs you built or are authorized to analyze",
+      "description": "Before Lesson 32's lab, confirm that every target is a program you wrote and compiled, or one with written authorization. Lesson 32 opens with the law and the authorization rules."
+    }
+  ],
+  "invocation": {
+    "codex": "learn-reverse-engineering, or choose it from /skills",
+    "claudeCode": "/learn-reverse-engineering",
+    "portableFallback": "Use learn-reverse-engineering to start or resume the Reverse Engineering path."
+  },
+  "conceptualFallback": "Read the website or each lesson's docs/en.md and trace the named fixture by hand. Record the checkpoint as conceptual and leave decoder, lifter, ledger, and proof evidence pending until the repository and Python 3 are available.",
+  "quickStart": {
+    "estimatedMinutes": 10,
+    "lessonPath": "phases/13-tools-and-protocols/32-program-anatomy-elf-from-scratch",
+    "goal": "Parse one compiled object you did not hand-write the bytes of, and name its sections, symbols, and relocations.",
+    "workingDirectory": "phases/13-tools-and-protocols/32-program-anatomy-elf-from-scratch",
+    "command": "python3 code/main.py code/fixtures/ledger-x86_64-O0.o",
+    "expectedEvidence": [
+      "The reader names the file format from its first four bytes.",
+      "The section table, the four function symbols, and the relocation records print with their offsets."
+    ]
+  },
+  "lessons": [
+    {
+      "order": 1,
+      "phase": 13,
+      "lesson": 32,
+      "title": "Program Anatomy: An ELF Reader From Scratch",
+      "path": "phases/13-tools-and-protocols/32-program-anatomy-elf-from-scratch",
+      "minutes": 120,
+      "required": true,
+      "prerequisiteChecks": ["own-binaries-only"],
+      "checkpoint": "Parse an ELF64 and a Mach-O fixture, and match the section, symbol, and relocation output against the recorded reference."
+    },
+    {
+      "order": 2,
+      "phase": 13,
+      "lesson": 33,
+      "title": "Disassembly and Control Flow: From Bytes to a Graph You Can Check",
+      "path": "phases/13-tools-and-protocols/33-disassembly-and-control-flow",
+      "minutes": 150,
+      "required": true,
+      "checkpoint": "Decode the fixture functions with a result that matches llvm-objdump, then build the control-flow graph and its dominators for grade."
+    },
+    {
+      "order": 3,
+      "phase": 13,
+      "lesson": 34,
+      "title": "Lifting to Pseudocode: IR, SSA, and Structuring From Scratch",
+      "path": "phases/13-tools-and-protocols/34-lifting-to-pseudocode",
+      "minutes": 150,
+      "required": true,
+      "checkpoint": "Lift percent_change to SSA and structured pseudocode, and explain each difference from the Ghidra output."
+    },
+    {
+      "order": 4,
+      "phase": 13,
+      "lesson": 35,
+      "title": "Evidence, Confidence, and Unknowns in Binary Analysis",
+      "path": "phases/13-tools-and-protocols/35-evidence-confidence-and-unknowns",
+      "minutes": 105,
+      "required": true,
+      "checkpoint": "Record one finding as an evidence entry with its confidence, limitations, and residual unknowns, and recompute its evidence id."
+    },
+    {
+      "order": 5,
+      "phase": 13,
+      "lesson": 36,
+      "title": "Rebuild and Prove Equal: Differential Tests, Byte Comparison, and the Evidence Loop",
+      "path": "phases/13-tools-and-protocols/36-rebuild-and-prove-equal",
+      "minutes": 110,
+      "required": true,
+      "checkpoint": "Run the differential grid and the relocation-masked byte comparison on a rebuilt function, and record the result as evidence."
+    }
+  ],
+  "optionalLessons": []
+}

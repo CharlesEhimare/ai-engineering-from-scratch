@@ -70,6 +70,7 @@ mlruns/
 !.claude/skills/find-your-level/**
 !.claude/skills/learn-agent-skills/
 !.claude/skills/learn-mcp/
+!.claude/skills/learn-reverse-engineering/
 !.claude/skills/blueprint-figure/
 !.claude/skills/blueprint-figure/**
 !.claude/skills/course-style/

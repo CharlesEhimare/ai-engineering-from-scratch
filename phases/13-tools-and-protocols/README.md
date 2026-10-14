@@ -144,9 +144,9 @@ Five lessons teach how to read a compiled program you built yourself. You parse 
 | [33](33-disassembly-and-control-flow/) | An x86-64 decoder, linear sweep, recursive descent, and a control-flow graph | 2 hr 30 min |
 | [34](34-lifting-to-pseudocode/) | A lifter from instructions to structured pseudocode | 2 hr 30 min |
 | [35](35-evidence-confidence-and-unknowns/) | An evidence ledger with confidence, limitations, and unknowns | 1 hr 45 min |
-| [36](36-rebuild-and-prove-equal/) | A differential test harness and a byte comparison that masks relocations | 2 hr |
+| [36](36-rebuild-and-prove-equal/) | A differential test harness and a byte comparison that masks relocations | 1 hr 50 min |
 
-Every target in this path is a program you wrote and compiled. Lesson 32 starts with the law and the authorization rules.
+Every target in this path is a program you wrote and compiled. Lesson 32 starts with the law and the authorization rules. To follow the path with a tutor that records your progress, run the `learn-reverse-engineering` skill. Its order and checkpoints are in the [Reverse Engineering manifest](../../learning-paths/reverse-engineering.json).
 
 ## Full phase
 
