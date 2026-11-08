@@ -1,0 +1,6 @@
+device,time_ms
+Windows laptop CPU,808
+MacBook Air M4 CPU,66.6
+MacBook Air M4 GPU (MPS),43.7
+Colab T4 GPU fp32,28.3
+Colab T4 GPU fp16,2.8
