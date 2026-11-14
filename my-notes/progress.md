@@ -6,3 +6,4 @@
 - Lesson 4 APIs & Keys: complete (real call deferred to Phase 11)
 - Lesson 5 Jupyter Notebooks: complete
 - Lesson 6 Python Environments: complete
+- Lesson 7 Docker for AI: complete
