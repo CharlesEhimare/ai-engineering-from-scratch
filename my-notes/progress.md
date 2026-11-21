@@ -8,3 +8,4 @@
 - Lesson 6 Python Environments: complete
 - Lesson 7 Docker for AI: complete
 - Lesson 8 Editor Setup: complete (VS Code, Pylance, Black, Ruff, project .vscode settings)
+- Lesson 10 Terminal & Shell: complete
